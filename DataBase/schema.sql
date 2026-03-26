@@ -1,4 +1,4 @@
--- Creación de la base de datos (Opcional, si no la has creado aún)
+-- Creación de la base de datos
 CREATE DATABASE IF NOT EXISTS restaurante_db;
 USE restaurante_db;
 
@@ -39,10 +39,3 @@ CREATE TABLE lineas_comanda (
     CONSTRAINT fk_linea_comanda FOREIGN KEY (comanda_id) REFERENCES comandas(id) ON DELETE CASCADE,
     CONSTRAINT fk_linea_producto FOREIGN KEY (producto_id) REFERENCES productos(id) ON DELETE CASCADE
 );
-
--- Datos de prueba (Opcional, para tener algo con lo que probar luego)
-INSERT INTO mesas (numero, capacidad) VALUES (1, 4), (2, 2), (3, 6);
-INSERT INTO productos (nombre, descripcion, precio, categoria) VALUES 
-('Hamburguesa Clásica', 'Carne de res, lechuga, tomate y queso', 10.50, 'Principal'),
-('Patatas Bravas', 'Ración de patatas con salsa picante', 5.00, 'Entrante'),
-('Coca-Cola', 'Refresco de cola 33cl', 2.50, 'Bebida');
