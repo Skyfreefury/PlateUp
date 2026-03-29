@@ -4,10 +4,13 @@
  */
 package com.Mogena.Repository;
 
-/**
- *
- * @author Chris
- */
+import com.Mogena.Model.TipoProducto;
+import java.util.List;
+
 public interface TipoProductoDAO {
-    
+    List<TipoProducto> findAll();
+    TipoProducto findById(Long id);
+    int save(TipoProducto tipoProducto);
+    int update(TipoProducto tipoProducto);
+    int delete(Long id);
 }

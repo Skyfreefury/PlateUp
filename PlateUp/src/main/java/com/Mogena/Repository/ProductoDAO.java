@@ -4,10 +4,13 @@
  */
 package com.Mogena.Repository;
 
-/**
- *
- * @author Chris
- */
+import com.Mogena.Model.Producto;
+import java.util.List;
+
 public interface ProductoDAO {
-    
+    List<Producto> findAll();
+    Producto findById(Long id);
+    int save(Producto producto);
+    int update(Producto producto);
+    int delete(Long id);
 }

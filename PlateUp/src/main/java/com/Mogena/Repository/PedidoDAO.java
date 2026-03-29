@@ -4,10 +4,13 @@
  */
 package com.Mogena.Repository;
 
-/**
- *
- * @author Chris
- */
-public class LineaComandaDAOjdbc {
-    
+import com.Mogena.Model.Pedido;
+import java.util.List;
+
+public interface PedidoDAO {
+    List<Pedido> findAll();
+    Pedido findById(Long id);
+    int save(Pedido pedido);
+    int update(Pedido pedido);
+    int delete(Long id);
 }

@@ -4,10 +4,13 @@
  */
 package com.Mogena.Repository;
 
-/**
- *
- * @author Chris
- */
+import com.Mogena.Model.Mesa;
+import java.util.List;
+
 public interface MesaDAO {
-    
+    List<Mesa> findAll();
+    Mesa findById(Long id);
+    int save(Mesa mesa);
+    int update(Mesa mesa);
+    int delete(Long id);
 }

@@ -4,13 +4,13 @@
  */
 package com.Mogena.Repository;
 
-import com.Mogena.Model.Comanda;
+import com.Mogena.Model.TipoComanda;
 import java.util.List;
 
-public interface ComandaDAO {
-    List<Comanda> findAll();
-    Comanda findById(Long id);
-    int save(Comanda comanda);
-    int update(Comanda comanda);
+public interface TipoComandaDAO {
+    List<TipoComanda> findAll();
+    TipoComanda findById(Long id);
+    int save(TipoComanda tipoComanda);
+    int update(TipoComanda tipoComanda);
     int delete(Long id);
 }

@@ -4,10 +4,13 @@
  */
 package com.Mogena.Repository;
 
-/**
- *
- * @author Chris
- */
+import com.Mogena.Model.Cliente;
+import java.util.List;
+
 public interface ClienteDAO {
-    
+    List<Cliente> findAll();          // Buscar todos los clientes
+    Cliente findById(Long id);        // Buscar un cliente por su ID
+    int save(Cliente cliente);        // Guardar un cliente nuevo
+    int update(Cliente cliente);      // Actualizar un cliente existente
+    int delete(Long id);              // Borrar un cliente por su ID
 }

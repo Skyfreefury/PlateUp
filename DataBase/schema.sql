@@ -1,36 +1,69 @@
--- Creación de la base de datos
-CREATE DATABASE IF NOT EXISTS restaurante_db;
+DROP DATABASE IF EXISTS restaurante_db;
+CREATE DATABASE restaurante_db;
 USE restaurante_db;
 
--- 1. Tabla Mesas
+-- 1. Tabla Clientes
+CREATE TABLE clientes (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(100) NOT NULL,
+    telefono VARCHAR(20),
+    email VARCHAR(100) UNIQUE
+);
+
+-- 2. Tabla Mesas
 CREATE TABLE mesas (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     numero INT NOT NULL UNIQUE,
     capacidad INT NOT NULL,
-    estado VARCHAR(20) DEFAULT 'LIBRE' -- Estados: LIBRE, OCUPADA, RESERVADA
+    estado VARCHAR(20) DEFAULT 'LIBRE'
 );
 
--- 2. Tabla Productos (Carta)
+-- 3. Tabla Tipos de Producto (Ej: Bebida, Plato, Postre)
+CREATE TABLE tipos_producto (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(50) NOT NULL UNIQUE
+);
+
+-- 4. Tabla Tipos de Comanda (Ej: Entrante, Plato Fuerte)
+CREATE TABLE tipos_comanda (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(50) NOT NULL UNIQUE
+);
+
+-- 5. Tabla Productos (La Carta: une nombre, precio y sus tipos)
 CREATE TABLE productos (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     nombre VARCHAR(100) NOT NULL,
-    descripcion VARCHAR(255),
     precio DECIMAL(10, 2) NOT NULL,
-    categoria VARCHAR(50) NOT NULL -- Ej: Entrante, Principal, Bebida, Postre
+    tipo_producto_id BIGINT NOT NULL,
+    tipo_comanda_id BIGINT,
+    CONSTRAINT fk_producto_tipo FOREIGN KEY (tipo_producto_id) REFERENCES tipos_producto(id) ON DELETE CASCADE,
+    CONSTRAINT fk_producto_comanda FOREIGN KEY (tipo_comanda_id) REFERENCES tipos_comanda(id) ON DELETE SET NULL
 );
 
--- 3. Tabla Comandas (Relación 1:N con Mesas)
+-- 6. Tabla Pedidos (La cuenta global que asocia Cliente y Mesa)
+CREATE TABLE pedidos (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    cliente_id BIGINT,
+    mesa_id BIGINT,
+    fecha_hora DATETIME DEFAULT CURRENT_TIMESTAMP,
+    total DECIMAL(10, 2) DEFAULT 0.00,
+    estado VARCHAR(20) DEFAULT 'ABIERTO', -- Estados: ABIERTO, PAGADO, CERRADO
+    CONSTRAINT fk_pedido_cliente FOREIGN KEY (cliente_id) REFERENCES clientes(id) ON DELETE SET NULL,
+    CONSTRAINT fk_pedido_mesa FOREIGN KEY (mesa_id) REFERENCES mesas(id) ON DELETE SET NULL
+);
+
+-- 7. Tabla Comandas (Los tickets para cocina, asociados al Pedido)
 CREATE TABLE comandas (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    mesa_id BIGINT NOT NULL,
+    pedido_id BIGINT NOT NULL,
     fecha_hora DATETIME DEFAULT CURRENT_TIMESTAMP,
-    estado VARCHAR(20) DEFAULT 'EN_PREPARACION', -- Estados: EN_PREPARACION, SERVIDA, PAGADA
-    total DECIMAL(10, 2) DEFAULT 0.00,
-    CONSTRAINT fk_comanda_mesa FOREIGN KEY (mesa_id) REFERENCES mesas(id) ON DELETE CASCADE
+    estado VARCHAR(20) DEFAULT 'EN_PREPARACION', -- Estados: EN_PREPARACION, SERVIDA
+    CONSTRAINT fk_comanda_pedido FOREIGN KEY (pedido_id) REFERENCES pedidos(id) ON DELETE CASCADE
 );
 
--- 4. Tabla Lineas_Comanda (Tabla intermedia para relación N:M entre Comandas y Productos)
-CREATE TABLE lineas_comanda (
+-- 8. Tabla Lineas_Producto (Relación N:M entre Comanda y Producto con cantidades)
+CREATE TABLE lineas_producto (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     comanda_id BIGINT NOT NULL,
     producto_id BIGINT NOT NULL,
