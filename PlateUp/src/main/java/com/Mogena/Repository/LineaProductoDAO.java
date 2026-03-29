@@ -5,12 +5,10 @@
 package com.Mogena.Repository;
 
 import com.Mogena.Model.LineaProducto;
-import java.util.List;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-public interface LineaProductoDAO {
-    List<LineaProducto> findAll();
-    LineaProducto findById(Long id);
-    int save(LineaProducto linea);
-    int update(LineaProducto linea);
-    int delete(Long id);
+@Repository
+public interface LineaProductoDAO extends JpaRepository<LineaProducto, Long> {
+    // ¡Vacío! Spring Data JPA se encarga de todo.
 }

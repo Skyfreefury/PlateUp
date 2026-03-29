@@ -22,19 +22,22 @@ public class ProductoService {
     }
 
     public Producto obtenerPorId(Long id) {
-        return productoDAO.findById(id);
+        return productoDAO.findById(id).orElse(null);
     }
 
     public boolean guardarProducto(Producto producto) {
-        return productoDAO.save(producto) > 0;
+        productoDAO.save(producto);
+        return true;
     }
 
     public boolean actualizarProducto(Producto producto) {
         if (producto.getId() == null) return false;
-        return productoDAO.update(producto) > 0;
+        productoDAO.save(producto);
+        return true;
     }
 
     public boolean borrarProducto(Long id) {
-        return productoDAO.delete(id) > 0;
+        productoDAO.deleteById(id);
+        return true;
     }
 }

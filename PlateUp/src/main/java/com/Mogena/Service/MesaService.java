@@ -22,19 +22,22 @@ public class MesaService {
     }
 
     public Mesa obtenerPorId(Long id) {
-        return mesaDAO.findById(id);
+        return mesaDAO.findById(id).orElse(null); 
     }
 
     public boolean guardarMesa(Mesa mesa) {
-        return mesaDAO.save(mesa) > 0;
+        mesaDAO.save(mesa);
+        return true;
     }
 
     public boolean actualizarMesa(Mesa mesa) {
         if (mesa.getId() == null) return false;
-        return mesaDAO.update(mesa) > 0;
+        mesaDAO.save(mesa);
+        return true;
     }
 
     public boolean borrarMesa(Long id) {
-        return mesaDAO.delete(id) > 0;
+        mesaDAO.deleteById(id);
+        return true;
     }
 }

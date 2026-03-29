@@ -22,19 +22,22 @@ public class TipoProductoService {
     }
 
     public TipoProducto obtenerPorId(Long id) {
-        return tipoProductoDAO.findById(id);
+        return tipoProductoDAO.findById(id).orElse(null);
     }
 
     public boolean guardarTipoProducto(TipoProducto tipoProducto) {
-        return tipoProductoDAO.save(tipoProducto) > 0;
+        tipoProductoDAO.save(tipoProducto);
+        return true;
     }
 
     public boolean actualizarTipoProducto(TipoProducto tipoProducto) {
         if (tipoProducto.getId() == null) return false;
-        return tipoProductoDAO.update(tipoProducto) > 0;
+        tipoProductoDAO.save(tipoProducto);
+        return true;
     }
 
     public boolean borrarTipoProducto(Long id) {
-        return tipoProductoDAO.delete(id) > 0;
+        tipoProductoDAO.deleteById(id);
+        return true;
     }
 }

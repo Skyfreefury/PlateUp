@@ -5,12 +5,10 @@
 package com.Mogena.Repository;
 
 import com.Mogena.Model.Producto;
-import java.util.List;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-public interface ProductoDAO {
-    List<Producto> findAll();
-    Producto findById(Long id);
-    int save(Producto producto);
-    int update(Producto producto);
-    int delete(Long id);
+@Repository
+public interface ProductoDAO extends JpaRepository<Producto, Long> {
+    // ¡Vacío! Spring Boot hace el SQL automáticamente.
 }

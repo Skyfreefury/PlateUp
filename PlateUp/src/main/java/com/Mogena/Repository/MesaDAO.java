@@ -5,12 +5,10 @@
 package com.Mogena.Repository;
 
 import com.Mogena.Model.Mesa;
-import java.util.List;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-public interface MesaDAO {
-    List<Mesa> findAll();
-    Mesa findById(Long id);
-    int save(Mesa mesa);
-    int update(Mesa mesa);
-    int delete(Long id);
+@Repository
+public interface MesaDAO extends JpaRepository<Mesa, Long> {
+    // Sigue vacía por dentro, ¡pero ahora hereda 20 funciones automáticas de JPA!
 }

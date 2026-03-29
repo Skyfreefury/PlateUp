@@ -22,19 +22,22 @@ public class TipoComandaService {
     }
 
     public TipoComanda obtenerPorId(Long id) {
-        return tipoComandaDAO.findById(id);
+        return tipoComandaDAO.findById(id).orElse(null);
     }
 
     public boolean guardarTipoComanda(TipoComanda tipoComanda) {
-        return tipoComandaDAO.save(tipoComanda) > 0;
+        tipoComandaDAO.save(tipoComanda);
+        return true;
     }
 
     public boolean actualizarTipoComanda(TipoComanda tipoComanda) {
         if (tipoComanda.getId() == null) return false;
-        return tipoComandaDAO.update(tipoComanda) > 0;
+        tipoComandaDAO.save(tipoComanda);
+        return true;
     }
 
     public boolean borrarTipoComanda(Long id) {
-        return tipoComandaDAO.delete(id) > 0;
+        tipoComandaDAO.deleteById(id);
+        return true;
     }
 }

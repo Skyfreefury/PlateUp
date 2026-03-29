@@ -5,12 +5,10 @@
 package com.Mogena.Repository;
 
 import com.Mogena.Model.Comanda;
-import java.util.List;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-public interface ComandaDAO {
-    List<Comanda> findAll();
-    Comanda findById(Long id);
-    int save(Comanda comanda);
-    int update(Comanda comanda);
-    int delete(Long id);
+@Repository
+public interface ComandaDAO extends JpaRepository<Comanda, Long> {
+    // ¡Vacío! Spring Data JPA hace el trabajo duro por ti.
 }

@@ -22,19 +22,22 @@ public class LineaProductoService {
     }
 
     public LineaProducto obtenerPorId(Long id) {
-        return lineaProductoDAO.findById(id);
+        return lineaProductoDAO.findById(id).orElse(null);
     }
 
     public boolean guardarLinea(LineaProducto linea) {
-        return lineaProductoDAO.save(linea) > 0;
+        lineaProductoDAO.save(linea);
+        return true;
     }
 
     public boolean actualizarLinea(LineaProducto linea) {
         if (linea.getId() == null) return false;
-        return lineaProductoDAO.update(linea) > 0;
+        lineaProductoDAO.save(linea);
+        return true;
     }
 
     public boolean borrarLinea(Long id) {
-        return lineaProductoDAO.delete(id) > 0;
+        lineaProductoDAO.deleteById(id);
+        return true;
     }
 }

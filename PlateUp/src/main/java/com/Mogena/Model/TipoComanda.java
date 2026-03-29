@@ -4,8 +4,18 @@
  */
 package com.Mogena.Model;
 
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+
+@Entity
+@Table(name = "tipos_comanda")
 public class TipoComanda {
+    
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @NotBlank(message = "El nombre del tipo de comanda no puede estar vacío")
     private String nombre;
 
     public TipoComanda() {}

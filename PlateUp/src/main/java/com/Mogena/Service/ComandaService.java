@@ -22,19 +22,22 @@ public class ComandaService {
     }
 
     public Comanda obtenerPorId(Long id) {
-        return comandaDAO.findById(id);
+        return comandaDAO.findById(id).orElse(null);
     }
 
     public boolean guardarComanda(Comanda comanda) {
-        return comandaDAO.save(comanda) > 0;
+        comandaDAO.save(comanda);
+        return true;
     }
 
     public boolean actualizarComanda(Comanda comanda) {
         if (comanda.getId() == null) return false;
-        return comandaDAO.update(comanda) > 0;
+        comandaDAO.save(comanda);
+        return true;
     }
 
     public boolean borrarComanda(Long id) {
-        return comandaDAO.delete(id) > 0;
+        comandaDAO.deleteById(id);
+        return true;
     }
 }

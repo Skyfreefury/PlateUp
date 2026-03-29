@@ -5,12 +5,9 @@
 package com.Mogena.Repository;
 
 import com.Mogena.Model.TipoProducto;
-import java.util.List;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-public interface TipoProductoDAO {
-    List<TipoProducto> findAll();
-    TipoProducto findById(Long id);
-    int save(TipoProducto tipoProducto);
-    int update(TipoProducto tipoProducto);
-    int delete(Long id);
+@Repository
+public interface TipoProductoDAO extends JpaRepository<TipoProducto, Long> {
 }

@@ -5,12 +5,9 @@
 package com.Mogena.Repository;
 
 import com.Mogena.Model.TipoComanda;
-import java.util.List;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-public interface TipoComandaDAO {
-    List<TipoComanda> findAll();
-    TipoComanda findById(Long id);
-    int save(TipoComanda tipoComanda);
-    int update(TipoComanda tipoComanda);
-    int delete(Long id);
+@Repository
+public interface TipoComandaDAO extends JpaRepository<TipoComanda, Long> {
 }

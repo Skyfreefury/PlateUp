@@ -22,23 +22,25 @@ public class ClienteService {
     }
 
     public Cliente obtenerPorId(Long id) {
-        return clienteDAO.findById(id);
+        // findById en JPA devuelve un Optional
+        return clienteDAO.findById(id).orElse(null);
     }
 
     public boolean guardarCliente(Cliente cliente) {
-        // Ejemplo de lógica de negocio: no guardar si no hay nombre
-        if (cliente.getNombre() == null || cliente.getNombre().trim().isEmpty()) {
-            return false;
-        }
-        return clienteDAO.save(cliente) > 0;
+        // En JPA save() hace el insert
+        clienteDAO.save(cliente);
+        return true;
     }
 
     public boolean actualizarCliente(Cliente cliente) {
         if (cliente.getId() == null) return false;
-        return clienteDAO.update(cliente) > 0;
+        // En JPA save() también sirve para hacer el update si el ID ya existe
+        clienteDAO.save(cliente);
+        return true;
     }
 
     public boolean borrarCliente(Long id) {
-        return clienteDAO.delete(id) > 0;
+        clienteDAO.deleteById(id);
+        return true;
     }
 }

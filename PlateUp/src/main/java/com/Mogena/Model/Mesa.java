@@ -4,10 +4,26 @@
  */
 package com.Mogena.Model;
 
+import jakarta.persistence.*;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
+
+@Entity
+@Table(name = "mesas")
 public class Mesa {
+    
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @NotNull(message = "El número no puede estar vacío")
+    @Min(value = 1, message = "El número de mesa debe ser 1 o mayor")
     private Integer numero;
+
+    @NotNull(message = "La capacidad no puede estar vacía")
+    @Min(value = 1, message = "La capacidad mínima es 1 persona")
     private Integer capacidad;
+
     private String estado;
 
     public Mesa() {}
@@ -19,6 +35,7 @@ public class Mesa {
         this.estado = estado;
     }
 
+    // Getters y Setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
     public Integer getNumero() { return numero; }

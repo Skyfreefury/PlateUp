@@ -4,14 +4,33 @@
  */
 package com.Mogena.Model;
 
+import jakarta.persistence.*;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
+@Entity
+@Table(name = "pedidos")
 public class Pedido {
+    
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Long clienteId; // Clave foránea a Cliente
-    private Long mesaId;    // Clave foránea a Mesa
+
+    @NotNull(message = "El ID del cliente es obligatorio")
+    @Column(name = "cliente_id") // Asegura que mapea bien con la base de datos
+    private Long clienteId; 
+
+    @NotNull(message = "El ID de la mesa es obligatorio")
+    @Column(name = "mesa_id")
+    private Long mesaId;    
+
+    @NotNull(message = "La fecha y hora son obligatorias")
     private LocalDateTime fechaHora;
+
+    @Min(value = 0, message = "El total no puede ser negativo")
     private Double total;
+
     private String estado;
 
     public Pedido() {}
@@ -25,6 +44,7 @@ public class Pedido {
         this.estado = estado;
     }
 
+    // Getters y Setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
     public Long getClienteId() { return clienteId; }

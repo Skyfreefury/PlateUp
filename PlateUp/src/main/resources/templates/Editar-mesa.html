@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Mesa | PlateUp</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+
+    <header class="bg-dark text-white py-3 shadow-sm mb-4">
+        <div class="container">
+            <h1 class="h3 mb-0">🍽️ PlateUp - Editar Mesa</h1>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="card shadow-sm mx-auto" style="max-width: 500px;">
+            <div class="card-header bg-warning">
+                <h3 class="h5 mb-0">✏️ Modificar datos de la mesa</h3>
+            </div>
+            <div class="card-body">
+                <form th:action="@{/mesas/editar/{id}(id=${mesa.id})}" method="post">
+                    
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Número de mesa:</label>
+                        <input type="number" name="numero" class="form-control" th:value="${mesa.numero}" required>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Capacidad (Personas):</label>
+                        <input type="number" name="capacidad" class="form-control" th:value="${mesa.capacidad}" required>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Estado:</label>
+                        <select name="estado" class="form-select">
+                            <option value="LIBRE" th:selected="${mesa.estado == 'LIBRE'}">LIBRE</option>
+                            <option value="OCUPADA" th:selected="${mesa.estado == 'OCUPADA'}">OCUPADA</option>
+                            <option value="SUCIA" th:selected="${mesa.estado == 'SUCIA'}">SUCIA</option>
+                        </select>
+                    </div>
+                    
+                    <div class="d-flex justify-content-between mt-4">
+                        <a th:href="@{/mesas}" class="btn btn-secondary">Cancelar</a>
+                        <button type="submit" class="btn btn-success">Guardar Cambios</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+
+</body>
+</html>

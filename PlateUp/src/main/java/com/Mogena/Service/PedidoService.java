@@ -22,19 +22,22 @@ public class PedidoService {
     }
 
     public Pedido obtenerPorId(Long id) {
-        return pedidoDAO.findById(id);
+        return pedidoDAO.findById(id).orElse(null);
     }
 
     public boolean guardarPedido(Pedido pedido) {
-        return pedidoDAO.save(pedido) > 0;
+        pedidoDAO.save(pedido);
+        return true;
     }
 
     public boolean actualizarPedido(Pedido pedido) {
         if (pedido.getId() == null) return false;
-        return pedidoDAO.update(pedido) > 0;
+        pedidoDAO.save(pedido);
+        return true;
     }
 
     public boolean borrarPedido(Long id) {
-        return pedidoDAO.delete(id) > 0;
+        pedidoDAO.deleteById(id);
+        return true;
     }
 }

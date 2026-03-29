@@ -5,12 +5,10 @@
 package com.Mogena.Repository;
 
 import com.Mogena.Model.Pedido;
-import java.util.List;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-public interface PedidoDAO {
-    List<Pedido> findAll();
-    Pedido findById(Long id);
-    int save(Pedido pedido);
-    int update(Pedido pedido);
-    int delete(Long id);
+@Repository
+public interface PedidoDAO extends JpaRepository<Pedido, Long> {
+    // ¡Vacío! Spring Data JPA domina el SQL por ti.
 }

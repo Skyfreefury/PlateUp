@@ -4,10 +4,26 @@
  */
 package com.Mogena.Model;
 
+import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+
+@Entity
+@Table(name = "clientes")
 public class Cliente {
+    
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @NotBlank(message = "El nombre no puede estar vacío")
     private String nombre;
+
+    @NotBlank(message = "El teléfono no puede estar vacío")
     private String telefono;
+
+    @NotBlank(message = "El email no puede estar vacío")
+    @Email(message = "Debe tener un formato de correo electrónico válido")
     private String email;
 
     public Cliente() {}
@@ -19,6 +35,7 @@ public class Cliente {
         this.email = email;
     }
 
+    // Getters y Setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
     public String getNombre() { return nombre; }

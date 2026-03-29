@@ -4,8 +4,18 @@
  */
 package com.Mogena.Model;
 
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+
+@Entity
+@Table(name = "tipos_producto")
 public class TipoProducto {
+    
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @NotBlank(message = "El nombre del tipo de producto no puede estar vacío")
     private String nombre;
 
     public TipoProducto() {}
