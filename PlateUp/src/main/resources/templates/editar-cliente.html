@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Editar Cliente | PlateUp</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+    <div class="container mt-5">
+        <div class="card shadow mx-auto" style="max-width: 500px;">
+            <div class="card-header bg-warning text-dark"><h3>✏️ Editar Cliente</h3></div>
+            <div class="card-body">
+                <form th:action="@{/clientes/guardar}" th:object="${cliente}" method="post">
+                    <input type="hidden" th:field="*{id}">
+                    <div class="mb-3">
+                        <label class="form-label">Nombre:</label>
+                        <input type="text" th:field="*{nombre}" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Teléfono:</label>
+                        <input type="text" th:field="*{telefono}" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Email:</label>
+                        <input type="email" th:field="*{email}" class="form-control" required>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <a th:href="@{/clientes}" class="btn btn-secondary">Cancelar</a>
+                        <button type="submit" class="btn btn-success">Guardar Cambios</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

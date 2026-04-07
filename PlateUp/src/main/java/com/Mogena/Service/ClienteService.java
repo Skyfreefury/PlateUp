@@ -8,7 +8,6 @@ import com.Mogena.Model.Cliente;
 import com.Mogena.Repository.ClienteDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 
 @Service
@@ -22,19 +21,16 @@ public class ClienteService {
     }
 
     public Cliente obtenerPorId(Long id) {
-        // findById en JPA devuelve un Optional
         return clienteDAO.findById(id).orElse(null);
     }
 
     public boolean guardarCliente(Cliente cliente) {
-        // En JPA save() hace el insert
         clienteDAO.save(cliente);
         return true;
     }
 
     public boolean actualizarCliente(Cliente cliente) {
         if (cliente.getId() == null) return false;
-        // En JPA save() también sirve para hacer el update si el ID ya existe
         clienteDAO.save(cliente);
         return true;
     }

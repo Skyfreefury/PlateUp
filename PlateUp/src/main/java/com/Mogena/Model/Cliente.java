@@ -13,16 +13,14 @@ import jakarta.validation.constraints.NotBlank;
 public class Cliente {
     
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // Recuperamos el piloto automático
     private Long id;
 
     @NotBlank(message = "El nombre no puede estar vacío")
     private String nombre;
 
-    @NotBlank(message = "El teléfono no puede estar vacío")
-    private String telefono;
+    private String telefono; // Lo dejo sin NotBlank por si acaso, según tu SQL puede ser null
 
-    @NotBlank(message = "El email no puede estar vacío")
     @Email(message = "Debe tener un formato de correo electrónico válido")
     private String email;
 

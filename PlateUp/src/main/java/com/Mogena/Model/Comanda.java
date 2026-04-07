@@ -4,45 +4,48 @@
  */
 package com.Mogena.Model;
 
-import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import java.time.LocalDateTime;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "comandas")
 public class Comanda {
-    
+
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotNull(message = "El ID del pedido es obligatorio")
-    @Column(name = "pedido_id") // Para que coincida bien en la base de datos si usa guion bajo
-    private Long pedidoId; 
+    @Column(name = "pedido_id")
+    private Long pedidoId; // Esto es el número de la Cuenta/Mesa
 
-    @NotNull(message = "La fecha y hora son obligatorias")
-    private LocalDateTime fechaHora;
-
-    @NotBlank(message = "El estado no puede estar vacío")
     private String estado;
+    private String comentarios;
+    
+    // ✨ NUEVOS CAMPOS PARA LA COMIDA ✨
+    @Column(name = "nombre_plato")
+    private String nombrePlato; 
+    
+    private Integer cantidad;
 
     public Comanda() {}
 
-    public Comanda(Long id, Long pedidoId, LocalDateTime fechaHora, String estado) {
-        this.id = id;
-        this.pedidoId = pedidoId;
-        this.fechaHora = fechaHora;
-        this.estado = estado;
-    }
-
-    // Getters y Setters
+    // --- GETTERS Y SETTERS ---
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
+
     public Long getPedidoId() { return pedidoId; }
     public void setPedidoId(Long pedidoId) { this.pedidoId = pedidoId; }
-    public LocalDateTime getFechaHora() { return fechaHora; }
-    public void setFechaHora(LocalDateTime fechaHora) { this.fechaHora = fechaHora; }
+
     public String getEstado() { return estado; }
     public void setEstado(String estado) { this.estado = estado; }
+
+    public String getComentarios() { return comentarios; }
+    public void setComentarios(String comentarios) { this.comentarios = comentarios; }
+
+    public String getNombrePlato() { return nombrePlato; }
+    public void setNombrePlato(String nombrePlato) { this.nombrePlato = nombrePlato; }
+
+    public Integer getCantidad() { return cantidad; }
+    public void setCantidad(Integer cantidad) { this.cantidad = cantidad; }
 }

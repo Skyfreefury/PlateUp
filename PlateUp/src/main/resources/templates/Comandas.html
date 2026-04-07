@@ -1,15 +1,121 @@
 <!DOCTYPE html>
-<!--
-Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
-Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this template
--->
-<html>
-    <head>
-        <title>TODO supply a title</title>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    </head>
-    <body>
-        <div>TODO write content</div>
-    </body>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Comandas | PlateUp</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm mb-4">
+        <div class="container">
+            <a class="navbar-brand fw-bold" th:href="@{/}">🍽️ PlateUp</a>
+            <div class="collapse navbar-collapse">
+                <ul class="navbar-nav ms-auto gap-2">
+                    <li class="nav-item"><a class="nav-link" th:href="@{/}">Inicio</a></li>
+                    <li class="nav-item"><a class="nav-link" th:href="@{/mesas}">Mesas</a></li>
+                    <li class="nav-item"><a class="nav-link" th:href="@{/pedidos}">Pedidos</a></li>
+                    <li class="nav-item"><a class="nav-link active fw-bold" th:href="@{/comandas}">Comandas</a></li>
+                    <li class="nav-item"><a class="nav-link" th:href="@{/productos}">Carta</a></li>
+                    <li class="nav-item"><a class="nav-link" th:href="@{/clientes}">Clientes</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container">
+        <div class="row">
+            <div class="col-md-4 mb-4">
+                <div class="card shadow-sm border-0">
+                    <div class="card-header bg-primary text-white py-3">
+                        <h4 class="h5 mb-0 fw-bold">➕ Enviar a Cocina</h4>
+                    </div>
+                    <div class="card-body">
+                        <form th:action="@{/comandas/guardar}" method="post" th:object="${comanda}">
+                            
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">ID del Pedido (Cuenta):</label>
+                                <input type="number" th:field="*{pedidoId}" class="form-control" required placeholder="Nº de cuenta de la mesa">
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">¿Qué han pedido?</label>
+                                <select th:field="*{nombrePlato}" class="form-select" required>
+                                    <option value="" disabled selected>-- Selecciona un plato --</option>
+                                    <option th:each="p : ${productos}" th:value="${p.nombre}" th:text="${p.nombre}"></option>
+                                </select>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">Cantidad:</label>
+                                <input type="number" th:field="*{cantidad}" class="form-control" value="1" min="1" required>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">Notas y Alergias:</label>
+                                <textarea th:field="*{comentarios}" class="form-control" rows="2" placeholder="Ej: Sin cebolla, extra de queso..."></textarea>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">Estado:</label>
+                                <select th:field="*{estado}" class="form-select" required>
+                                    <option value="PENDIENTE">Pendiente 📝</option>
+                                    <option value="EN PREPARACION">En Preparación 🍳</option>
+                                    <option value="LISTO">Listo 🔔</option>
+                                    <option value="ENTREGADO">Entregado ✅</option>
+                                </select>
+                            </div>
+
+                            <button type="submit" class="btn btn-success w-100 fw-bold">Marchar a Cocina</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-8">
+                <div class="card shadow-sm border-0">
+                    <div class="card-header bg-white py-3">
+                        <h4 class="h5 mb-0 fw-bold">📋 Comandas en Curso</h4>
+                    </div>
+                    <div class="card-body p-0">
+                        <table class="table table-hover table-striped mb-0 text-center align-middle">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th>Cuenta</th>
+                                    <th>Comida</th>
+                                    <th>Notas</th>
+                                    <th>Estado</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="c : ${comandas}">
+                                    <td class="fw-bold text-primary" th:text="'Pedido ' + ${c.pedidoId}"></td>
+                                    
+                                    <td class="text-start fw-bold">
+                                        <span class="text-danger" th:text="${c.cantidad} + 'x '"></span>
+                                        <span th:text="${c.nombrePlato}"></span>
+                                    </td>
+                                    
+                                    <td th:text="${c.comentarios}" class="text-muted fst-italic"></td>
+                                    <td>
+                                        <span class="badge" 
+                                              th:classappend="${c.estado == 'PENDIENTE' ? 'bg-danger' : 
+                                                            (c.estado == 'EN PREPARACION' ? 'bg-warning text-dark' : 
+                                                            (c.estado == 'LISTO' ? 'bg-info text-dark' : 'bg-success'))}"
+                                              th:text="${c.estado}"></span>
+                                    </td>
+                                    <td>
+                                        <a th:href="@{/comandas/editar/{id}(id=${c.id})}" class="btn btn-warning btn-sm">✏️</a>
+                                        <a th:href="@{/comandas/borrar/{id}(id=${c.id})}" class="btn btn-danger btn-sm">🗑️</a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</body>
 </html>

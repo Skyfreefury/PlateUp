@@ -12,14 +12,14 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/mesas")
+@RequestMapping("/api/mesas") // O la ruta que tuvieras puesta aquí antes
 public class MesaController {
 
     @Autowired
     private MesaService mesaService;
 
     @GetMapping
-    public List<Mesa> obtenerTodas() {
+    public List<Mesa> listar() {
         return mesaService.obtenerTodas();
     }
 
@@ -29,20 +29,21 @@ public class MesaController {
     }
 
     @PostMapping
-    public String guardar(@RequestBody Mesa mesa) {
-        boolean exito = mesaService.guardarMesa(mesa);
-        return exito ? "Mesa guardada correctamente" : "Error al guardar la mesa";
+    public boolean crear(@RequestBody Mesa mesa) {
+        // Ahora guardarMesa devuelve un boolean si tiene éxito
+        return mesaService.guardarMesa(mesa);
     }
 
-    @PutMapping
-    public String actualizar(@RequestBody Mesa mesa) {
-        boolean exito = mesaService.actualizarMesa(mesa);
-        return exito ? "Mesa actualizada correctamente" : "Error al actualizar la mesa";
+    @PutMapping("/{id}")
+    public boolean actualizar(@PathVariable Long id, @RequestBody Mesa mesa) {
+        mesa.setId(id);
+        // Usamos guardarMesa porque ahora sirve tanto para crear como para actualizar
+        return mesaService.guardarMesa(mesa);
     }
 
     @DeleteMapping("/{id}")
-    public String borrar(@PathVariable Long id) {
-        boolean exito = mesaService.borrarMesa(id);
-        return exito ? "Mesa borrada correctamente" : "Error al borrar la mesa";
+    public void borrar(@PathVariable Long id) {
+        // Como borrarMesa es 'void', ya no ponemos el 'return' delante
+        mesaService.borrarMesa(id);
     }
 }

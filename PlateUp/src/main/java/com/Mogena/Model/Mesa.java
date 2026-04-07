@@ -4,44 +4,75 @@
  */
 package com.Mogena.Model;
 
-import jakarta.persistence.*;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotNull;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "mesas")
 public class Mesa {
-    
+
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    // 🚨 HEMOS QUITADO @GeneratedValue para que funcione tu sistema de reciclaje manual
     private Long id;
 
-    @NotNull(message = "El número no puede estar vacío")
-    @Min(value = 1, message = "El número de mesa debe ser 1 o mayor")
-    private Integer numero;
+    private Integer numero;    // El número físico de la mesa (Mesa 1, Mesa 2...)
+    private Integer capacidad; // Cuánta gente cabe
+    private String estado;     // LIBRE, OCUPADA, RESERVADA
+    private String ubicacion;  // Interior, Terraza...
 
-    @NotNull(message = "La capacidad no puede estar vacía")
-    @Min(value = 1, message = "La capacidad mínima es 1 persona")
-    private Integer capacidad;
+    // Constructor vacío (Obligatorio para Hibernate)
+    public Mesa() {
+    }
 
-    private String estado;
-
-    public Mesa() {}
-
-    public Mesa(Long id, Integer numero, Integer capacidad, String estado) {
+    // Constructor con campos (Opcional, útil para pruebas)
+    public Mesa(Long id, Integer numero, Integer capacidad, String estado, String ubicacion) {
         this.id = id;
         this.numero = numero;
         this.capacidad = capacidad;
         this.estado = estado;
+        this.ubicacion = ubicacion;
     }
 
-    // Getters y Setters
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
-    public Integer getNumero() { return numero; }
-    public void setNumero(Integer numero) { this.numero = numero; }
-    public Integer getCapacidad() { return capacidad; }
-    public void setCapacidad(Integer capacidad) { this.capacidad = capacidad; }
-    public String getEstado() { return estado; }
-    public void setEstado(String estado) { this.estado = estado; }
+    // --- GETTERS Y SETTERS (Fundamentales para que el Formulario funcione) ---
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Integer getNumero() {
+        return numero;
+    }
+
+    public void setNumero(Integer numero) {
+        this.numero = numero;
+    }
+
+    public Integer getCapacidad() {
+        return capacidad;
+    }
+
+    public void setCapacidad(Integer capacidad) {
+        this.capacidad = capacidad;
+    }
+
+    public String getEstado() {
+        return estado;
+    }
+
+    public void setEstado(String estado) {
+        this.estado = estado;
+    }
+
+    public String getUbicacion() {
+        return ubicacion;
+    }
+
+    public void setUbicacion(String ubicacion) {
+        this.ubicacion = ubicacion;
+    }
 }

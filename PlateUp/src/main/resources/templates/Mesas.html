@@ -1,112 +1,108 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Panel de administración y gestión de mesas para el restaurante PlateUp.">
-    <title>Gestión de Mesas | PlateUp</title>
-    
+    <title>Mesas - PlateUp</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { background-color: #f8f9fa; }
+        .card-header-blue { background-color: #0d6efd; color: white; font-weight: bold; }
+    </style>
 </head>
-<body class="d-flex flex-column min-vh-100 bg-light">
+<body>
 
-    <header class="bg-dark text-white py-3 shadow-sm">
-        <div class="container">
-            <h1 class="h3 mb-0">🍽️ PlateUp - Administración</h1>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid px-4">
+            <a class="navbar-brand fw-bold" href="#"><i class="fa-solid fa-plate-wheat me-2"></i>PlateUp</a>
+            <div class="collapse navbar-collapse justify-content-end">
+                <ul class="navbar-nav gap-3">
+                    <li class="nav-item"><a class="nav-link" href="/"><i class="fa-solid fa-house"></i> Inicio</a></li>
+                    <li class="nav-item"><a class="nav-link active fw-bold text-white" href="/mesas"><i class="fa-solid fa-chair"></i> Mesas</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/pedidos"><i class="fa-solid fa-receipt"></i> Pedidos</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/carta"><i class="fa-solid fa-burger"></i> Carta</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/clientes"><i class="fa-solid fa-users"></i> Clientes</a></li>
+                </ul>
+            </div>
         </div>
-    </header>
+    </nav>
 
-    <main class="container my-5 flex-grow-1">
-        
-        <section>
-            <div th:if="${param.exito}" class="alert alert-success">✅ ¡Mesa guardada correctamente!</div>
-            <div th:if="${param.exitoBorrado}" class="alert alert-success">✅ ¡Mesa borrada con éxito!</div>
-            <div th:if="${param.error != null and param.error[0] == 'duplicada'}" class="alert alert-danger">❌ Error: Ya existe una mesa con ese número.</div>
-            <div th:if="${param.error != null and param.error[0] == 'true'}" class="alert alert-danger">❌ Error al procesar la operación.</div>
-        </section>
-
-        <h2 class="mb-4">Gestión de Mesas</h2>
-
-        <section class="row align-items-start">
+    <div class="container-fluid px-4 mt-4">
+        <div class="row">
             
-            <article class="col-lg-4 mb-4">
-                <div class="card shadow-sm">
-                    <div class="card-header bg-primary text-white">
-                        <h3 class="h5 mb-0">➕ Añadir Nueva Mesa</h3>
+            <div class="col-md-4 mb-4">
+                <div class="card shadow-sm border-0">
+                    <div class="card-header card-header-blue py-3">
+                        <i class="fa-solid fa-plus me-2"></i> Nueva Mesa
                     </div>
-                    <div class="card-body">
-                        <form th:action="@{/mesas/guardar}" method="post">
+                    <div class="card-body p-4">
+                        <form th:action="@{/mesas/guardar}" method="POST" th:object="${mesa}">
                             <div class="mb-3">
-                                <label class="form-label fw-bold">Número de mesa:</label>
-                                <input type="number" name="numero" class="form-control" required>
+                                <label class="form-label fw-bold">Capacidad (Personas):</label>
+                                <input type="number" class="form-control" name="capacidad" value="2" required>
                             </div>
                             <div class="mb-3">
-                                <label class="form-label fw-bold">Capacidad:</label>
-                                <input type="number" name="capacidad" class="form-control" required>
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-label fw-bold">Estado:</label>
-                                <select name="estado" class="form-select">
-                                    <option value="LIBRE">LIBRE</option>
-                                    <option value="OCUPADA">OCUPADA</option>
-                                    <option value="SUCIA">SUCIA</option>
+                                <label class="form-label fw-bold">Ubicación:</label>
+                                <select class="form-select" name="ubicacion">
+                                    <option value="Interior">Interior 🏠</option>
+                                    <option value="Terraza">Terraza ☀️</option>
                                 </select>
                             </div>
-                            <button type="submit" class="btn btn-primary w-100">Guardar Mesa</button>
+                            <div class="mb-4">
+                                <label class="form-label fw-bold">Estado inicial:</label>
+                                <select class="form-select" name="estado">
+                                    <option value="LIBRE">Libre 🟢</option>
+                                    <option value="OCUPADA">Ocupada 🔴</option>
+                                </select>
+                            </div>
+                            <button type="submit" class="btn btn-success w-100 py-2 fw-bold">Añadir Mesa</button>
                         </form>
                     </div>
                 </div>
-            </article>
+            </div>
 
-            <article class="col-lg-8">
-                <div class="card shadow-sm">
-                    <div class="card-body">
-                        <div class="table-responsive">
-                            <table class="table table-striped table-hover align-middle">
-                                <thead class="table-dark">
-                                    <tr>
-                                        <th>Nº Mesa</th>
-                                        <th>Capacidad</th>
-                                        <th>Estado</th>
-                                        <th>Acciones</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr th:each="mesa : ${mesas}">
-                                        <td th:text="${mesa.numero}" class="fw-bold">1</td>
-                                        <td th:text="${mesa.capacidad}">4</td>
-                                        <td>
-                                            <span class="badge" 
-                                                  th:classappend="${mesa.estado == 'LIBRE' ? 'bg-success' : (mesa.estado == 'OCUPADA' ? 'bg-danger' : 'bg-warning text-dark')}"
-                                                  th:text="${mesa.estado}">
-                                            </span>
-                                        </td>
-                                        <td>
-                                            <a th:href="@{/mesas/editar/{id}(id=${mesa.id})}" 
-                                               class="btn btn-sm btn-warning me-1">
-                                               ✏️ Editar
-                                            </a>
-                                            <a th:href="@{/mesas/borrar/{id}(id=${mesa.id})}" 
-                                               class="btn btn-sm btn-danger"
-                                               onclick="return confirm('⚠️ ¿Estás totalmente seguro de borrar esta mesa?');">
-                                               🗑️ Borrar
-                                            </a>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
+            <div class="col-md-8">
+                <div class="card shadow-sm border-0">
+                    <div class="card-header bg-white py-3 fw-bold border-bottom">
+                        <i class="fa-regular fa-clipboard me-2"></i> Distribución del Local
+                    </div>
+                    <div class="card-body p-0">
+                        <table class="table table-hover mb-0 text-center align-middle">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th>Nº Mesa</th>
+                                    <th>Capacidad</th>
+                                    <th>Ubicación</th>
+                                    <th>Estado</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="m : ${listaMesas}">
+                                    <td class="fw-bold" th:text="'Mesa ' + ${m.numero}">Mesa 1</td>
+                                    <td th:text="${m.capacidad} + ' pax'">4 pax</td>
+                                    <td th:text="${m.ubicacion}">Interior</td>
+                                    <td>
+                                        <span class="badge rounded-pill px-3" 
+                                              th:classappend="${m.estado == 'LIBRE' ? 'bg-success' : 'bg-danger'}"
+                                              th:text="${m.estado}">Libre</span>
+                                    </td>
+                                    <td>
+                                        <a th:href="@{/mesas/editar/{id}(id=${m.id})}" class="btn btn-sm btn-outline-primary me-2">
+                                            <i class="fa-solid fa-pen"></i>
+                                        </a>
+                                        <a th:href="@{/mesas/borrar/{id}(id=${m.id})}" class="btn btn-sm btn-outline-danger">
+                                            <i class="fa-solid fa-trash"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
-            </article>
-
-        </section>
-    </main>
-
-    <footer class="bg-dark text-white text-center py-3 mt-auto">
-        <p class="mb-0">&copy; 2026 PlateUp - Proyecto DAW / DAM</p>
-    </footer>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+            </div>
+        </div>
+    </div>
 </body>
 </html>

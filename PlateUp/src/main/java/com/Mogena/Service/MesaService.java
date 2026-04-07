@@ -17,27 +17,39 @@ public class MesaService {
     @Autowired
     private MesaDAO mesaDAO;
 
+    // Límite máximo de mesas físicas en el restaurante
+    private final int LIMITE_MESAS = 20;
+
     public List<Mesa> obtenerTodas() {
         return mesaDAO.findAll();
     }
 
     public Mesa obtenerPorId(Long id) {
-        return mesaDAO.findById(id).orElse(null); 
+        return mesaDAO.findById(id).orElse(null);
     }
 
     public boolean guardarMesa(Mesa mesa) {
-        mesaDAO.save(mesa);
+    if (mesa.getId() != null) {
+        mesaDAO.saveAndFlush(mesa); // Usamos saveAndFlush para sincronizar ya
         return true;
     }
 
-    public boolean actualizarMesa(Mesa mesa) {
-        if (mesa.getId() == null) return false;
-        mesaDAO.save(mesa);
-        return true;
+    List<Long> idsOcupados = mesaDAO.findAll().stream().map(Mesa::getId).toList();
+    
+    for (long i = 1; i <= LIMITE_MESAS; i++) {
+        if (!idsOcupados.contains(i)) {
+            mesa.setId(i);
+            mesa.setNumero((int) i);
+            
+            // 🚨 GUARDADO FORZADO Y LIMPIO
+            mesaDAO.saveAndFlush(mesa); 
+            return true; 
+        }
     }
+    return false; 
+}
 
-    public boolean borrarMesa(Long id) {
+    public void borrarMesa(Long id) {
         mesaDAO.deleteById(id);
-        return true;
     }
 }

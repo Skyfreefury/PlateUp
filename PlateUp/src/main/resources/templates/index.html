@@ -1,15 +1,90 @@
 <!DOCTYPE html>
-<!--
-Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
-Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this template
--->
-<html>
-    <head>
-        <title>TODO supply a title</title>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    </head>
-    <body>
-        <div>TODO write content</div>
-    </body>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel de Control | PlateUp</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        /* Efecto de elevación al pasar el ratón */
+        .card-menu { 
+            transition: transform 0.3s ease, box-shadow 0.3s ease; 
+            cursor: pointer; 
+            text-decoration: none; 
+            border-radius: 15px;
+        }
+        .card-menu:hover { 
+            transform: translateY(-8px); 
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important;
+        }
+    </style>
+</head>
+<body class="bg-light">
+
+    <div class="container py-5">
+        <div class="text-center mb-5">
+            <h1 class="display-4 fw-bold text-dark">🍽️ PlateUp Admin</h1>
+            <p class="lead text-muted">Gestión integral de tu restaurante</p>
+        </div>
+
+        <div class="row g-4 justify-content-center mb-4">
+            
+            <div class="col-md-4">
+                <a th:href="@{/mesas}" class="card h-100 shadow-sm border-0 card-menu text-center">
+                    <div class="card-body py-4">
+                        <div class="display-3 mb-3">🪑</div>
+                        <h2 class="h4 text-primary fw-bold">Mesas</h2>
+                        <p class="text-muted small mb-0">Gestiona el estado y la ubicación.</p>
+                    </div>
+                </a>
+            </div>
+
+            <div class="col-md-4">
+                <a th:href="@{/productos}" class="card h-100 shadow-sm border-0 card-menu text-center">
+                    <div class="card-body py-4">
+                        <div class="display-3 mb-3">🍔</div>
+                        <h2 class="h4 text-success fw-bold">La Carta</h2>
+                        <p class="text-muted small mb-0">Añade platos, precios y categorías.</p>
+                    </div>
+                </a>
+            </div>
+
+            <div class="col-md-4">
+                <a th:href="@{/clientes}" class="card h-100 shadow-sm border-0 card-menu text-center">
+                    <div class="card-body py-4">
+                        <div class="display-3 mb-3">👥</div>
+                        <h2 class="h4 text-info fw-bold">Clientes</h2>
+                        <p class="text-muted small mb-0">Listado de clientes y fidelización.</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+
+        <div class="row g-4 justify-content-center">
+            
+            <div class="col-md-4">
+                <a th:href="@{/pedidos}" class="card h-100 shadow border-0 card-menu text-center" style="background-color: #f8f9fa;">
+                    <div class="card-body py-4">
+                        <div class="display-3 mb-3">🧾</div>
+                        <h2 class="h4 text-dark fw-bold">Pedidos (Caja)</h2>
+                        <p class="text-muted small mb-0">Abre cuentas para las mesas y cobra.</p>
+                    </div>
+                </a>
+            </div>
+
+            <div class="col-md-4">
+                <a th:href="@{/comandas}" class="card h-100 shadow border-0 card-menu text-center" style="background-color: #fff3cd;">
+                    <div class="card-body py-4">
+                        <div class="display-3 mb-3">🍳</div>
+                        <h2 class="h4 text-warning fw-bold" style="filter: brightness(0.8);">Comandas</h2>
+                        <p class="text-muted small mb-0">Manda platos a cocina y controla el estado.</p>
+                    </div>
+                </a>
+            </div>
+
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
 </html>

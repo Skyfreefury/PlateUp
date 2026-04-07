@@ -1,15 +1,141 @@
 <!DOCTYPE html>
-<!--
-Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
-Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this template
--->
-<html>
-    <head>
-        <title>TODO supply a title</title>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    </head>
-    <body>
-        <div>TODO write content</div>
-    </body>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Pedidos | PlateUp</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm mb-4">
+        <div class="container">
+            <a class="navbar-brand fw-bold" th:href="@{/}">🍽️ PlateUp</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" th:href="@{/}">🏠 Inicio</a></li>
+                    <li class="nav-item"><a class="nav-link" th:href="@{/mesas}">🪑 Mesas</a></li>
+                    <li class="nav-item"><a class="nav-link" th:href="@{/pedidos}">🧾 Pedidos</a></li>
+                    <li class="nav-item"><a class="nav-link" th:href="@{/comandas}">🍳 Comandas</a></li>
+                    <li class="nav-item"><a class="nav-link" th:href="@{/productos}">🍔 Carta</a></li>
+                    <li class="nav-item"><a class="nav-link" th:href="@{/clientes}">👥 Clientes</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container">
+        
+        <div th:if="${param.exito}" class="alert alert-success alert-dismissible fade show shadow-sm">
+            ✅ Pedido guardado correctamente.
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+        <div th:if="${param.borrado}" class="alert alert-danger alert-dismissible fade show shadow-sm">
+            🗑️ Pedido eliminado.
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+        <div th:if="${param.error != null and param.error[0] == 'mesa_ocupada'}" class="alert alert-warning alert-dismissible fade show shadow-sm fw-bold">
+            ⚠️ ¡Esa mesa ya tiene un pedido abierto! Por favor, elige otra mesa o cierra primero el pedido actual.
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+
+        <div class="row">
+            <div class="col-md-4 mb-4">
+                <div class="card shadow-sm border-0">
+                    <div class="card-header bg-primary text-white">
+                        <h4 class="h5 mb-0">➕ Abrir Nuevo Pedido</h4>
+                    </div>
+                    <div class="card-body">
+                        <form th:action="@{/pedidos/guardar}" method="post">
+                            
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">Seleccionar Mesa:</label>
+                                <select name="mesaId" class="form-select" required>
+                                    <option value="" disabled selected>Elige una mesa...</option>
+                                    <option th:each="mesa : ${mesas}" 
+                                            th:value="${mesa.id}" 
+                                            th:text="'Mesa ' + ${mesa.id}">
+                                    </option>
+                                </select>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">Cliente (Opcional):</label>
+                                <select name="clienteId" class="form-select">
+                                    <option value="">-- Cliente de paso (Ninguno) --</option>
+                                    <option th:each="cliente : ${clientes}" 
+                                            th:value="${cliente.id}" 
+                                            th:text="${cliente.nombre}">
+                                    </option>
+                                </select>
+                            </div>
+                            
+                            <div class="mb-4">
+                                <label class="form-label fw-bold">Estado inicial:</label>
+                                <select name="estado" class="form-select" required>
+                                    <option value="Abierto" selected>Abierto 🟢</option>
+                                    <option value="Pagado">Pagado 💳</option>
+                                    <option value="Cancelado">Cancelado ❌</option>
+                                </select>
+                            </div>
+                            
+                            <button type="submit" class="btn btn-success w-100 shadow-sm">Abrir Pedido</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-8">
+                <div class="card shadow-sm border-0">
+                    <div class="card-header bg-white">
+                        <h4 class="h5 mb-0 text-dark">📋 Listado de Pedidos</h4>
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table table-hover mb-0 align-middle text-center">
+                                <thead class="table-dark">
+                                    <tr>
+                                        <th>Nº Pedido</th>
+                                        <th>Mesa</th>
+                                        <th>Fecha y Hora</th>
+                                        <th>Estado</th>
+                                        <th>Total</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr th:each="pedido : ${pedidos}">
+                                        <td class="fw-bold" th:text="${pedido.id}"></td>
+                                        <td th:text="'Mesa ' + ${pedido.mesaId}"></td>
+                                        <td th:text="${#temporals.format(pedido.fechaHora, 'dd/MM/yyyy HH:mm')}"></td>
+                                        <td>
+                                            <span class="badge bg-success" th:if="${pedido.estado == 'Abierto'}">Abierto</span>
+                                            <span class="badge bg-primary" th:if="${pedido.estado == 'Pagado'}">Pagado</span>
+                                            <span class="badge bg-danger" th:if="${pedido.estado == 'Cancelado'}">Cancelado</span>
+                                        </td>
+                                        <td class="fw-bold" th:text="${pedido.total} + ' €'"></td>
+                                        <td>
+                                            <div class="btn-group">
+                                                <a th:href="@{/pedidos/editar/{id}(id=${pedido.id})}" class="btn btn-warning btn-sm">✏️</a>
+                                                <a th:href="@{/pedidos/borrar/{id}(id=${pedido.id})}" class="btn btn-danger btn-sm" onclick="return confirm('¿Borrar este pedido?')">🗑️</a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr th:if="${#lists.isEmpty(pedidos)}">
+                                        <td colspan="6" class="text-center text-muted py-4">No hay pedidos registrados.</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
 </html>

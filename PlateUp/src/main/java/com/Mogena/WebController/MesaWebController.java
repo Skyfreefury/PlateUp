@@ -9,71 +9,48 @@ import com.Mogena.Service.MesaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping; // Importante
-import org.springframework.web.bind.annotation.ModelAttribute; // Importante
-
-import java.util.List;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
+@RequestMapping("/mesas")
 public class MesaWebController {
 
     @Autowired
     private MesaService mesaService;
 
-    @GetMapping("/mesas")
-    public String mostrarPaginaMesas(Model model) {
-        List<Mesa> listaMesas = mesaService.obtenerTodas();
-        model.addAttribute("mesas", listaMesas);
+    @GetMapping
+    public String listar(Model model) {
+        // "listaMesas" debe coincidir con el th:each del HTML
+        model.addAttribute("listaMesas", mesaService.obtenerTodas());
+        // "mesa" debe coincidir con el th:object del formulario
+        model.addAttribute("mesa", new Mesa()); 
         return "mesas";
     }
 
-    // 🔴 NUEVO MÉTODO: Atrapa el formulario y guarda la mesa
-   @PostMapping("/mesas/guardar")
-    public String guardarMesaWeb(@ModelAttribute Mesa mesa) {
-        try {
-            // Intentamos guardar la mesa
-            boolean exito = mesaService.guardarMesa(mesa);
-            if (exito) {
-                return "redirect:/mesas?exito=true"; // Si va bien, recarga con mensaje verde
-            } else {
-                return "redirect:/mesas?error=true"; // Si falla la lógica, recarga con mensaje rojo
-            }
-        } catch (Exception e) {
-            // Si la Base de Datos explota (por ejemplo, número duplicado), lo capturamos aquí
-            System.out.println("Error al guardar la mesa: " + e.getMessage());
-            return "redirect:/mesas?error=duplicada";
-        }
-    }
-    // 🔴 NUEVO MÉTODO: Borrar una mesa
-    @GetMapping("/mesas/borrar/{id}")
-    public String borrarMesa(@PathVariable Long id) {
-        try {
-            mesaService.borrarMesa(id);
-            return "redirect:/mesas?exitoBorrado=true";
-        } catch (Exception e) {
-            System.out.println("Error al borrar la mesa: " + e.getMessage());
-            return "redirect:/mesas?errorBorrado=true";
-        }
-    }
-    // 1. Mostrar el formulario con los datos de la mesa cargados
-    @GetMapping("/mesas/editar/{id}")
-    public String mostrarFormularioEditar(@PathVariable Long id, Model model) {
-        Mesa mesa = mesaService.obtenerPorId(id);
-        if (mesa != null) {
-            model.addAttribute("mesa", mesa);
-            return "editar-mesa"; // Cargará un HTML que crearemos para editar
-        }
-        return "redirect:/mesas?error=true";
+    // 🚨 CORRECCIÓN: Quitamos el "/mesas" repetido porque ya está en el RequestMapping de arriba
+    @PostMapping("/guardar")
+    public String guardarMesa(@ModelAttribute("mesa") Mesa mesa) {
+        System.out.println("Enviando al Service la mesa con capacidad: " + mesa.getCapacidad());
+        
+        // El Service se encargará de ponerle el ID y el Número libre
+        mesaService.guardarMesa(mesa); 
+        
+        return "redirect:/mesas";
     }
 
-    // 2. Guardar los cambios cuando el usuario le da a "Actualizar"
-    @PostMapping("/mesas/editar/{id}")
-    public String guardarEdicionMesa(@PathVariable Long id, @ModelAttribute Mesa mesa) {
-        mesa.setId(id); // Nos aseguramos de que no cambie de ID
-        mesaService.actualizarMesa(mesa);
-        return "redirect:/mesas?exito=true";
+    @GetMapping("/editar/{id}")
+    public String editar(@PathVariable Long id, Model model) {
+        Mesa m = mesaService.obtenerPorId(id);
+        if (m != null) {
+            model.addAttribute("mesa", m);
+            return "editar-mesa"; 
+        }
+        return "redirect:/mesas";
     }
-    
+
+    @GetMapping("/borrar/{id}")
+    public String borrar(@PathVariable Long id) {
+        mesaService.borrarMesa(id);
+        return "redirect:/mesas?borrado=true";
+    }
 }
