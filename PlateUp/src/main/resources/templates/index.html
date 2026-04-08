@@ -1,90 +1,240 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Panel de Control | PlateUp</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        /* Efecto de elevación al pasar el ratón */
-        .card-menu { 
-            transition: transform 0.3s ease, box-shadow 0.3s ease; 
-            cursor: pointer; 
-            text-decoration: none; 
-            border-radius: 15px;
-        }
-        .card-menu:hover { 
-            transform: translateY(-8px); 
-            box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Eclipse PlateUp — Restaurante</title>
+  
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
-<body class="bg-light">
+<body>
 
-    <div class="container py-5">
-        <div class="text-center mb-5">
-            <h1 class="display-4 fw-bold text-dark">🍽️ PlateUp Admin</h1>
-            <p class="lead text-muted">Gestión integral de tu restaurante</p>
-        </div>
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
 
-        <div class="row g-4 justify-content-center mb-4">
-            
-            <div class="col-md-4">
-                <a th:href="@{/mesas}" class="card h-100 shadow-sm border-0 card-menu text-center">
-                    <div class="card-body py-4">
-                        <div class="display-3 mb-3">🪑</div>
-                        <h2 class="h4 text-primary fw-bold">Mesas</h2>
-                        <p class="text-muted small mb-0">Gestiona el estado y la ubicación.</p>
-                    </div>
-                </a>
-            </div>
+<nav id="navbar">
+  <a th:href="@{/}" class="nav-logo" style="font-size: 18px; letter-spacing: 0.15em;">Eclipse PlateUp</a>
+  
+  <button class="mobile-menu-btn" id="burger-btn" aria-label="Menú">
+      <svg viewBox="0 0 100 80" width="24" height="24" fill="var(--gold)">
+          <rect width="100" height="10" rx="5"></rect>
+          <rect y="35" width="100" height="10" rx="5"></rect>
+          <rect y="70" width="100" height="10" rx="5"></rect>
+      </svg>
+  </button>
+  
+  <ul class="nav-links" id="nav-links">
+    <li><a th:href="@{/mesas}">Mesas</a></li>
+    <li><a th:href="@{/pedidos}">Cuentas</a></li>
+    <li><a th:href="@{/comandas}">Comandas</a></li>
+    <li><a th:href="@{/productos}">Carta (TPV)</a></li>
+    <li><a th:href="@{/clientes}">Clientes</a></li>
+  </ul>
+  
+  <button class="nav-cta" onclick="scrollToReserva()">Reservar Mesa</button>
+</nav>
 
-            <div class="col-md-4">
-                <a th:href="@{/productos}" class="card h-100 shadow-sm border-0 card-menu text-center">
-                    <div class="card-body py-4">
-                        <div class="display-3 mb-3">🍔</div>
-                        <h2 class="h4 text-success fw-bold">La Carta</h2>
-                        <p class="text-muted small mb-0">Añade platos, precios y categorías.</p>
-                    </div>
-                </a>
-            </div>
+<section id="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grain"></div>
+  <div class="hero-line-left"></div>
+  <div class="hero-line-right"></div>
+  <div class="hero-content">
+    <span class="hero-tag">Madrid · Alta Cocina Contemporánea · Desde 2024</span>
+    <h1 class="hero-title">ECLIPSE PLATEUP<em>Restaurant</em></h1>
+    <p class="hero-subtitle">Donde la tradición culinaria se encuentra con la vanguardia gastronómica</p>
+    <div class="hero-divider"><span></span><i>Una experiencia única</i><span></span></div>
+    <div class="hero-actions">
+      <button class="btn-primary" onclick="scrollToReserva()"><span>Reservar Mesa</span></button>
+      <button class="btn-secondary" onclick="document.getElementById('menu').scrollIntoView({behavior:'smooth'})">Ver Carta</button>
+    </div>
+  </div>
+  <div class="hero-scroll"><span>Descubrir</span><div class="scroll-line"></div></div>
+</section>
 
-            <div class="col-md-4">
-                <a th:href="@{/clientes}" class="card h-100 shadow-sm border-0 card-menu text-center">
-                    <div class="card-body py-4">
-                        <div class="display-3 mb-3">👥</div>
-                        <h2 class="h4 text-info fw-bold">Clientes</h2>
-                        <p class="text-muted small mb-0">Listado de clientes y fidelización.</p>
-                    </div>
-                </a>
-            </div>
-        </div>
+<section id="experience">
+  <div class="exp-text reveal">
+    <span class="section-tag">Nuestra Filosofía</span>
+    <h2 class="section-title">Una <em>pasión</em><br>por el sabor</h2>
+    <p class="exp-desc">Como un eclipse, nuestra cocina nace del contraste perfecto: el respeto absoluto por la tradición y la audacia de la vanguardia. Cada creación es un homenaje a la tierra, transformando ingredientes puros en una experiencia sensorial inolvidable.</p>
+    </div>
+  <div class="exp-visual" th:style="'background-image: url(@{/Img/FondoFilosofia.jpg});'">
+    <div class="exp-plate">
+      <div class="plate-ring"></div><div class="plate-ring"></div><div class="plate-ring"></div>
+      <div class="plate-inner"><div class="plate-symbol">✦</div></div>
+    </div>
+    <div class="exp-dots" id="expDots"></div>
+  </div>
+</section>
 
-        <div class="row g-4 justify-content-center">
-            
-            <div class="col-md-4">
-                <a th:href="@{/pedidos}" class="card h-100 shadow border-0 card-menu text-center" style="background-color: #f8f9fa;">
-                    <div class="card-body py-4">
-                        <div class="display-3 mb-3">🧾</div>
-                        <h2 class="h4 text-dark fw-bold">Pedidos (Caja)</h2>
-                        <p class="text-muted small mb-0">Abre cuentas para las mesas y cobra.</p>
-                    </div>
-                </a>
-            </div>
+<section id="menu">
+  <div class="menu-header reveal">
+    <div>
+      <span class="section-tag">Carta de Temporada</span>
+      <h2 class="section-title">Nuestros <em>Platos</em></h2>
+    </div>
+    <div class="menu-tabs">
+      <button class="menu-tab active" onclick="tabMenu('entrantes-grid', this)">Entrantes</button>
+      <button class="menu-tab" onclick="tabMenu('principales-grid', this)">Principales</button>
+      <button class="menu-tab" onclick="tabMenu('postres-grid', this)">Postres</button>
+    </div>
+  </div>
 
-            <div class="col-md-4">
-                <a th:href="@{/comandas}" class="card h-100 shadow border-0 card-menu text-center" style="background-color: #fff3cd;">
-                    <div class="card-body py-4">
-                        <div class="display-3 mb-3">🍳</div>
-                        <h2 class="h4 text-warning fw-bold" style="filter: brightness(0.8);">Comandas</h2>
-                        <p class="text-muted small mb-0">Manda platos a cocina y controla el estado.</p>
-                    </div>
-                </a>
-            </div>
+  <div id="entrantes-grid" class="menu-grid">
+    <div th:each="p, iter : ${entrantes}" class="menu-card">
+      <span class="menu-card-num" th:text="${iter.count < 10 ? '0' + iter.count : iter.count}">01</span>
+      <h3 class="menu-card-name" th:text="${p.nombre}">Nombre</h3>
+      <p class="menu-card-desc" th:text="${p.descripcion}">Descripción</p>
+      <div class="menu-card-footer">
+        <span class="menu-price" th:text="${p.precio} + '€'">0€</span>
+        <span class="menu-tag">Entrante</span>
+      </div>
+    </div>
+  </div>
 
-        </div>
+  <div id="principales-grid" class="menu-grid" style="display: none;">
+    <div th:each="p, iter : ${principales}" class="menu-card">
+      <span class="menu-card-num" th:text="${iter.count < 10 ? '0' + iter.count : iter.count}">01</span>
+      <h3 class="menu-card-name" th:text="${p.nombre}">Nombre</h3>
+      <p class="menu-card-desc" th:text="${p.descripcion}">Descripción</p>
+      <div class="menu-card-footer">
+        <span class="menu-price" th:text="${p.precio} + '€'">0€</span>
+        <span class="menu-tag">Principal</span>
+      </div>
+    </div>
+  </div>
+
+  <div id="postres-grid" class="menu-grid" style="display: none;">
+    <div th:each="p, iter : ${postres}" class="menu-card">
+      <span class="menu-card-num" th:text="${iter.count < 10 ? '0' + iter.count : iter.count}">01</span>
+      <h3 class="menu-card-name" th:text="${p.nombre}">Nombre</h3>
+      <p class="menu-card-desc" th:text="${p.descripcion}">Descripción</p>
+      <div class="menu-card-footer">
+        <span class="menu-price" th:text="${p.precio} + '€'">0€</span>
+        <span class="menu-tag">Postre</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="fuego">
+  <div class="fuego-bg" id="fuegoBg"></div>
+  <div class="fuego-overlay"></div>
+  <div class="fuego-grain"></div>
+  <div class="fuego-content reveal">
+    <span class="fuego-tag">Eclipse en números</span>
+    <h2 class="fuego-title">Una <em>trayectoria</em> de excelencia</h2>
+    <div class="fuego-stats">
+      <div class="fuego-stat"><span class="fuego-stat-num" data-count="5">0</span><span class="fuego-stat-label">Años de historia</span></div>
+      <div class="fuego-sep"></div>
+      <div class="fuego-stat"><span class="fuego-stat-num" data-count="3">0</span><span class="fuego-stat-label">Soles Repsol</span></div>
+      <div class="fuego-sep"></div>
+      <div class="fuego-stat"><span class="fuego-stat-num" data-count="48">0</span><span class="fuego-stat-label">Platos</span></div>
+      <div class="fuego-sep"></div>
+      <div class="fuego-stat"><span class="fuego-stat-num" data-count="9800">0</span><span class="fuego-stat-label">Comensales</span></div>
+    </div>
+  </div>
+</section>
+
+<section id="team">
+  <div class="reveal" style="text-align:center; margin-bottom:20px;">
+    <span class="section-tag">El Equipo</span>
+    <h2 class="section-title">Los artífices de la <em>experiencia</em></h2>
+  </div>
+
+  <div class="team-grid">
+    <div class="team-card reveal" style="background: url('/Img/AndresFuentes.png') center/cover no-repeat;">
+      <div class="team-overlay"></div>
+      <div class="team-info">
+        <div class="team-name">Andrés Fuentes</div>
+        <div class="team-role">Chef Ejecutivo</div>
+      </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <div class="team-card reveal" style="background: url('/Img/ClaraMontoya.png') center/cover no-repeat; transition-delay: 0.1s;">
+      <div class="team-overlay"></div>
+      <div class="team-info">
+        <div class="team-name">Clara Montoya</div>
+        <div class="team-role">Sous Chef</div>
+      </div>
+    </div>
+
+    <div class="team-card reveal" style="background: url('/Img/MiguelRios.png') center/cover no-repeat; transition-delay: 0.2s;">
+      <div class="team-overlay"></div>
+      <div class="team-info">
+        <div class="team-name">Miguel Ríos</div>
+        <div class="team-role">Jefe de Sala</div>
+      </div>
+    </div>
+
+    <div class="team-card reveal" style="background: url('/Img/SofiaAguilar.png') center/cover no-repeat; transition-delay: 0.3s;">
+      <div class="team-overlay"></div>
+      <div class="team-info">
+        <div class="team-name">Sofía Aguilar</div>
+        <div class="team-role">Sommelier</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="reserva">
+  <div class="reserva-inner">
+    <div class="reserva-info reveal">
+      <span class="section-tag">Reservas</span>
+      <h2 class="section-title">Reserve <em>su</em><br>experiencia</h2>
+      <div class="contact-list">
+        <div class="contact-item"><div class="contact-icon">✆</div><div><span class="contact-label">Teléfono</span><span class="contact-value">+34 91 000 00 00</span></div></div>
+        <div class="contact-item"><div class="contact-icon">✉</div><div><span class="contact-label">Email</span><span class="contact-value">reservas@eclipse-plateup.com</span></div></div>
+      </div>
+    </div>
+    <div class="reveal">
+      <form class="reserva-form" onsubmit="handleReserva(event)">
+        <div class="form-row">
+          <div class="form-group"><label class="form-label">Nombre</label><input type="text" class="form-input" required /></div>
+          <div class="form-group"><label class="form-label">Teléfono</label><input type="tel" class="form-input" /></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label class="form-label">Fecha</label><input type="date" class="form-input" required /></div>
+          <div class="form-group"><label class="form-label">Hora</label>
+            <select class="form-select form-input"><option>13:30</option><option>21:00</option></select>
+          </div>
+        </div>
+        <button type="submit" class="btn-primary" style="width:100%"><span>Confirmar Reserva</span></button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-logo">ECLIPSE PLATEUP</div>
+    <div class="footer-copy">© 2026 Eclipse PlateUp Madrid</div>
+  </div>
+</footer>
+
+<div class="toast" id="toast"></div>
+
+<script th:src="@{/js/main.js}"></script>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+      const burgerBtn = document.getElementById('burger-btn');
+      const navLinks = document.getElementById('nav-links');
+      if (burgerBtn && navLinks) {
+          burgerBtn.addEventListener('click', () => {
+              navLinks.classList.toggle('active');
+          });
+      }
+  });
+
+  function tabMenu(gridId, btn) {
+    document.querySelectorAll('.menu-grid').forEach(grid => grid.style.display = 'none');
+    document.querySelectorAll('.menu-tab').forEach(t => t.classList.remove('active'));
+    document.getElementById(gridId).style.display = 'grid';
+    btn.classList.add('active');
+  }
+</script>
+
 </body>
 </html>

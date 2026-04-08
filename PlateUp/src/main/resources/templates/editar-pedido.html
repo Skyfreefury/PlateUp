@@ -2,65 +2,41 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Editar Pedido | PlateUp</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>Editar Cuenta | Eclipse PlateUp</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
-<body class="bg-light">
+<body>
 
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm mb-5">
-        <div class="container">
-            <a class="navbar-brand fw-bold" th:href="@{/}">🍽️ PlateUp</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto gap-2">
-                    <li class="nav-item"><a class="nav-link" th:href="@{/}">🏠 Inicio</a></li>
-                    <li class="nav-item"><a class="nav-link" th:href="@{/mesas}">🪑 Mesas</a></li>
-                    <li class="nav-item"><a class="nav-link active fw-bold" th:href="@{/pedidos}">🧾 Pedidos</a></li>
-                    <li class="nav-item"><a class="nav-link" th:href="@{/comandas}">🍳 Comandas</a></li>
-                    <li class="nav-item"><a class="nav-link" th:href="@{/productos}">🍔 Carta</a></li>
-                    <li class="nav-item"><a class="nav-link" th:href="@{/clientes}">👥 Clientes</a></li>
-                </ul>
+<nav id="navbar" class="scrolled">
+    <a th:href="@{/}" class="nav-logo" style="font-size: 18px; letter-spacing: 0.15em;">Eclipse PlateUp</a>
+    <button class="nav-cta" th:onclick="|window.location.href='@{/pedidos}'|">Volver a Cuentas</button>
+</nav>
+
+<section class="dashboard-section reveal" style="display: flex; justify-content: center; align-items: flex-start; padding-top: 150px;">
+    <div class="card" style="background: var(--dark); padding: 50px; border: 1px solid var(--border); width: 100%; max-width: 500px;">
+        <span class="section-tag" style="text-align: center;">Servicio</span>
+        <h3 style="font-family: 'Cormorant Garamond', serif; color: var(--gold); font-size: 32px; margin-bottom: 30px; font-weight: 300; text-align: center;">Modificar <em>Cuenta</em></h3>
+        
+        <form th:action="@{/pedidos/editar/{id}(id=${pedido.id})}" th:object="${pedido}" method="post" class="reserva-form">
+            <input type="hidden" th:field="*{id}">
+
+            <div class="form-group">
+                <label class="form-label">ID de la Mesa</label>
+                <input type="number" th:field="*{mesaId}" class="form-input" required />
             </div>
-        </div>
-    </nav>
-
-    <main class="container">
-        <div class="card shadow-sm mx-auto border-0" style="max-width: 500px;">
-            <div class="card-header bg-warning text-dark py-3">
-                <h3 class="h5 mb-0 fw-bold">✏️ Modificar Pedido</h3>
+            <div class="form-group">
+                <label class="form-label">ID del Cliente</label>
+                <input type="number" th:field="*{clienteId}" class="form-input" required />
             </div>
-            <div class="card-body p-4">
-                <form th:action="@{/pedidos/guardar}" th:object="${pedido}" method="post">
-                    
-                    <input type="hidden" th:field="*{id}">
 
-                    <div class="mb-3">
-                        <label class="form-label fw-bold">ID del Pedido:</label>
-                        <input type="text" th:value="'Pedido Nº ' + *{id}" class="form-control bg-light" disabled>
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="form-label fw-bold">ID del Cliente:</label>
-                        <input type="number" th:field="*{clienteId}" class="form-control" required>
-                    </div>
-
-                    <div class="mb-4">
-                        <label class="form-label fw-bold">ID de la Mesa:</label>
-                        <input type="number" th:field="*{mesaId}" class="form-control" required>
-                    </div>
-
-                    <div class="d-flex justify-content-between mt-4">
-                        <a th:href="@{/pedidos}" class="btn btn-outline-secondary">Cancelar</a>
-                        <button type="submit" class="btn btn-success px-4 fw-bold">Guardar Cambios</button>
-                    </div>
-                </form>
+            <div style="display: flex; gap: 15px; margin-top: 30px;">
+                <a th:href="@{/pedidos}" class="btn-secondary" style="width: 50%; text-align: center; text-decoration: none;">Cancelar</a>
+                <button type="submit" class="btn-primary" style="width: 50%;"><span>Guardar</span></button>
             </div>
-        </div>
-    </main>
+        </form>
+    </div>
+</section>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

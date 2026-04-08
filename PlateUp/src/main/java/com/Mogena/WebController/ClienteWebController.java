@@ -11,6 +11,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Controller
 @RequestMapping("/clientes")
 public class ClienteWebController {
@@ -18,35 +20,55 @@ public class ClienteWebController {
     @Autowired
     private ClienteService clienteService;
 
-    // Listar todos
+    // 1. LISTAR CLIENTES
     @GetMapping
-    public String listar(Model model) {
-        model.addAttribute("clientes", clienteService.obtenerTodos());
-        return "clientes";
+    public String listarClientes(Model model) {
+        try {
+            List<Cliente> lista = clienteService.obtenerTodos();
+            
+            // Enviamos la lista para la tabla de la derecha
+            model.addAttribute("clientes", lista); 
+            
+            // 🚨 EL ARREGLO: Enviamos un objeto vacío para que el formulario no pete
+            model.addAttribute("cliente", new Cliente()); 
+            
+            return "clientes"; 
+        } catch (Exception e) {
+            System.out.println("ERROR AL LISTAR CLIENTES: " + e.getMessage());
+            return "redirect:/?error=true";
+        }
     }
 
-    // Guardar (Nuevo o Editado)
+    // 2. GUARDAR / CREAR
     @PostMapping("/guardar")
-    public String guardar(@ModelAttribute Cliente cliente) {
+    public String guardarCliente(@ModelAttribute("cliente") Cliente cliente) {
         clienteService.guardarCliente(cliente);
         return "redirect:/clientes?exito=true";
     }
 
-    // Mostrar formulario de edición
+    // 3. MOSTRAR FORMULARIO EDITAR
     @GetMapping("/editar/{id}")
-    public String editar(@PathVariable Long id, Model model) {
-        Cliente c = clienteService.obtenerPorId(id);
-        if (c != null) {
-            model.addAttribute("cliente", c);
-            return "editar-cliente"; 
+    public String mostrarFormularioEditar(@PathVariable Long id, Model model) {
+        Cliente cliente = clienteService.obtenerPorId(id);
+        if (cliente != null) {
+            model.addAttribute("cliente", cliente);
+            return "editar-cliente"; // Ahora crearemos este con el nuevo diseño
         }
-        return "redirect:/clientes";
+        return "redirect:/clientes?error=true";
     }
 
-    // Borrar
+    // 4. PROCESAR EDICIÓN
+    @PostMapping("/editar/{id}")
+    public String procesarEdicion(@PathVariable Long id, @ModelAttribute("cliente") Cliente cliente) {
+        cliente.setId(id);
+        clienteService.guardarCliente(cliente);
+        return "redirect:/clientes?exito=true";
+    }
+
+    // 5. BORRAR
     @GetMapping("/borrar/{id}")
-    public String borrar(@PathVariable Long id) {
+    public String borrarCliente(@PathVariable Long id) {
         clienteService.borrarCliente(id);
-        return "redirect:/clientes?borrado=true";
+        return "redirect:/clientes?exitoBorrado=true";
     }
 }

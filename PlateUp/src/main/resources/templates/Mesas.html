@@ -1,108 +1,81 @@
 <!DOCTYPE html>
-<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mesas - PlateUp</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        body { background-color: #f8f9fa; }
-        .card-header-blue { background-color: #0d6efd; color: white; font-weight: bold; }
-    </style>
+    <title>Mesas | Eclipse PlateUp</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
+<nav id="navbar" class="scrolled">
+    <a th:href="@{/}" class="nav-logo" style="font-size: 18px; letter-spacing: 0.15em;">Eclipse PlateUp</a>
+    <ul class="nav-links">
+        <li><a th:href="@{/mesas}" style="color: var(--gold);">Mesas</a></li>
+        <li><a th:href="@{/pedidos}">Cuentas</a></li>
+        <li><a th:href="@{/comandas}">Comandas</a></li>
+        <li><a th:href="@{/productos}">Carta</a></li>
+        <li><a th:href="@{/clientes}">Clientes</a></li>
+    </ul>
+    <button class="nav-cta" th:onclick="|window.location.href='@{/}'|">Volver al Inicio</button>
+</nav>
 
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <div class="container-fluid px-4">
-            <a class="navbar-brand fw-bold" href="#"><i class="fa-solid fa-plate-wheat me-2"></i>PlateUp</a>
-            <div class="collapse navbar-collapse justify-content-end">
-                <ul class="navbar-nav gap-3">
-                    <li class="nav-item"><a class="nav-link" href="/"><i class="fa-solid fa-house"></i> Inicio</a></li>
-                    <li class="nav-item"><a class="nav-link active fw-bold text-white" href="/mesas"><i class="fa-solid fa-chair"></i> Mesas</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/pedidos"><i class="fa-solid fa-receipt"></i> Pedidos</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/carta"><i class="fa-solid fa-burger"></i> Carta</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/clientes"><i class="fa-solid fa-users"></i> Clientes</a></li>
-                </ul>
-            </div>
+<section class="dashboard-section reveal">
+    <div class="dashboard-grid">
+        <div class="card" style="background: var(--dark); padding: 40px; border: 1px solid var(--border);">
+            <span class="section-tag">Logística</span>
+            <h3 style="font-family: 'Cormorant Garamond', serif; font-size: 28px; margin-bottom: 30px; font-weight: 300;">Añadir <em>Mesa</em></h3>
+            <form th:action="@{/mesas/guardar}" method="post" th:object="${mesa}" class="reserva-form">
+                <input type="hidden" th:field="*{id}" />
+                <div class="form-group">
+                    <label class="form-label">Número de Mesa</label>
+                    <input type="number" th:field="*{numero}" class="form-input" required />
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Capacidad</label>
+                    <input type="number" th:field="*{capacidad}" class="form-input" required />
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Ubicación</label>
+                    <select th:field="*{ubicacion}" class="form-select">
+                        <option value="Interior">Interior</option>
+                        <option value="Terraza">Terraza</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Estado</label>
+                    <select th:field="*{estado}" class="form-select">
+                        <option value="LIBRE">Libre</option>
+                        <option value="OCUPADA">Ocupada</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn-primary" style="width: 100%;"><span>Guardar Mesa</span></button>
+            </form>
         </div>
-    </nav>
-
-    <div class="container-fluid px-4 mt-4">
-        <div class="row">
-            
-            <div class="col-md-4 mb-4">
-                <div class="card shadow-sm border-0">
-                    <div class="card-header card-header-blue py-3">
-                        <i class="fa-solid fa-plus me-2"></i> Nueva Mesa
-                    </div>
-                    <div class="card-body p-4">
-                        <form th:action="@{/mesas/guardar}" method="POST" th:object="${mesa}">
-                            <div class="mb-3">
-                                <label class="form-label fw-bold">Capacidad (Personas):</label>
-                                <input type="number" class="form-control" name="capacidad" value="2" required>
+        <div>
+            <span class="section-tag">Plano</span>
+            <h2 class="section-title">Gestión de <em>Mesas</em></h2>
+            <table class="solstice-table">
+                <thead>
+                    <tr><th>Nº Mesa</th><th>Capacidad</th><th>Ubicación</th><th>Estado</th><th style="text-align: right;">Acciones</th></tr>
+                </thead>
+                <tbody>
+                    <tr th:each="m : ${listaMesas}">
+                        <td th:text="${m.numero}"></td>
+                        <td th:text="${m.capacidad} + ' pax'"></td>
+                        <td th:text="${m.ubicacion}"></td>
+                        <td><span class="badge-solstice badge-gold" th:text="${m.estado}"></span></td>
+                        <td style="text-align: right;">
+                            <div class="action-buttons">
+                                <a th:href="@{/mesas/editar/{id}(id=${m.id})}" class="btn-icon btn-edit"><svg viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg></a>
+                                <a th:href="@{/mesas/borrar/{id}(id=${m.id})}" class="btn-icon btn-delete"><svg viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg></a>
                             </div>
-                            <div class="mb-3">
-                                <label class="form-label fw-bold">Ubicación:</label>
-                                <select class="form-select" name="ubicacion">
-                                    <option value="Interior">Interior 🏠</option>
-                                    <option value="Terraza">Terraza ☀️</option>
-                                </select>
-                            </div>
-                            <div class="mb-4">
-                                <label class="form-label fw-bold">Estado inicial:</label>
-                                <select class="form-select" name="estado">
-                                    <option value="LIBRE">Libre 🟢</option>
-                                    <option value="OCUPADA">Ocupada 🔴</option>
-                                </select>
-                            </div>
-                            <button type="submit" class="btn btn-success w-100 py-2 fw-bold">Añadir Mesa</button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-md-8">
-                <div class="card shadow-sm border-0">
-                    <div class="card-header bg-white py-3 fw-bold border-bottom">
-                        <i class="fa-regular fa-clipboard me-2"></i> Distribución del Local
-                    </div>
-                    <div class="card-body p-0">
-                        <table class="table table-hover mb-0 text-center align-middle">
-                            <thead class="table-dark">
-                                <tr>
-                                    <th>Nº Mesa</th>
-                                    <th>Capacidad</th>
-                                    <th>Ubicación</th>
-                                    <th>Estado</th>
-                                    <th>Acciones</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr th:each="m : ${listaMesas}">
-                                    <td class="fw-bold" th:text="'Mesa ' + ${m.numero}">Mesa 1</td>
-                                    <td th:text="${m.capacidad} + ' pax'">4 pax</td>
-                                    <td th:text="${m.ubicacion}">Interior</td>
-                                    <td>
-                                        <span class="badge rounded-pill px-3" 
-                                              th:classappend="${m.estado == 'LIBRE' ? 'bg-success' : 'bg-danger'}"
-                                              th:text="${m.estado}">Libre</span>
-                                    </td>
-                                    <td>
-                                        <a th:href="@{/mesas/editar/{id}(id=${m.id})}" class="btn btn-sm btn-outline-primary me-2">
-                                            <i class="fa-solid fa-pen"></i>
-                                        </a>
-                                        <a th:href="@{/mesas/borrar/{id}(id=${m.id})}" class="btn btn-sm btn-outline-danger">
-                                            <i class="fa-solid fa-trash"></i>
-                                        </a>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
     </div>
+</section>
+<script th:src="@{/js/main.js}"></script>
 </body>
 </html>
