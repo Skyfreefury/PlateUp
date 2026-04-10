@@ -11,4 +11,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ProductoDAO extends JpaRepository<Producto, Long> {
     // ¡Vacío! Spring Boot hace el SQL automáticamente.
+    Producto findByNombre(String nombre);
 }

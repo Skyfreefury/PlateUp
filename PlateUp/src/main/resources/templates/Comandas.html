@@ -2,80 +2,119 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Comandas | Eclipse PlateUp</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel de Cocina | Eclipse PlateUp</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" th:href="@{/css/style.css}">
+    <style>
+        body { background-color: #0a0a08; color: #f5f2eb; overflow-x: hidden; }
+        .reveal { opacity: 0; transform: translateY(30px); transition: all 0.8s ease-out; }
+        .reveal.visible { opacity: 1; transform: translateY(0); }
+        .table-dark { --bs-table-bg: #161614; --bs-table-border-color: #2a2a26; font-size: 14px; }
+        .timer { font-family: monospace; color: #c9a84c; font-weight: bold; }
+    </style>
 </head>
 <body>
-<nav id="navbar" class="scrolled">
+
+<nav id="navbar" class="scrolled" style="position: relative; z-index: 1000; margin-bottom: 20px;">
     <a th:href="@{/}" class="nav-logo" style="font-size: 18px; letter-spacing: 0.15em;">Eclipse PlateUp</a>
-    <ul class="nav-links">
+    <ul class="nav-links" id="nav-links">
         <li><a th:href="@{/mesas}">Mesas</a></li>
         <li><a th:href="@{/pedidos}">Cuentas</a></li>
         <li><a th:href="@{/comandas}" style="color: var(--gold);">Comandas</a></li>
         <li><a th:href="@{/productos}">Carta</a></li>
         <li><a th:href="@{/clientes}">Clientes</a></li>
     </ul>
-    <button class="nav-cta" th:onclick="|window.location.href='@{/}'|">Volver al Inicio</button>
+    <button class="nav-cta" th:onclick="|window.location.href='@{/}'|" style="padding: 10px 24px; font-size: 12px;">Volver al Inicio</button>
 </nav>
 
-<section class="dashboard-section reveal">
-    <div class="dashboard-grid">
-        <div class="card" style="background: var(--dark); padding: 40px; border: 1px solid var(--border);">
-            <span class="section-tag">Servicio</span>
-            <h3 style="font-family: 'Cormorant Garamond', serif; font-size: 28px; font-weight: 300;">Marchar <em>Plato</em></h3>
-            <form th:action="@{/comandas/guardar}" method="post" th:object="${comanda}" class="reserva-form">
-                <input type="hidden" th:field="*{id}" />
-                <div class="form-group">
-                    <label class="form-label">Cuenta ID (Pedido)</label>
-                    <input type="number" th:field="*{pedidoId}" class="form-input" required />
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Nombre del Plato</label>
-                    <input type="text" th:field="*{nombrePlato}" class="form-input" required />
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Cantidad</label>
-                    <input type="number" th:field="*{cantidad}" class="form-input" required min="1" />
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Estado</label>
-                    <input type="text" th:field="*{estado}" class="form-input" placeholder="EN PREPARACIÓN, LISTO..." />
-                </div>
-                <button type="submit" class="btn-primary" style="width: 100%;"><span>Marchar</span></button>
-            </form>
+<div class="container-fluid mt-4 reveal" id="main-content">
+    <div class="row px-4">
+        <div class="col-md-3">
+            <div class="p-4" style="background-color: #161614; border: 1px solid #2a2a26;">
+                <span style="color: #c9a84c; font-size: 10px; letter-spacing: 0.4em; text-transform: uppercase;">SERVICIO</span>
+                <h3 style="font-family: 'Cormorant Garamond', serif; margin-bottom: 25px;">Marchar <em style="color: #c9a84c;">Plato</em></h3>
+                <form th:action="@{/comandas/guardar}" method="post" th:object="${comanda}">
+                    <div class="mb-3">
+                        <label style="font-size: 9px; letter-spacing: 0.2em; color: #7a7a72;">ID PEDIDO</label>
+                        <input type="number" th:field="*{pedidoId}" class="form-control" style="background-color: #0a0a08; color: #fff; border: 1px solid #2a2a26; border-radius: 0;" required />
+                    </div>
+                    <div class="mb-3">
+                        <label style="font-size: 9px; letter-spacing: 0.2em; color: #7a7a72;">PLATO</label>
+                        <select th:field="*{nombrePlato}" class="form-select" style="background-color: #0a0a08; color: #fff; border: 1px solid #2a2a26; border-radius: 0;" 
+                                onchange="document.getElementById('tipoOculto').value = this.options[this.selectedIndex].getAttribute('data-tipo');" required>
+                            <option value="" selected disabled>Seleccionar...</option>
+                            <option th:each="p : ${productos}" th:value="${p.nombre}" th:text="${p.nombre}" th:data-tipo="${p.tipoProductoId}"></option>
+                        </select>
+                        <input type="hidden" th:field="*{tipoComandaId}" id="tipoOculto" />
+                    </div>
+                    <div class="mb-4">
+                        <label style="font-size: 9px; letter-spacing: 0.2em; color: #7a7a72;">CANTIDAD</label>
+                        <input type="number" th:field="*{cantidad}" class="form-control" style="background-color: #0a0a08; color: #fff; border: 1px solid #2a2a26; border-radius: 0;" required min="1" />
+                    </div>
+                    <button type="submit" class="w-100" style="background-color: #c9a84c; color: #0a0a08; border: none; padding: 12px; font-weight: bold; letter-spacing: 0.1em; text-transform: uppercase;">MARCHAR</button>
+                </form>
+            </div>
         </div>
-        <div>
-            <span class="section-tag">Cocina</span>
-            <h2 class="section-title">Comandas <em>en Curso</em></h2>
-            <table class="solstice-table">
-                <thead>
-                    <tr>
-                        <th>Cuenta</th>
-                        <th>Plato</th>
-                        <th>Cant.</th>
-                        <th>Estado</th>
-                        <th style="text-align: right;">Acciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr th:each="c : ${comandas}">
-                        <td th:text="${c.pedidoId}"></td>
-                        <td th:text="${c.nombrePlato}"></td>
-                        <td th:text="${c.cantidad}"></td>
-                        <td><span class="badge-solstice badge-gold" th:text="${c.estado}"></span></td>
-                        <td style="text-align: right;">
-                            <div class="action-buttons">
-                                <a th:href="@{/comandas/editar/{id}(id=${c.id})}" class="btn-icon btn-edit"><svg viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg></a>
-                                <a th:href="@{/comandas/eliminar/{id}(id=${c.id})}" class="btn-icon btn-delete"><svg viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg></a>
-                            </div>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+
+        <div class="col-md-9">
+            <h2 style="font-family: 'Cormorant Garamond', serif; font-size: 2.5rem; margin-bottom: 30px;">Panel de <em style="color: #c9a84c;">Cocina</em></h2>
+            
+            <div class="mb-5">
+                <h5 style="color: #c9a84c;">🥗 ENTRANTES</h5>
+                <table class="table table-dark">
+                    <thead><tr><th>PEDIDO</th><th>PLATO</th><th>CANT.</th><th>TIEMPO</th><th>ACCIÓN</th></tr></thead>
+                    <tbody>
+                        <tr th:each="c : ${comandas}" th:if="${c.tipoComandaId == 1 && c.estado == 'EN_PREPARACION'}">
+                            <td th:text="${c.pedidoId}"></td><td th:text="${c.nombrePlato}" style="color: #c9a84c;"></td>
+                            <td th:text="${c.cantidad}"></td><td class="timer" th:data-start="${c.creadoEn}">00:00</td>
+                            <td><form th:action="@{/comandas/borrar/{id}(id=${c.id})}" method="post"><button class="btn btn-outline-success btn-sm">LISTO</button></form></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="mb-5">
+                <h5 style="color: #c9a84c;">🥩 PLATOS FUERTES</h5>
+                <table class="table table-dark">
+                    <thead><tr><th>PEDIDO</th><th>PLATO</th><th>CANT.</th><th>TIEMPO</th><th>ACCIÓN</th></tr></thead>
+                    <tbody>
+                        <tr th:each="c : ${comandas}" th:if="${c.tipoComandaId == 2 && c.estado == 'EN_PREPARACION'}">
+                            <td th:text="${c.pedidoId}"></td><td th:text="${c.nombrePlato}" style="color: #c9a84c;"></td>
+                            <td th:text="${c.cantidad}"></td><td class="timer" th:data-start="${c.creadoEn}">00:00</td>
+                            <td><form th:action="@{/comandas/borrar/{id}(id=${c.id})}" method="post"><button class="btn btn-outline-success btn-sm">LISTO</button></form></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="mb-5">
+                <h5 style="color: #c9a84c;">🍰 POSTRES</h5>
+                <table class="table table-dark">
+                    <thead><tr><th>PEDIDO</th><th>PLATO</th><th>CANT.</th><th>TIEMPO</th><th>ACCIÓN</th></tr></thead>
+                    <tbody>
+                        <tr th:each="c : ${comandas}" th:if="${c.tipoComandaId == 3 && c.estado == 'EN_PREPARACION'}">
+                            <td th:text="${c.pedidoId}"></td><td th:text="${c.nombrePlato}" style="color: #c9a84c;"></td>
+                            <td th:text="${c.cantidad}"></td><td class="timer" th:data-start="${c.creadoEn}">00:00</td>
+                            <td><form th:action="@{/comandas/borrar/{id}(id=${c.id})}" method="post"><button class="btn btn-outline-success btn-sm">LISTO</button></form></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
-</section>
-<script th:src="@{/js/main.js}"></script>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        setTimeout(() => document.getElementById('main-content').classList.add('visible'), 100);
+        setInterval(() => {
+            document.querySelectorAll('.timer').forEach(timer => {
+                const diff = Math.floor((new Date() - new Date(timer.getAttribute('data-start'))) / 1000);
+                timer.innerText = `${Math.floor(diff/60).toString().padStart(2,'0')}:${(diff%60).toString().padStart(2,'0')}`;
+            });
+        }, 1000);
+    });
+</script>
 </body>
 </html>

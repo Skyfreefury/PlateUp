@@ -7,8 +7,10 @@ package com.Mogena.WebController;
 import com.Mogena.Model.Pedido;
 import com.Mogena.Model.Comanda;
 import com.Mogena.Model.Producto;
+import com.Mogena.Service.ClienteService;
 import com.Mogena.Service.PedidoService;
 import com.Mogena.Service.ComandaService;
+import com.Mogena.Service.MesaService;
 import com.Mogena.Service.ProductoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -30,6 +32,12 @@ public class PedidoWebController {
 
     @Autowired
     private ProductoService productoService;
+    
+    @Autowired
+    private MesaService mesaService;
+
+    @Autowired
+    private ClienteService clienteService;
 
     // 1. LISTAR PEDIDOS Y CALCULAR TOTALES AUTOMÁTICAMENTE
     @GetMapping
@@ -86,12 +94,18 @@ public class PedidoWebController {
         return "redirect:/pedidos?exito=true";
     }
 
-    // 3. MOSTRAR FORMULARIO EDITAR
+// 3. MOSTRAR FORMULARIO EDITAR
     @GetMapping("/editar/{id}")
     public String mostrarFormularioEditar(@PathVariable Long id, Model model) {
         Pedido pedido = pedidoService.obtenerPorId(id);
+        
         if (pedido != null) {
             model.addAttribute("pedido", pedido);
+            
+            // AÑADE ESTAS DOS LÍNEAS PARA QUE EL HTML NO EXPLOTE:
+            model.addAttribute("mesas", mesaService.obtenerTodas());
+            model.addAttribute("clientes", clienteService.obtenerTodos());
+            
             return "editar-pedido"; 
         }
         return "redirect:/pedidos?error=true";

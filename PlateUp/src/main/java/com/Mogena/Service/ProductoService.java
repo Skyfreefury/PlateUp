@@ -71,4 +71,7 @@ public class ProductoService {
             productoDAO.flush();
         }
     }
+    public Producto obtenerPorNombre(String nombre) {
+    return productoDAO.findByNombre(nombre);
+}
 }

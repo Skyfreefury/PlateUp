@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @Controller
-@RequestMapping("/productos") // Ruta en el navegador: localhost:8080/productos
+@RequestMapping("/productos") 
 public class ProductoWebController {
 
     @Autowired
@@ -25,14 +25,8 @@ public class ProductoWebController {
     public String listarProductos(Model model) {
         try {
             List<Producto> lista = productoService.obtenerTodos();
-            
-            // 🚨 IMPORTANTE: En tu HTML usas ${productos}, así que el nombre debe ser este:
             model.addAttribute("productos", lista); 
-            
-            // Objeto vacío para el formulario de "Nuevo Producto"
             model.addAttribute("producto", new Producto()); 
-            
-            // 🚨 CORRECCIÓN FINAL: Debe coincidir con tu archivo "Productos.html"
             return "Productos"; 
             
         } catch (Exception e) {
@@ -41,27 +35,42 @@ public class ProductoWebController {
         }
     }
 
-    // 2. GUARDAR (NUEVO O EDITADO)
+    // 2. GUARDAR (NUEVO)
     @PostMapping("/guardar")
     public String guardarProducto(@ModelAttribute("producto") Producto producto) {
-        // El Service se encarga de reciclar el ID si es nuevo
         productoService.guardarProducto(producto);
         return "redirect:/productos?exito=true";
     }
 
-    // 3. MOSTRAR FORMULARIO DE EDITAR
+    // 3. MOSTRAR FORMULARIO DE EDITAR (Envía la página al navegador)
     @GetMapping("/editar/{id}")
     public String mostrarFormularioEditar(@PathVariable Long id, Model model) {
-        Producto p = productoService.obtenerPorId(id);
-        if (p != null) {
-            model.addAttribute("producto", p);
-            // 🚨 Según tu captura, este se llama editar-producto.html (en minúsculas)
+        Producto producto = productoService.obtenerPorId(id);
+        
+        if (producto != null) {
+            model.addAttribute("producto", producto);
             return "editar-producto"; 
         }
         return "redirect:/productos?error=true";
     }
 
-    // 4. BORRAR PRODUCTO
+    // =========================================================
+    // ✨ 4. ACTUALIZAR PRODUCTO (ESTO ES LO QUE FALTABA) ✨
+    // Recibe los datos del formulario HTML y los guarda en la BD
+    // =========================================================
+    @PostMapping("/editar/{id}")
+    public String actualizarProducto(@PathVariable Long id, @ModelAttribute("producto") Producto producto) {
+        try {
+            producto.setId(id); // Blindaje extra por si el HTML pierde el ID
+            productoService.guardarProducto(producto);
+            return "redirect:/productos?exito=true";
+        } catch (Exception e) {
+            System.out.println("ERROR AL EDITAR: " + e.getMessage());
+            return "redirect:/productos?error=true";
+        }
+    }
+
+    // 5. BORRAR PRODUCTO
     @GetMapping("/borrar/{id}")
     public String borrarProducto(@PathVariable Long id) {
         productoService.borrarProducto(id);
