@@ -3,10 +3,12 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Eclipse PlateUp — Restaurante</title>
+  <title>Eclipse PlateUp | Alta Cocina Contemporánea en Madrid</title>
+  
+  <meta name="description" content="Descubre Eclipse PlateUp en Madrid. Un restaurante donde la tradición culinaria se encuentra con la vanguardia gastronómica." />
   
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet"/>
-  <link rel="stylesheet" th:href="@{/css/style.css}">
+  <link rel="stylesheet" th:href="@{/css/style.css?v=3.0}">
 </head>
 <body>
 
@@ -14,7 +16,7 @@
 <div class="cursor-ring" id="cursorRing"></div>
 
 <nav id="navbar">
-  <a th:href="@{/}" class="nav-logo" style="font-size: 18px; letter-spacing: 0.15em;">Eclipse PlateUp</a>
+  <a th:href="@{/}" class="nav-logo">Eclipse PlateUp</a>
   
   <button class="mobile-menu-btn" id="burger-btn" aria-label="Menú">
       <svg viewBox="0 0 100 80" width="24" height="24" fill="var(--gold)">
@@ -35,7 +37,7 @@
   <button class="nav-cta" onclick="scrollToReserva()">Reservar Mesa</button>
 </nav>
 
-<section id="hero">
+<section id="hero" class="hero-section">
   <div class="hero-bg"></div>
   <div class="hero-grain"></div>
   <div class="hero-line-left"></div>
@@ -53,13 +55,13 @@
   <div class="hero-scroll"><span>Descubrir</span><div class="scroll-line"></div></div>
 </section>
 
-<section id="experience">
+<section id="experience" class="experience-section">
   <div class="exp-text reveal">
     <span class="section-tag">Nuestra Filosofía</span>
     <h2 class="section-title">Una <em>pasión</em><br>por el sabor</h2>
     <p class="exp-desc">Como un eclipse, nuestra cocina nace del contraste perfecto: el respeto absoluto por la tradición y la audacia de la vanguardia. Cada creación es un homenaje a la tierra, transformando ingredientes puros en una experiencia sensorial inolvidable.</p>
-    </div>
-  <div class="exp-visual" th:style="'background-image: url(@{/Img/FondoFilosofia.jpg});'">
+  </div>
+  <div class="exp-visual bg-filosofia">
     <div class="exp-plate">
       <div class="plate-ring"></div><div class="plate-ring"></div><div class="plate-ring"></div>
       <div class="plate-inner"><div class="plate-symbol">✦</div></div>
@@ -93,7 +95,7 @@
     </div>
   </div>
 
-  <div id="principales-grid" class="menu-grid" style="display: none;">
+  <div id="principales-grid" class="menu-grid hidden">
     <div th:each="p, iter : ${principales}" class="menu-card">
       <span class="menu-card-num" th:text="${iter.count < 10 ? '0' + iter.count : iter.count}">01</span>
       <h3 class="menu-card-name" th:text="${p.nombre}">Nombre</h3>
@@ -105,7 +107,7 @@
     </div>
   </div>
 
-  <div id="postres-grid" class="menu-grid" style="display: none;">
+  <div id="postres-grid" class="menu-grid hidden">
     <div th:each="p, iter : ${postres}" class="menu-card">
       <span class="menu-card-num" th:text="${iter.count < 10 ? '0' + iter.count : iter.count}">01</span>
       <h3 class="menu-card-name" th:text="${p.nombre}">Nombre</h3>
@@ -138,13 +140,13 @@
 </section>
 
 <section id="team">
-  <div class="reveal" style="text-align:center; margin-bottom:20px;">
+  <div class="team-header reveal">
     <span class="section-tag">El Equipo</span>
     <h2 class="section-title">Los artífices de la <em>experiencia</em></h2>
   </div>
 
   <div class="team-grid">
-    <div class="team-card reveal" style="background: url('/Img/AndresFuentes.png') center/cover no-repeat;">
+    <div class="team-card reveal bg-andres">
       <div class="team-overlay"></div>
       <div class="team-info">
         <div class="team-name">Andrés Fuentes</div>
@@ -152,7 +154,7 @@
       </div>
     </div>
 
-    <div class="team-card reveal" style="background: url('/Img/ClaraMontoya.png') center/cover no-repeat; transition-delay: 0.1s;">
+    <div class="team-card reveal bg-clara delay-1">
       <div class="team-overlay"></div>
       <div class="team-info">
         <div class="team-name">Clara Montoya</div>
@@ -160,7 +162,7 @@
       </div>
     </div>
 
-    <div class="team-card reveal" style="background: url('/Img/MiguelRios.png') center/cover no-repeat; transition-delay: 0.2s;">
+    <div class="team-card reveal bg-miguel delay-2">
       <div class="team-overlay"></div>
       <div class="team-info">
         <div class="team-name">Miguel Ríos</div>
@@ -168,7 +170,7 @@
       </div>
     </div>
 
-    <div class="team-card reveal" style="background: url('/Img/SofiaAguilar.png') center/cover no-repeat; transition-delay: 0.3s;">
+    <div class="team-card reveal bg-sofia delay-3">
       <div class="team-overlay"></div>
       <div class="team-info">
         <div class="team-name">Sofía Aguilar</div>
@@ -200,7 +202,7 @@
             <select class="form-select form-input"><option>13:30</option><option>21:00</option></select>
           </div>
         </div>
-        <button type="submit" class="btn-primary" style="width:100%"><span>Confirmar Reserva</span></button>
+        <button type="submit" class="btn-primary-solid"><span>Confirmar Reserva</span></button>
       </form>
     </div>
   </div>
@@ -216,25 +218,6 @@
 <div class="toast" id="toast"></div>
 
 <script th:src="@{/js/main.js}"></script>
-
-<script>
-  document.addEventListener('DOMContentLoaded', () => {
-      const burgerBtn = document.getElementById('burger-btn');
-      const navLinks = document.getElementById('nav-links');
-      if (burgerBtn && navLinks) {
-          burgerBtn.addEventListener('click', () => {
-              navLinks.classList.toggle('active');
-          });
-      }
-  });
-
-  function tabMenu(gridId, btn) {
-    document.querySelectorAll('.menu-grid').forEach(grid => grid.style.display = 'none');
-    document.querySelectorAll('.menu-tab').forEach(t => t.classList.remove('active'));
-    document.getElementById(gridId).style.display = 'grid';
-    btn.classList.add('active');
-  }
-</script>
 
 </body>
 </html>

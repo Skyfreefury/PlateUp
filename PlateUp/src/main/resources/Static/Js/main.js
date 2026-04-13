@@ -44,6 +44,30 @@ window.addEventListener('scroll', () => {
 });
 
 
+// --- MENÚ MÓVIL (NUEVO) ---
+document.addEventListener('DOMContentLoaded', () => {
+    const burgerBtn = document.getElementById('burger-btn');
+    const navLinks = document.getElementById('nav-links');
+    if (burgerBtn && navLinks) {
+        burgerBtn.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+        });
+    }
+});
+
+
+// --- PESTAÑAS DE LA CARTA (NUEVO Y LIMPIO) ---
+function tabMenu(gridId, btn) {
+    // Oculta todas las tablas usando la clase .hidden de tu CSS
+    document.querySelectorAll('.menu-grid').forEach(grid => grid.classList.add('hidden'));
+    document.querySelectorAll('.menu-tab').forEach(t => t.classList.remove('active'));
+    
+    // Muestra la seleccionada
+    document.getElementById(gridId).classList.remove('hidden');
+    btn.classList.add('active');
+}
+
+
 // --- ANIMACIONES DE APARICIÓN (REVEAL) ---
 const reveals = document.querySelectorAll('.reveal');
 const obs = new IntersectionObserver(entries => {
