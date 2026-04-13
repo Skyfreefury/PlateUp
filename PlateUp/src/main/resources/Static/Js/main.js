@@ -119,3 +119,45 @@ function scrollToReserva() {
   const res = document.getElementById('reserva');
   if(res) res.scrollIntoView({behavior:'smooth'});
 }
+// =========================================
+// LÓGICA DE NAVEGACIÓN Y PESTAÑAS (Extraída del HTML)
+// =========================================
+
+document.addEventListener('DOMContentLoaded', () => {
+    // Menú Hamburguesa
+    const burgerBtn = document.getElementById('burger-btn');
+    const navLinks = document.getElementById('nav-links');
+    
+    if (burgerBtn && navLinks) {
+        burgerBtn.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+        });
+    }
+});
+
+// Lógica de Pestañas (Carta de la Landing Page)
+function tabMenu(gridId, btn) {
+    // Ocultar todas las grids usando la nueva clase .hidden
+    document.querySelectorAll('.menu-grid').forEach(grid => {
+        grid.classList.add('hidden');
+    });
+    
+    // Quitar 'active' de todos los botones
+    document.querySelectorAll('.menu-tab').forEach(t => {
+        t.classList.remove('active');
+    });
+    
+    // Mostrar la grid correcta y activar el botón
+    document.getElementById(gridId).classList.remove('hidden');
+    btn.classList.add('active');
+}
+// =========================================
+// ANIMACIÓN DE ENTRADA PARA PANELES CRUD
+// =========================================
+document.addEventListener('DOMContentLoaded', () => {
+    const mainContent = document.getElementById('main-content');
+    if (mainContent) {
+        // Hace aparecer el panel suavemente a los 100ms
+        setTimeout(() => mainContent.classList.add('visible'), 100);
+    }
+});

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Marchar Plato | Eclipse PlateUp</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+    <link rel="stylesheet" th:href="@{/css/style.css?v=6.1}">
+</head>
+<body>
+
+<nav id="navbar" class="scrolled dashboard-nav">
+    <a th:href="@{/}" class="nav-logo">Eclipse PlateUp</a>
+    <button class="nav-cta" th:onclick="|window.location.href='@{/comandas}'|">Volver a Cocina</button>
+</nav>
+
+<section class="reveal visible" style="padding: 40px 5%; display: flex; justify-content: center; align-items: center; min-height: 70vh;">
+    <div class="card" style="background: var(--dark); padding: 50px; border: 1px solid var(--border); width: 100%; max-width: 500px; box-shadow: 0 20px 40px rgba(0,0,0,0.5);">
+        
+        <span class="section-tag" style="text-align: center;">Servicio</span>
+        <h3 style="font-family: 'Cormorant Garamond', serif; font-size: 36px; font-weight: 300; text-align: center; margin-bottom: 40px; color: var(--white);">
+            Marchar <em>Plato</em>
+        </h3>
+        
+        <form th:action="@{/comandas/guardar}" method="post" th:object="${comanda}" class="reserva-form">
+            <input type="hidden" th:field="*{id}" />
+            
+            <div class="form-group" style="margin-bottom: 25px;">
+                <label class="form-label">ID del Pedido (Cuenta)</label>
+                <input type="number" th:field="*{pedidoId}" class="form-input" required />
+            </div>
+            
+            <div class="form-group" style="margin-bottom: 25px;">
+                <label class="form-label">Nombre del Plato</label>
+                <input type="text" th:field="*{nombrePlato}" class="form-input" required />
+            </div>
+
+            <div class="form-row" style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 40px;">
+                <div class="form-group">
+                    <label class="form-label">Cantidad</label>
+                    <input type="number" th:field="*{cantidad}" class="form-input" required min="1" value="1"/>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Categoría</label>
+                    <select th:field="*{tipoComandaId}" class="form-input" required>
+                        <option value="1">Entrante</option>
+                        <option value="2">Principal</option>
+                        <option value="3">Postre</option>
+                    </select>
+                </div>
+            </div>
+            
+            <button type="submit" class="btn-primary w-100"><span>Marchar Plato</span></button>
+        </form>
+    </div>
+</section>
+
+<script th:src="@{/js/main.js}"></script>
+</body>
+</html>

@@ -22,7 +22,9 @@ public class ComandaWebController {
     @Autowired
     private ProductoService productoService;
 
-    // 1. LISTAR COMANDAS
+    // =========================================================
+    // 1. LISTAR COMANDAS (Panel de Cocina y Filtros)
+    // =========================================================
     @GetMapping
     public String listarComandas(Model model) {
         List<Comanda> listaComandas = comandaService.obtenerTodas();
@@ -30,15 +32,39 @@ public class ComandaWebController {
         
         model.addAttribute("comandas", listaComandas);
         model.addAttribute("productos", listaProductos);
-        model.addAttribute("comanda", new Comanda()); // Objeto para el formulario
+        // Ya no enviamos "new Comanda()" aquí, porque el formulario está en otra pantalla
         
-        return "comandas";
+        return "comandas"; // Carga comandas.html
     }
 
-    // 2. GUARDAR / MARCHAR COMANDA
+    // =========================================================
+    // 2. PANTALLA "MARCHAR PLATO" (Formulario vacío)
+    // =========================================================
+    @GetMapping("/nuevo")
+    public String mostrarFormularioNuevaComanda(Model model) {
+        model.addAttribute("comanda", new Comanda());
+        return "comanda-form"; // Carga comanda-form.html
+    }
+
+    // =========================================================
+    // 3. PANTALLA "EDITAR COMANDA" (Formulario relleno)
+    // =========================================================
+    @GetMapping("/editar/{id}")
+    public String mostrarFormularioEditarComanda(@PathVariable Long id, Model model) {
+        Comanda comanda = comandaService.obtenerPorId(id);
+        if (comanda != null) {
+            model.addAttribute("comanda", comanda);
+            return "comanda-form";
+        }
+        return "redirect:/comandas?error=true";
+    }
+
+    // =========================================================
+    // 4. GUARDAR / ACTUALIZAR COMANDA
+    // =========================================================
     @PostMapping("/guardar")
     public String guardarComanda(@ModelAttribute("comanda") Comanda comanda) {
-        // Rescate de categoría si falla el JS
+        // Tu lógica original de rescate (¡Muy buena práctica!)
         if (comanda.getTipoComandaId() == null || comanda.getTipoComandaId() == 0) {
             Producto p = productoService.obtenerPorNombre(comanda.getNombrePlato());
             if (p != null) {
@@ -53,12 +79,14 @@ public class ComandaWebController {
         return "redirect:/comandas";
     }
 
-    // 3. BORRAR / LISTO (Finalizar plato)
-    @PostMapping("/borrar/{id}")
+    // =========================================================
+    // 5. BORRAR / LISTO (Finalizar plato)
+    // =========================================================
+    @GetMapping("/borrar/{id}") // CAMBIADO a @GetMapping para funcionar con el <a> del HTML
     public String borrarComanda(@PathVariable Long id) {
         try {
             comandaService.borrarComanda(id);
-            return "redirect:/comandas";
+            return "redirect:/comandas?exitoBorrado=true";
         } catch (Exception e) {
             return "redirect:/comandas?error=true";
         }
