@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Ticket Mesa | Eclipse PlateUp</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+    <link rel="stylesheet" th:href="@{/css/style.css?v=10.0}">
+</head>
+<body style="background-color: #0a0a08; display: flex; flex-direction: column; align-items: center; padding-top: 50px;">
+
+<div class="ticket-container">
+    <div class="ticket-header">
+        <h2>ECLIPSE PLATEUP</h2>
+        <p>Alta Cocina & Experiencias</p>
+        <p>Av. de la Gastronomía, 123</p>
+        <div class="ticket-divider"></div>
+        
+        <p th:text="'Ticket Nº: ' + (${pedido.numeroTicket != null ? pedido.numeroTicket : pedido.id})" style="font-size: 18px; font-weight: bold;"></p>
+        
+        <p th:text="'Mesa: ' + ${pedido.mesaId}"></p>
+        <p th:text="'Fecha: ' + ${#temporals.format(pedido.fechaHora, 'dd/MM/yyyy HH:mm')}"></p>
+    </div>
+
+    <div class="ticket-divider"></div>
+    <p style="font-weight: bold; margin-bottom: 5px;">CANT.   CONCEPTO</p>
+    
+    <div th:each="c : ${comandas}" class="ticket-item">
+        <div class="item-name" th:text="${c.cantidad} + 'x ' + ${c.nombrePlato}"></div>
+    </div>
+    
+    <div class="ticket-divider"></div>
+    
+    <div class="ticket-total">
+        TOTAL: <span th:text="${pedido.total} + ' €'"></span>
+    </div>
+    
+    <div class="ticket-header" style="margin-top: 30px;">
+        <p>¡Gracias por su visita!</p>
+        <p>Le esperamos pronto.</p>
+    </div>
+</div>
+
+<div class="ticket-actions">
+    <button onclick="window.print()" class="btn-primary" style="width: 300px;">
+        <span>🖨️ Imprimir Ticket</span>
+    </button>
+    <a th:href="@{/pedidos}" class="btn-outline" style="width: 300px; text-align: center;">
+        Volver a Cuentas
+    </a>
+</div>
+
+</body>
+</html>

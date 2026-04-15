@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.Mogena.Service;
 
 import com.Mogena.Model.Pedido;
@@ -10,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class PedidoService {
@@ -25,19 +22,20 @@ public class PedidoService {
         return pedidoDAO.findById(id).orElse(null);
     }
 
-    public boolean guardarPedido(Pedido pedido) {
-        pedidoDAO.save(pedido);
-        return true;
+    public Pedido guardarPedido(Pedido pedido) {
+        return pedidoDAO.save(pedido);
     }
 
-    public boolean actualizarPedido(Pedido pedido) {
-        if (pedido.getId() == null) return false;
-        pedidoDAO.save(pedido);
-        return true;
-    }
-
-    public boolean borrarPedido(Long id) {
+    public void borrarPedido(Long id) {
         pedidoDAO.deleteById(id);
-        return true;
+    }
+
+    public List<Pedido> obtenerPedidosPorSesion(Long sesionId) {
+        return pedidoDAO.findBySesionId(sesionId);
+    }
+
+    // NUEVO: Método para el contador de tickets
+    public Optional<Pedido> obtenerUltimoDeSesion(Long sesionId) {
+        return pedidoDAO.findTopBySesionIdOrderByNumeroTicketDesc(sesionId);
     }
 }

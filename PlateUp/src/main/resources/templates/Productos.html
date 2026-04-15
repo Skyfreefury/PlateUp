@@ -2,92 +2,73 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Carta | Eclipse PlateUp</title>
+    <title>La Carta | Eclipse PlateUp</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet"/>
-    <link rel="stylesheet" th:href="@{/css/style.css?v=6.0}">
+    <link rel="stylesheet" th:href="@{/css/style.css?v=10.5}">
+    <script>
+        if (localStorage.getItem('theme') === 'light') {
+            document.documentElement.setAttribute('data-theme', 'light');
+        }
+    </script>
 </head>
 <body>
 
-<nav id="navbar" class="scrolled" style="position: relative; z-index: 1000; margin-bottom: 20px;">
+<nav id="navbar" class="scrolled dashboard-nav">
     <a th:href="@{/}" class="nav-logo">Eclipse PlateUp</a>
-    <ul class="nav-links" id="nav-links">
+    <ul class="nav-links">
         <li><a th:href="@{/mesas}">Mesas</a></li>
         <li><a th:href="@{/pedidos}">Cuentas</a></li>
-        <li><a th:href="@{/comandas}">Comandas</a></li>
-        <li><a th:href="@{/productos}" style="color: var(--gold);">Carta</a></li>
+        <li><a th:href="@{/comandas}">Cocina</a></li>
+        <li><a th:href="@{/barra}">Barra</a></li>
+        <li><a th:href="@{/productos}" class="text-gold">Carta</a></li>
         <li><a th:href="@{/clientes}">Clientes</a></li>
+        <li><a th:href="@{/cierre}">Caja</a></li>
     </ul>
-    <button class="nav-cta" th:onclick="|window.location.href='@{/}'|">Volver al Inicio</button>
+    <div style="display: flex; align-items: center; gap: 15px;">
+        <button id="theme-toggle" class="btn-icon" style="background: none; border: 1px solid var(--border); border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; cursor: pointer;">
+            <span id="theme-icon" style="font-size: 18px;">☀️</span>
+        </button>
+        <button class="nav-cta" th:onclick="|window.location.href='@{/}'|">Inicio</button>
+    </div>
 </nav>
 
-<section class="reveal" id="main-content" style="padding: 40px 5%; max-width: 1400px; margin: 0 auto;">
-    
-    <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 30px; flex-wrap: wrap; gap: 20px;">
+<section class="reveal dashboard-container visible">
+    <div class="dashboard-header">
         <div>
-            <span class="section-tag">Gestión de Inventario</span>
-            <h2 class="section-title" style="margin-bottom: 0;">Platos <em>Disponibles</em></h2>
+            <span class="section-tag">Menú</span>
+            <h2 class="section-title m-0">Nuestra <em>Carta</em></h2>
         </div>
-        
-        <div style="display: flex; gap: 20px; align-items: center; flex-wrap: wrap;">
-            <div class="menu-tabs">
-                <button class="menu-tab active" onclick="filtrarCarta('todos', this)">Todos</button>
-                <button class="menu-tab" onclick="filtrarCarta('1', this)">Entrantes</button>
-                <button class="menu-tab" onclick="filtrarCarta('2', this)">Principales</button>
-                <button class="menu-tab" onclick="filtrarCarta('3', this)">Postres</button>
-                <button class="menu-tab" onclick="filtrarCarta('4', this)">Bebidas</button>
-            </div>
-            
-            <a th:href="@{/productos/nuevo}" class="btn-primary" style="text-decoration: none; display: inline-block;">+ Añadir Plato</a>
-        </div>
+        <a th:href="@{/productos/nuevo}" class="btn-primary">+ Añadir Producto</a>
     </div>
 
     <div class="table-responsive">
-        <table class="solstice-table" style="width: 100%;">
+        <table class="solstice-table w-100">
             <thead>
                 <tr>
                     <th>Nombre</th>
+                    <th>Descripción</th>
                     <th>Precio</th>
-                    <th>Categoría</th>
-                    <th style="text-align: right;">Acciones</th>
+                    <th class="text-right">Acciones</th>
                 </tr>
             </thead>
             <tbody>
-                <tr th:each="p : ${productos}" class="producto-fila" th:data-tipo="${p.tipoProductoId}">
-                    <td th:text="${p.nombre}" style="color: var(--gold); font-weight: 500; font-size: 15px;"></td>
-                    <td th:text="${p.precio} + '€'"></td>
-                    <td>
-                        <span th:if="${p.tipoProductoId == 1}" class="timer-badge timer-green">Entrante</span>
-                        <span th:if="${p.tipoProductoId == 2}" class="timer-badge timer-red">Principal</span>
-                        <span th:if="${p.tipoProductoId == 3}" class="timer-badge timer-yellow">Postre</span>
-                        <span th:if="${p.tipoProductoId == 4}" class="timer-badge" style="border-color: #17a2b8; color: #17a2b8;">Bebida</span>
-                    </td>
-                    <td style="text-align: right;">
+                <tr th:each="p : ${productos}">
+                    <td class="text-gold font-medium" th:text="${p.nombre}"></td>
+                    <td th:text="${p.descripcion}" style="opacity: 0.7;"></td>
+                    <td th:text="${p.precio} + ' €'"></td>
+                    <td class="text-right">
                         <div class="action-buttons">
                             <a th:href="@{/productos/editar/{id}(id=${p.id})}" class="btn-icon btn-edit"><svg viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg></a>
-                            <a th:href="@{/productos/borrar/{id}(id=${p.id})}" class="btn-icon btn-delete" title="Borrar" onclick="return confirm('¿Estás seguro de eliminar este plato?')">
-                                <svg viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
-                            </a>
+                            <a th:href="@{/productos/borrar/{id}(id=${p.id})}" class="btn-icon btn-delete" onclick="return confirm('¿Eliminar producto?')"><svg viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg></a>
                         </div>
                     </td>
                 </tr>
             </tbody>
         </table>
     </div>
-
 </section>
 
 <script th:src="@{/js/main.js}"></script>
-<script>
-    document.addEventListener('DOMContentLoaded', () => { setTimeout(() => document.getElementById('main-content').classList.add('visible'), 100); });
-    function filtrarCarta(tipoId, btn) {
-        document.querySelectorAll('.menu-tab').forEach(t => t.classList.remove('active'));
-        btn.classList.add('active');
-        document.querySelectorAll('.producto-fila').forEach(fila => {
-            if (tipoId === 'todos' || fila.getAttribute('data-tipo') === tipoId) fila.style.display = '';
-            else fila.style.display = 'none';
-        });
-    }
-</script>
 </body>
 </html>

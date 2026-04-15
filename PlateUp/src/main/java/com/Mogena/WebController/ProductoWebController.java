@@ -9,52 +9,58 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+/**
+ * Controlador para la gestión visual de la Carta (Productos).
+ * Sigue el patrón de diseño de Tablas de Visualización y Formularios Dedicados.
+ */
 @Controller
-@RequestMapping("/productos") 
+@RequestMapping("/productos")
 public class ProductoWebController {
 
     @Autowired
     private ProductoService productoService;
 
     // =========================================================
-    // 1. LISTAR PRODUCTOS (Muestra solo la tabla con los filtros)
+    // 1. LISTAR PRODUCTOS (Vista Principal de la Carta)
     // =========================================================
     @GetMapping
     public String listarProductos(Model model) {
         try {
             List<Producto> lista = productoService.obtenerTodos();
-            model.addAttribute("productos", lista); 
-            // Ya no hace falta mandar un producto vacío aquí porque el form no está en esta página
-            return "productos"; // Carga el archivo productos.html
-            
+            model.addAttribute("productos", lista);
+            // Retorna la vista de la tabla (productos.html)
+            return "productos"; 
         } catch (Exception e) {
-            System.out.println("ERROR CRÍTICO AL LISTAR: " + e.getMessage());
+            System.err.println("ERROR AL CARGAR LA CARTA: " + e.getMessage());
             return "redirect:/?error=true";
         }
     }
 
     // =========================================================
-    // 2. PANTALLA "AÑADIR NUEVO" (Muestra el formulario vacío)
+    // 2. MOSTRAR FORMULARIO PARA NUEVO PLATO
     // =========================================================
     @GetMapping("/nuevo")
     public String mostrarFormularioNuevo(Model model) {
-        model.addAttribute("producto", new Producto()); // Le pasamos un producto en blanco
-        return "producto-form"; // Carga el archivo producto-form.html
+        // Pasamos un objeto Producto vacío para vincularlo al th:object
+        model.addAttribute("producto", new Producto());
+        // Retorna la vista del formulario (producto-form.html)
+        return "producto-form";
     }
 
     // =========================================================
-    // 3. PANTALLA "EDITAR" (Muestra el formulario relleno)
+    // 3. MOSTRAR FORMULARIO PARA EDITAR PLATO EXISTENTE
     // =========================================================
     @GetMapping("/editar/{id}")
     public String mostrarFormularioEditar(@PathVariable Long id, Model model) {
-        Producto producto = productoService.obtenerPorId(id);
+        Producto productoExistente = productoService.obtenerPorId(id);
         
-        if (producto != null) {
-            model.addAttribute("producto", producto);
-            // REUTILIZAMOS EL MISMO HTML QUE PARA EL NUEVO
-            return "producto-form"; 
+        if (productoExistente != null) {
+            model.addAttribute("producto", productoExistente);
+            // Reutilizamos el mismo formulario (producto-form.html)
+            return "producto-form";
         }
-        return "redirect:/productos?error=true";
+        
+        return "redirect:/productos?error=no_encontrado";
     }
 
     // =========================================================
@@ -63,17 +69,20 @@ public class ProductoWebController {
     @PostMapping("/guardar")
     public String guardarProducto(@ModelAttribute("producto") Producto producto) {
         try {
-            // Spring Boot sabe si es nuevo (sin ID) o editar (con ID) automáticamente
+            /* * Spring Boot detecta automáticamente el ID:
+             * - Si id es null -> JPA hace un INSERT (Nuevo)
+             * - Si id tiene valor -> JPA hace un UPDATE (Edición)
+             */
             productoService.guardarProducto(producto);
             return "redirect:/productos?exito=true";
         } catch (Exception e) {
-            System.out.println("ERROR AL GUARDAR: " + e.getMessage());
+            System.err.println("ERROR AL GUARDAR PRODUCTO: " + e.getMessage());
             return "redirect:/productos?error=true";
         }
     }
 
     // =========================================================
-    // 5. BORRAR PRODUCTO
+    // 5. ELIMINAR PRODUCTO
     // =========================================================
     @GetMapping("/borrar/{id}")
     public String borrarProducto(@PathVariable Long id) {
@@ -81,8 +90,8 @@ public class ProductoWebController {
             productoService.borrarProducto(id);
             return "redirect:/productos?exitoBorrado=true";
         } catch (Exception e) {
-            System.out.println("ERROR AL BORRAR: " + e.getMessage());
-            return "redirect:/productos?error=true";
+            System.err.println("ERROR AL ELIMINAR PRODUCTO: " + e.getMessage());
+            return "redirect:/productos?error=dependencias";
         }
     }
 }

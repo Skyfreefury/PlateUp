@@ -16,10 +16,11 @@
   <meta property="og:url" content="https://www.eclipse-plateup.com" />
   <meta property="og:type" content="restaurant.restaurant" />
 
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Eclipse PlateUp | Alta Cocina en Madrid" />
-  <meta name="twitter:description" content="Donde la tradición culinaria se encuentra con la vanguardia gastronómica." />
-  <meta name="twitter:image" content="https://www.eclipse-plateup.com/Img/FondoFilosofia.jpg" />
+  <script>
+    if (localStorage.getItem('theme') === 'light') {
+        document.documentElement.setAttribute('data-theme', 'light');
+    }
+  </script>
 
   <link rel="canonical" href="https://www.eclipse-plateup.com/" />
 
@@ -45,7 +46,7 @@
   </script>
 
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet"/>
-  <link rel="stylesheet" th:href="@{/css/style.css?v=6.0}">
+  <link rel="stylesheet" th:href="@{/css/style.css?v=10.8}">
 </head>
 <body>
 
@@ -67,11 +68,17 @@
     <li><a th:href="@{/mesas}">Mesas</a></li>
     <li><a th:href="@{/pedidos}">Cuentas</a></li>
     <li><a th:href="@{/comandas}">Comandas</a></li>
+    <li><a th:href="@{/barra}">Barra</a></li>
     <li><a th:href="@{/productos}">Carta (TPV)</a></li>
     <li><a th:href="@{/clientes}">Clientes</a></li>
   </ul>
   
-  <button class="nav-cta" onclick="scrollToReserva()">Reservar Mesa</button>
+  <div style="display: flex; align-items: center; gap: 15px;">
+    <button id="theme-toggle" class="btn-icon" style="background: none; border: 1px solid var(--border); border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; cursor: pointer;" title="Cambiar Tema">
+        <span id="theme-icon" style="font-size: 18px;">☀️</span>
+    </button>
+    <button class="nav-cta" onclick="scrollToReserva()">Reservar Mesa</button>
+  </div>
 </nav>
 
 <section id="hero">

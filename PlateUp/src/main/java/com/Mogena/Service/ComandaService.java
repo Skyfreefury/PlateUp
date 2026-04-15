@@ -64,4 +64,9 @@ public class ComandaService {
             comandaDAO.flush();
         }
     }
+    
+    // Añade este método a tu ComandaService.java
+    public List<Comanda> obtenerPorPedidoId(Long pedidoId) {
+        return comandaDAO.findByPedidoId(pedidoId);
+    }
 }

@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Gestión de Caja | Eclipse PlateUp</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+    <link rel="stylesheet" th:href="@{/css/style.css?v=10.2}">
+    <script>
+        if (localStorage.getItem('theme') === 'light') {
+            document.documentElement.setAttribute('data-theme', 'light');
+        }
+    </script>
+</head>
+<body>
+
+<nav id="navbar" class="scrolled dashboard-nav">
+    <a th:href="@{/}" class="nav-logo">Eclipse PlateUp</a>
+    <ul class="nav-links">
+        <li><a th:href="@{/mesas}">Mesas</a></li>
+        <li><a th:href="@{/pedidos}">Cuentas</a></li>
+        <li><a th:href="@{/comandas}">Cocina</a></li>
+        <li><a th:href="@{/barra}">Barra</a></li>
+    </ul>
+    <div style="display: flex; align-items: center; gap: 15px;">
+        <button id="theme-toggle" class="btn-icon" style="background: none; border: 1px solid var(--border); border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; cursor: pointer;" title="Cambiar Tema">
+            <span id="theme-icon" style="font-size: 18px;">☀️</span>
+        </button>
+        <button class="nav-cta" onclick="window.print()">🖨️ Imprimir Resumen</button>
+    </div>
+</nav>
+
+<section class="reveal dashboard-container visible" style="padding-top: 120px;">
+    
+    <div class="dashboard-header" style="margin-bottom: 40px;">
+        <div>
+            <span class="section-tag">Administración</span>
+            <h2 class="section-title m-0">Gestión de <em>Caja</em></h2>
+            <p style="color: var(--gold); letter-spacing: 1px; margin-top: 10px;" th:text="${mensajeEstado}"></p>
+        </div>
+    </div>
+
+    <div th:if="${sesionActivaId == null}" class="text-center" style="margin: 50px auto; max-width: 500px; padding: 40px; background: rgba(201, 168, 76, 0.05); border: 1px solid var(--gold); border-radius: 8px;">
+        <h3 style="color: var(--gold); font-family: 'Cormorant Garamond'; font-size: 32px; margin-bottom: 20px;">Apertura de Turno</h3>
+        <p style="color: var(--text-main); margin-bottom: 30px; opacity: 0.8;">No hay ninguna sesión activa. Introduce el fondo de caja inicial para comenzar a registrar ventas y abrir mesas.</p>
+        <form th:action="@{/cierre/abrir}" method="post">
+            <div class="form-group" style="text-align: left; margin-bottom: 30px;">
+                <label class="form-label">Fondo de Caja Inicial (€)</label>
+                <input type="number" name="montoInicial" step="0.01" min="0" value="150.00" class="form-input" required style="font-size: 24px; text-align: center; color: var(--gold); font-weight: bold; background: var(--input-bg);">
+            </div>
+            <button type="submit" class="btn-primary w-100" style="padding: 15px;"><span>🟢 Abrir Caja y Comenzar Turno</span></button>
+        </form>
+    </div>
+
+    <div th:if="${sesionActivaId != null}">
+        <div class="kpi-grid">
+            <div class="kpi-card">
+                <div class="kpi-title">Ingresos de la Sesión</div>
+                <p class="kpi-value" th:text="${totalCaja} + ' €'"></p>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-title">Cuentas Pagadas</div>
+                <p class="kpi-value" th:text="${totalTickets}"></p>
+            </div>
+        </div>
+
+        <div class="dashboard-header" style="margin-top: 60px; border-bottom: 1px solid var(--border); padding-bottom: 10px;">
+            <h3 style="font-family: 'Cormorant Garamond', serif; color: var(--text-main); font-size: 28px;">Desglose de <em>Ventas</em></h3>
+        </div>
+
+        <div class="table-responsive">
+            <table class="solstice-table w-100">
+                <thead>
+                    <tr>
+                        <th>Plato / Producto</th>
+                        <th class="text-right">Cantidad Vendida</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="entry : ${platosVendidos}">
+                        <td class="text-gold font-medium" th:text="${entry.key}"></td>
+                        <td class="text-right" th:text="${entry.value} + ' ud.'"></td>
+                    </tr>
+                    <tr th:if="${platosVendidos.empty}">
+                        <td colspan="2" class="text-center" style="opacity: 0.5; padding: 40px;">No hay ventas registradas en esta sesión.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="text-center mt-5 mb-5" style="padding: 40px; background: rgba(0,0,0,0.02); border: 1px dashed var(--border);">
+            <h4 style="color: var(--text-main); margin-bottom: 20px; font-family: 'Cormorant Garamond';">¿Finalizar jornada?</h4>
+            <form th:action="@{/cierre/cerrar}" method="post">
+                <input type="hidden" name="sesionId" th:value="${sesionActivaId}" />
+                <button type="submit" class="btn-primary" style="background: #dc3545; border-color: #dc3545; width: 300px;" onclick="return confirm('¿Confirmar cierre de caja? Esto archivará todos los pedidos actuales.')">
+                    <span style="color: white;">🔴 Cerrar Sesión Actual</span>
+                </button>
+            </form>
+        </div>
+    </div>
+</section>
+
+<script th:src="@{/js/main.js}"></script>
+</body>
+</html>

@@ -1,13 +1,21 @@
 package com.Mogena.WebController;
 
+import com.Mogena.Model.Comanda;
 import com.Mogena.Model.Pedido;
-import com.Mogena.Service.PedidoService;
-import com.Mogena.Service.MesaService;
+import com.Mogena.Model.Sesion;
 import com.Mogena.Service.ClienteService;
+import com.Mogena.Service.ComandaService;
+import com.Mogena.Service.MesaService;
+import com.Mogena.Service.PedidoService;
+import com.Mogena.Service.SesionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/pedidos")
@@ -15,61 +23,127 @@ public class PedidoWebController {
 
     @Autowired
     private PedidoService pedidoService;
-
-    // Inyectamos los otros servicios para cargar los selects
+    
     @Autowired
     private MesaService mesaService;
-
+    
     @Autowired
     private ClienteService clienteService;
 
+    @Autowired
+    private ComandaService comandaService;
+
+    @Autowired
+    private SesionService sesionService;
+
+    // ==========================================
+    // LISTAR SOLO PEDIDOS DE LA SESIÓN ACTUAL
+    // ==========================================
     @GetMapping
     public String listarPedidos(Model model) {
-        model.addAttribute("pedidos", pedidoService.obtenerTodos());
+        Sesion activa = sesionService.obtenerSesionActiva();
+        
+        if (activa != null) {
+            // Si hay caja abierta, mostramos solo las cuentas de hoy
+            model.addAttribute("pedidos", pedidoService.obtenerPedidosPorSesion(activa.getId()));
+        } else {
+            // Si la caja está cerrada, enviamos una lista vacía para que la pantalla esté limpia
+            model.addAttribute("pedidos", java.util.List.of());
+        }
+        
         return "pedidos";
     }
 
     @GetMapping("/nuevo")
-    public String mostrarFormularioNuevoPedido(Model model) {
+    public String mostrarFormularioNuevo(Model model) {
+        // Bloqueo: Si no hay caja abierta, no dejamos abrir mesa
+        Sesion activa = sesionService.obtenerSesionActiva();
+        if (activa == null) {
+            return "redirect:/cierre"; // Redirigimos a abrir la caja
+        }
+        
         model.addAttribute("pedido", new Pedido());
-        // Pasamos las listas al HTML para rellenar los selectores
         model.addAttribute("mesas", mesaService.obtenerTodas());
         model.addAttribute("clientes", clienteService.obtenerTodos());
         return "pedido-form";
     }
 
+    @PostMapping("/guardar")
+    public String guardarPedido(@ModelAttribute("pedido") Pedido pedido) {
+        if (pedido.getId() == null) { 
+            // ES UN PEDIDO NUEVO
+            Sesion activa = sesionService.obtenerSesionActiva();
+            if (activa == null) return "redirect:/cierre";
+            
+            pedido.setSesionId(activa.getId());
+            
+            // LÓGICA DE NUMERACIÓN DE TICKETS
+            Optional<Pedido> ultimo = pedidoService.obtenerUltimoDeSesion(activa.getId());
+            if (ultimo.isPresent() && ultimo.get().getNumeroTicket() != null) {
+                pedido.setNumeroTicket(ultimo.get().getNumeroTicket() + 1);
+            } else {
+                pedido.setNumeroTicket(1);
+            }
+            
+            pedido.setEstado("ABIERTA");
+            pedido.setFechaHora(LocalDateTime.now());
+            pedido.setTotal(0.0);
+        }
+        
+        pedidoService.guardarPedido(pedido);
+        return "redirect:/pedidos";
+    }
+
     @GetMapping("/editar/{id}")
-    public String mostrarFormularioEditarPedido(@PathVariable Long id, Model model) {
+    public String mostrarFormularioEditar(@PathVariable Long id, Model model) {
         Pedido pedido = pedidoService.obtenerPorId(id);
         if (pedido != null) {
             model.addAttribute("pedido", pedido);
-            // También pasamos las listas aquí por si quieren cambiar de mesa/cliente
             model.addAttribute("mesas", mesaService.obtenerTodas());
             model.addAttribute("clientes", clienteService.obtenerTodos());
             return "pedido-form";
         }
-        return "redirect:/pedidos?error=true";
+        return "redirect:/pedidos";
     }
 
-    @PostMapping("/guardar")
-    public String guardarPedido(@ModelAttribute("pedido") Pedido pedido) {
-        
-        // Ponemos la fecha si es una cuenta nueva
-        if (pedido.getFechaHora() == null) {
-            pedido.setFechaHora(java.time.LocalDateTime.now());
-        }
-        // Si el total viene vacío (null), lo ponemos a 0.0 para que no salte el error de la BD
-        if (pedido.getTotal() == null) {
-            pedido.setTotal(0.0);
-        }
-
-        pedidoService.guardarPedido(pedido);
-        return "redirect:/pedidos?exito=true";
-    }
-
+    // BORRADO SEGURO (Borra platos y luego cuenta)
     @GetMapping("/borrar/{id}")
     public String borrarPedido(@PathVariable Long id) {
+        List<Comanda> comandas = comandaService.obtenerPorPedidoId(id);
+        if (comandas != null) {
+            for (Comanda c : comandas) {
+                comandaService.borrarComanda(c.getId()); 
+            }
+        }
         pedidoService.borrarPedido(id);
-        return "redirect:/pedidos?exitoBorrado=true";
+        return "redirect:/pedidos?borrado=true";
+    }
+
+    // COBRO RÁPIDO (Cierra la cuenta y la enlaza a la sesión)
+    @GetMapping("/cobrar/{id}")
+    public String cobrarPedidoRapido(@PathVariable Long id) {
+        Pedido p = pedidoService.obtenerPorId(id);
+        if (p != null) {
+            p.setEstado("CERRADA");
+            if (p.getSesionId() == null) {
+                Sesion activa = sesionService.obtenerSesionActiva();
+                if (activa != null) p.setSesionId(activa.getId());
+            }
+            pedidoService.guardarPedido(p);
+        }
+        return "redirect:/pedidos?cobrado=true";
+    }
+
+    // VER EL TICKET
+    @GetMapping("/ticket/{id}")
+    public String verTicket(@PathVariable Long id, Model model) {
+        Pedido pedido = pedidoService.obtenerPorId(id);
+        if (pedido != null) {
+            List<Comanda> comandas = comandaService.obtenerPorPedidoId(id);
+            model.addAttribute("pedido", pedido);
+            model.addAttribute("comandas", comandas);
+            return "ticket";
+        }
+        return "redirect:/pedidos";
     }
 }

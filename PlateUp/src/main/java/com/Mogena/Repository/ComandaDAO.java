@@ -7,8 +7,10 @@ package com.Mogena.Repository;
 import com.Mogena.Model.Comanda;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
+import java.util.List;
 
 @Repository
 public interface ComandaDAO extends JpaRepository<Comanda, Long> {
-    // ¡Vacío! Spring Data JPA hace el trabajo duro por ti.
+    // MAGIA DE SPRING BOOT: Con solo escribir esto, Spring crea la consulta SQL por debajo
+    List<Comanda> findByPedidoId(Long pedidoId);
 }

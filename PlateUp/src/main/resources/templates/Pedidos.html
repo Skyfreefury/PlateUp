@@ -2,10 +2,15 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Cuentas | Eclipse PlateUp</title>
+    <title>Cuentas (Pedidos) | Eclipse PlateUp</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet"/>
-    <link rel="stylesheet" th:href="@{/css/style.css?v=6.1}">
+    <link rel="stylesheet" th:href="@{/css/style.css?v=10.2}">
+    <script>
+        if (localStorage.getItem('theme') === 'light') {
+            document.documentElement.setAttribute('data-theme', 'light');
+        }
+    </script>
 </head>
 <body>
 
@@ -14,20 +19,28 @@
     <ul class="nav-links" id="nav-links">
         <li><a th:href="@{/mesas}">Mesas</a></li>
         <li><a th:href="@{/pedidos}" class="text-gold">Cuentas</a></li>
-        <li><a th:href="@{/comandas}">Comandas</a></li>
+        <li><a th:href="@{/comandas}">Cocina</a></li>
+        <li><a th:href="@{/barra}">Barra</a></li>
         <li><a th:href="@{/productos}">Carta</a></li>
         <li><a th:href="@{/clientes}">Clientes</a></li>
+        <li><a th:href="@{/cierre}">Caja</a></li>
     </ul>
-    <button class="nav-cta" th:onclick="|window.location.href='@{/}'|">Volver al Inicio</button>
+    <div style="display: flex; align-items: center; gap: 15px;">
+        <button id="theme-toggle" class="btn-icon" style="background: none; border: 1px solid var(--border); border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; cursor: pointer;" title="Cambiar Tema">
+            <span id="theme-icon" style="font-size: 18px;">☀️</span>
+        </button>
+        <button class="nav-cta" th:onclick="|window.location.href='@{/}'|">Inicio</button>
+    </div>
 </nav>
 
 <section class="reveal dashboard-container" id="main-content">
     <div class="dashboard-header">
         <div>
             <span class="section-tag">Facturación</span>
-            <h2 class="section-title m-0">Cuentas <em>Activas</em></h2>
+            <h2 class="section-title m-0">Gestión de <em>Cuentas</em></h2>
         </div>
         <div class="header-actions">
+            <a th:href="@{/cierre}" class="btn-outline btn-link-action" style="margin-right: 15px;">📊 Resumen de Caja</a>
             <a th:href="@{/pedidos/nuevo}" class="btn-primary btn-link-action">+ Abrir Cuenta</a>
         </div>
     </div>
@@ -36,21 +49,35 @@
         <table class="solstice-table w-100">
             <thead>
                 <tr>
-                    <th>Mesa ID</th>
-                    <th>Cliente ID</th>
-                    <th>Total Acumulado</th>
+                    <th>Nº Ticket</th>
+                    <th>Mesa</th>
+                    <th>Fecha y Hora</th>
+                    <th>Total</th>
+                    <th>Estado</th>
+                    <th>Detalles</th>
                     <th class="text-right">Acciones</th>
                 </tr>
             </thead>
             <tbody>
                 <tr th:each="p : ${pedidos}">
-                    <td class="text-gold font-medium" th:text="'Mesa #' + ${p.mesaId}"></td>
-                    <td th:text="'ID: ' + ${p.clienteId}"></td>
-                    <td th:text="${p.total} + ' €'" style="font-weight: 500;"></td>
+                    <td th:text="${p.numeroTicket != null} ? 'Ticket #' + ${p.numeroTicket} : 'Ref. #' + ${p.id}" style="font-weight: 600; color: var(--gold);"></td>
+                    <td th:text="'Mesa ' + ${p.mesaId}"></td>
+                    <td th:text="${#temporals.format(p.fechaHora, 'dd/MM/yyyy HH:mm')}"></td>
+                    <td class="text-gold font-medium" th:text="${p.total} + ' €'"></td>
+                    <td>
+                        <span th:if="${p.estado == 'ABIERTA'}" class="timer-badge timer-green">Abierta</span>
+                        <span th:if="${p.estado == 'CERRADA'}" class="timer-badge timer-red">Cerrada</span>
+                    </td>
+                    <td>
+                        <div style="display: flex; gap: 8px; align-items: center;">
+                            <a th:if="${p.estado == 'ABIERTA'}" th:href="@{/pedidos/cobrar/{id}(id=${p.id})}" class="btn-cobrar">💵 Cobrar</a>
+                            <a th:href="@{/pedidos/ticket/{id}(id=${p.id})}" class="btn-ver-mas">Ver más</a>
+                        </div>
+                    </td>
                     <td class="text-right">
                         <div class="action-buttons">
                             <a th:href="@{/pedidos/editar/{id}(id=${p.id})}" class="btn-icon btn-edit"><svg viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg></a>
-                            <a th:href="@{/pedidos/borrar/{id}(id=${p.id})}" class="btn-icon btn-delete" onclick="return confirm('¿Cerrar y eliminar cuenta?')"><svg viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg></a>
+                            <a th:href="@{/pedidos/borrar/{id}(id=${p.id})}" class="btn-icon btn-delete" onclick="return confirm('¿Eliminar cuenta permanentemente?')"><svg viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg></a>
                         </div>
                     </td>
                 </tr>

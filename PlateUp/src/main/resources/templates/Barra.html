@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Panel de Barra | Eclipse PlateUp</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+    <link rel="stylesheet" th:href="@{/css/style.css?v=10.2}">
+    <script>
+        if (localStorage.getItem('theme') === 'light') {
+            document.documentElement.setAttribute('data-theme', 'light');
+        }
+    </script>
+</head>
+<body>
+
+<nav id="navbar" class="scrolled dashboard-nav">
+    <a th:href="@{/}" class="nav-logo">Eclipse PlateUp</a>
+    <ul class="nav-links">
+        <li><a th:href="@{/mesas}">Mesas</a></li>
+        <li><a th:href="@{/pedidos}">Cuentas</a></li>
+        <li><a th:href="@{/comandas}">Cocina</a></li>
+        <li><a th:href="@{/barra}" class="text-gold">Barra</a></li>
+        <li><a th:href="@{/productos}">Carta</a></li>
+        <li><a th:href="@{/clientes}">Clientes</a></li>
+        <li><a th:href="@{/cierre}">Caja</a></li>
+    </ul>
+    <div style="display: flex; align-items: center; gap: 15px;">
+        <button id="theme-toggle" class="btn-icon" style="background: none; border: 1px solid var(--border); border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; cursor: pointer;" title="Cambiar Tema">
+            <span id="theme-icon" style="font-size: 18px;">☀️</span>
+        </button>
+        <button class="nav-cta" th:onclick="|window.location.href='@{/}'|">Inicio</button>
+    </div>
+</nav>
+
+<section class="reveal dashboard-container visible" style="padding-top: 120px;">
+    <div class="dashboard-header">
+        <div>
+            <span class="section-tag" style="color: #0dcaf0; border-color: #0dcaf0;">Servicio de Bebidas</span>
+            <h2 class="section-title m-0">Estado de <em>Barra</em></h2>
+        </div>
+        <a th:href="@{/comandas/nuevo}" class="btn-primary btn-link-action">+ Marchar Bebida</a>
+    </div>
+
+    <div class="comanda-section-title"><h3 style="font-family: 'Cormorant Garamond'; color: var(--text-main);">🍹 Bebidas Pendientes</h3></div>
+    <div class="table-responsive">
+        <table class="solstice-table w-100">
+            <thead><tr><th>Ticket</th><th>Bebida</th><th>Cant.</th><th>Tiempo Espera</th><th class="text-right">Acción</th></tr></thead>
+            <tbody>
+                <tr th:each="c : ${comandas}" th:if="${c.tipoComandaId == 4 and c.estado != 'LISTO'}">
+                    <td th:text="'Ticket #' + ${c.pedidoId}"></td>
+                    <td style="color: #0dcaf0; font-weight: 500;" th:text="${c.nombrePlato}"></td>
+                    <td th:text="'x' + ${c.cantidad}"></td>
+                    <td><span class="wait-time" th:data-start="${c.creadoEn}">Calculando...</span></td>
+                    <td class="text-right">
+                        <a th:href="@{/comandas/listo/{id}(id=${c.id})}" class="btn-icon" style="color: #28a745; border: 1px solid #28a745;" title="¡Bebida Lista!">
+                            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M9 16.17L4.83 12l-1.41 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                        </a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</section>
+
+<script th:src="@{/js/main.js}"></script>
+<script>
+    function actualizarRelojes() {
+        const ahora = new Date();
+        document.querySelectorAll('.wait-time').forEach(el => {
+            const fechaInicioStr = el.getAttribute('data-start');
+            if(!fechaInicioStr) return;
+            const fechaInicio = new Date(fechaInicioStr);
+            const dif = Math.floor((ahora - fechaInicio) / 1000);
+            if (dif >= 0) {
+                const min = Math.floor(dif / 60);
+                const seg = dif % 60;
+                el.innerText = `${min}m ${seg}s`;
+                if (min >= 5) el.classList.add('urgent'); 
+            }
+        });
+    }
+    setInterval(actualizarRelojes, 1000);
+    actualizarRelojes();
+</script>
+</body>
+</html>
