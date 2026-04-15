@@ -25,9 +25,9 @@
         <li><a th:href="@{/clientes}">Clientes</a></li>
         <li><a th:href="@{/cierre}">Caja</a></li>
     </ul>
-    <div style="display: flex; align-items: center; gap: 15px;">
-        <button id="theme-toggle" class="btn-icon" style="background: none; border: 1px solid var(--border); border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; cursor: pointer;" title="Cambiar Tema">
-            <span id="theme-icon" style="font-size: 18px;">☀️</span>
+    <div class="nav-actions">
+        <button id="theme-toggle" class="btn-icon btn-circle" title="Cambiar Tema">
+            <span id="theme-icon">☀️</span>
         </button>
         <button class="nav-cta" th:onclick="|window.location.href='@{/}'|">Inicio</button>
     </div>
@@ -42,7 +42,7 @@
         <a th:href="@{/comandas/nuevo}" class="btn-primary btn-link-action">+ Marchar Plato</a>
     </div>
 
-    <div class="comanda-section-title"><h3 style="font-family: 'Cormorant Garamond'; color: var(--text-main);">🥗 Entrantes</h3></div>
+    <div class="comanda-section-title"><h3 class="comanda-title">🥗 Entrantes</h3></div>
     <div class="table-responsive">
         <table class="solstice-table w-100">
             <thead><tr><th>Ticket</th><th>Plato</th><th>Cant.</th><th>Tiempo Espera</th><th class="text-right">Acción</th></tr></thead>
@@ -53,7 +53,7 @@
                     <td th:text="'x' + ${c.cantidad}"></td>
                     <td><span class="wait-time" th:data-start="${c.creadoEn}">Calculando...</span></td>
                     <td class="text-right">
-                        <a th:href="@{/comandas/listo/{id}(id=${c.id})}" class="btn-icon" style="color: #28a745; border: 1px solid #28a745;" title="¡Plato Listo!">
+                        <a th:href="@{/comandas/listo/{id}(id=${c.id})}" class="btn-icon btn-icon-success" title="¡Plato Listo!">
                             <svg viewBox="0 0 24 24" fill="currentColor"><path d="M9 16.17L4.83 12l-1.41 1.41L9 19 21 7l-1.41-1.41z"/></svg>
                         </a>
                     </td>
@@ -62,7 +62,7 @@
         </table>
     </div>
 
-    <div class="comanda-section-title"><h3 style="font-family: 'Cormorant Garamond'; color: var(--text-main);">🥩 Principales</h3></div>
+    <div class="comanda-section-title"><h3 class="comanda-title">🥩 Principales</h3></div>
     <div class="table-responsive">
         <table class="solstice-table w-100">
             <thead><tr><th>Ticket</th><th>Plato</th><th>Cant.</th><th>Tiempo Espera</th><th class="text-right">Acción</th></tr></thead>
@@ -73,7 +73,7 @@
                     <td th:text="'x' + ${c.cantidad}"></td>
                     <td><span class="wait-time" th:data-start="${c.creadoEn}">Calculando...</span></td>
                     <td class="text-right">
-                        <a th:href="@{/comandas/listo/{id}(id=${c.id})}" class="btn-icon" style="color: #28a745; border: 1px solid #28a745;" title="¡Plato Listo!">
+                        <a th:href="@{/comandas/listo/{id}(id=${c.id})}" class="btn-icon btn-icon-success" title="¡Plato Listo!">
                             <svg viewBox="0 0 24 24" fill="currentColor"><path d="M9 16.17L4.83 12l-1.41 1.41L9 19 21 7l-1.41-1.41z"/></svg>
                         </a>
                     </td>
@@ -82,7 +82,7 @@
         </table>
     </div>
 
-    <div class="comanda-section-title"><h3 style="font-family: 'Cormorant Garamond'; color: var(--text-main);">🍰 Postres</h3></div>
+    <div class="comanda-section-title"><h3 class="comanda-title">🍰 Postres</h3></div>
     <div class="table-responsive">
         <table class="solstice-table w-100">
             <thead><tr><th>Ticket</th><th>Plato</th><th>Cant.</th><th>Tiempo Espera</th><th class="text-right">Acción</th></tr></thead>
@@ -93,7 +93,7 @@
                     <td th:text="'x' + ${c.cantidad}"></td>
                     <td><span class="wait-time" th:data-start="${c.creadoEn}">Calculando...</span></td>
                     <td class="text-right">
-                        <a th:href="@{/comandas/listo/{id}(id=${c.id})}" class="btn-icon" style="color: #28a745; border: 1px solid #28a745;" title="¡Plato Listo!">
+                        <a th:href="@{/comandas/listo/{id}(id=${c.id})}" class="btn-icon btn-icon-success" title="¡Plato Listo!">
                             <svg viewBox="0 0 24 24" fill="currentColor"><path d="M9 16.17L4.83 12l-1.41 1.41L9 19 21 7l-1.41-1.41z"/></svg>
                         </a>
                     </td>
@@ -104,24 +104,5 @@
 </section>
 
 <script th:src="@{/js/main.js}"></script>
-<script>
-    function actualizarRelojes() {
-        const ahora = new Date();
-        document.querySelectorAll('.wait-time').forEach(el => {
-            const fechaInicioStr = el.getAttribute('data-start');
-            if(!fechaInicioStr) return;
-            const fechaInicio = new Date(fechaInicioStr);
-            const dif = Math.floor((ahora - fechaInicio) / 1000);
-            if (dif >= 0) {
-                const min = Math.floor(dif / 60);
-                const seg = dif % 60;
-                el.innerText = `${min}m ${seg}s`;
-                if (min >= 15) el.classList.add('urgent');
-            }
-        });
-    }
-    setInterval(actualizarRelojes, 1000);
-    actualizarRelojes();
-</script>
 </body>
 </html>

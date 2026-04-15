@@ -25,9 +25,9 @@
         <li><a th:href="@{/clientes}">Clientes</a></li>
         <li><a th:href="@{/cierre}">Caja</a></li>
     </ul>
-    <div style="display: flex; align-items: center; gap: 15px;">
-        <button id="theme-toggle" class="btn-icon" style="background: none; border: 1px solid var(--border); border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; cursor: pointer;">
-            <span id="theme-icon" style="font-size: 18px;">☀️</span>
+    <div class="nav-actions">
+        <button id="theme-toggle" class="btn-icon btn-circle">
+            <span id="theme-icon">☀️</span>
         </button>
         <button class="nav-cta" th:onclick="|window.location.href='@{/}'|">Inicio</button>
     </div>
@@ -55,7 +55,7 @@
             <tbody>
                 <tr th:each="p : ${productos}">
                     <td class="text-gold font-medium" th:text="${p.nombre}"></td>
-                    <td th:text="${p.descripcion}" style="opacity: 0.7;"></td>
+                    <td class="opacity-70" th:text="${p.descripcion}"></td>
                     <td th:text="${p.precio} + ' €'"></td>
                     <td class="text-right">
                         <div class="action-buttons">

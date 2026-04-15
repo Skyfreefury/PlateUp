@@ -16,9 +16,9 @@
 
 <nav id="navbar" class="scrolled dashboard-nav">
     <a th:href="@{/}" class="nav-logo">Eclipse PlateUp</a>
-    <div style="display: flex; align-items: center; gap: 15px;">
-        <button id="theme-toggle" class="btn-icon" style="background: none; border: 1px solid var(--border); border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; cursor: pointer;" title="Cambiar Tema">
-            <span id="theme-icon" style="font-size: 18px;">☀️</span>
+    <div class="nav-actions">
+        <button id="theme-toggle" class="btn-icon btn-circle" title="Cambiar Tema">
+            <span id="theme-icon">☀️</span>
         </button>
         <button class="nav-cta" onclick="history.back()">Volver Atrás</button>
     </div>
@@ -36,7 +36,7 @@
             
             <div class="form-group mb-25">
                 <label class="form-label">Asignar a la Cuenta</label>
-                <select th:field="*{pedidoId}" class="form-input" required style="background-color: var(--input-bg);">
+                <select th:field="*{pedidoId}" class="form-input" required>
                     <option value="" disabled selected>-- Seleccione la cuenta abierta --</option>
                     <option th:each="p : ${pedidos}" th:if="${p.estado == 'ABIERTA'}" th:value="${p.id}" th:text="${p.numeroTicket != null ? 'Ticket #' + p.numeroTicket : 'Ref #' + p.id} + ' (Mesa ' + ${p.mesaId} + ')'"></option>
                 </select>
@@ -44,7 +44,7 @@
 
             <div class="form-group mb-25">
                 <label class="form-label">Producto / Plato</label>
-                <select th:field="*{nombrePlato}" class="form-input" required style="background-color: var(--input-bg);">
+                <select th:field="*{nombrePlato}" class="form-input" required>
                     <option value="" disabled selected>-- Selecciona un plato de la carta --</option>
                     <option th:each="prod : ${productos}" th:value="${prod.nombre}" th:text="${prod.nombre} + ' (' + ${prod.precio} + '€)'"></option>
                 </select>
@@ -54,13 +54,13 @@
                 <div class="col-md-4">
                     <div class="form-group mb-25">
                         <label class="form-label">Cantidad</label>
-                        <input type="number" th:field="*{cantidad}" class="form-input" min="1" value="1" required style="background-color: var(--input-bg);" />
+                        <input type="number" th:field="*{cantidad}" class="form-input" min="1" value="1" required />
                     </div>
                 </div>
                 <div class="col-md-8">
                     <div class="form-group mb-40">
                         <label class="form-label">Destino de Preparación</label>
-                        <select th:field="*{tipoComandaId}" class="form-input" required style="background-color: var(--input-bg);">
+                        <select th:field="*{tipoComandaId}" class="form-input" required>
                             <option value="" disabled selected>-- Enviar a... --</option>
                             <option value="1">🥗 Entrante (Cocina)</option>
                             <option value="2">🥩 Principal (Cocina)</option>

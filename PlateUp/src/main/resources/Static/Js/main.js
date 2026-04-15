@@ -77,10 +77,38 @@ function handleTheme() {
     });
 }
 
+// --- TEMPORIZADORES DE ESPERA EN COMANDAS ---
+function initWaitTimers() {
+    const timers = document.querySelectorAll('.wait-time');
+    if (!timers.length) return;
+
+    // Umbral de urgencia configurable por página via data-urgency-minutes en <body>
+    const urgencyMinutes = parseInt(document.body.dataset.urgencyMinutes || '15');
+
+    function tick() {
+        const ahora = new Date();
+        timers.forEach(el => {
+            const start = el.getAttribute('data-start');
+            if (!start) return;
+            const dif = Math.floor((ahora - new Date(start)) / 1000);
+            if (dif >= 0) {
+                const min = Math.floor(dif / 60);
+                const seg = dif % 60;
+                el.innerText = `${min}m ${seg}s`;
+                if (min >= urgencyMinutes) el.classList.add('urgent');
+            }
+        });
+    }
+
+    setInterval(tick, 1000);
+    tick();
+}
+
 // --- INICIALIZACIÓN GENERAL ---
 document.addEventListener('DOMContentLoaded', () => {
     handleTheme();
     initHoverEffects();
+    initWaitTimers();
 
     // Animaciones Reveal
     const reveals = document.querySelectorAll('.reveal');

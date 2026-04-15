@@ -25,9 +25,9 @@
         <li><a th:href="@{/clientes}">Clientes</a></li>
         <li><a th:href="@{/cierre}">Caja</a></li>
     </ul>
-    <div style="display: flex; align-items: center; gap: 15px;">
-        <button id="theme-toggle" class="btn-icon" style="background: none; border: 1px solid var(--border); border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; cursor: pointer;" title="Cambiar Tema">
-            <span id="theme-icon" style="font-size: 18px;">☀️</span>
+    <div class="nav-actions">
+        <button id="theme-toggle" class="btn-icon btn-circle" title="Cambiar Tema">
+            <span id="theme-icon">☀️</span>
         </button>
         <button class="nav-cta" th:onclick="|window.location.href='@{/}'|">Inicio</button>
     </div>
@@ -40,7 +40,7 @@
             <h2 class="section-title m-0">Gestión de <em>Cuentas</em></h2>
         </div>
         <div class="header-actions">
-            <a th:href="@{/cierre}" class="btn-outline btn-link-action" style="margin-right: 15px;">📊 Resumen de Caja</a>
+            <a th:href="@{/cierre}" class="btn-outline btn-link-action">📊 Resumen de Caja</a>
             <a th:href="@{/pedidos/nuevo}" class="btn-primary btn-link-action">+ Abrir Cuenta</a>
         </div>
     </div>
@@ -60,7 +60,7 @@
             </thead>
             <tbody>
                 <tr th:each="p : ${pedidos}">
-                    <td th:text="${p.numeroTicket != null} ? 'Ticket #' + ${p.numeroTicket} : 'Ref. #' + ${p.id}" style="font-weight: 600; color: var(--gold);"></td>
+                    <td class="text-gold font-semibold" th:text="${p.numeroTicket != null} ? 'Ticket #' + ${p.numeroTicket} : 'Ref. #' + ${p.id}"></td>
                     <td th:text="'Mesa ' + ${p.mesaId}"></td>
                     <td th:text="${#temporals.format(p.fechaHora, 'dd/MM/yyyy HH:mm')}"></td>
                     <td class="text-gold font-medium" th:text="${p.total} + ' €'"></td>
@@ -69,7 +69,7 @@
                         <span th:if="${p.estado == 'CERRADA'}" class="timer-badge timer-red">Cerrada</span>
                     </td>
                     <td>
-                        <div style="display: flex; gap: 8px; align-items: center;">
+                        <div class="action-row">
                             <a th:if="${p.estado == 'ABIERTA'}" th:href="@{/pedidos/cobrar/{id}(id=${p.id})}" class="btn-cobrar">💵 Cobrar</a>
                             <a th:href="@{/pedidos/ticket/{id}(id=${p.id})}" class="btn-ver-mas">Ver más</a>
                         </div>

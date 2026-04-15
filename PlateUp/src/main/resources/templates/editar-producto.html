@@ -5,19 +5,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Editar Plato | Eclipse PlateUp</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet"/>
     <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
-<body style="background-color: #0a0a08; color: #f5f2eb;">
+<body>
 
-<nav class="navbar navbar-expand-lg navbar-dark sticky-top" style="background-color: #0a0a08; border-bottom: 1px solid #2a2a26;">
+<nav class="navbar navbar-expand-lg navbar-dark sticky-top crud-nav">
     <div class="container">
-        <a class="navbar-brand nav-logo" th:href="@{/}" style="font-family: 'Cormorant Garamond', serif; color: #c9a84c; letter-spacing: 0.3em; text-transform: uppercase;">ECLIPSE PLATEUP</a>
+        <a class="navbar-brand nav-logo" th:href="@{/}">ECLIPSE PLATEUP</a>
         <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav ms-auto nav-links" style="gap: 20px;">
-                <li class="nav-item"><a class="nav-link text-white" th:href="@{/mesas}" style="font-size: 11px; letter-spacing: 0.2em;">MESAS</a></li>
-                <li class="nav-item"><a class="nav-link text-white" th:href="@{/pedidos}" style="font-size: 11px; letter-spacing: 0.2em;">CUENTAS</a></li>
-                <li class="nav-item"><a class="nav-link text-white" th:href="@{/comandas}" style="font-size: 11px; letter-spacing: 0.2em;">COMANDAS</a></li>
-                <li class="nav-item"><a class="nav-link" th:href="@{/productos}" style="color: #c9a84c; font-size: 11px; letter-spacing: 0.2em;">CARTA</a></li>
+            <ul class="navbar-nav ms-auto nav-links">
+                <li class="nav-item"><a class="nav-link" th:href="@{/mesas}">MESAS</a></li>
+                <li class="nav-item"><a class="nav-link" th:href="@{/pedidos}">CUENTAS</a></li>
+                <li class="nav-item"><a class="nav-link" th:href="@{/comandas}">COMANDAS</a></li>
+                <li class="nav-item"><a class="nav-link text-gold" th:href="@{/productos}">CARTA</a></li>
             </ul>
         </div>
     </div>
@@ -26,41 +27,41 @@
 <div class="container mt-5 pt-4 pb-5">
     <div class="row justify-content-center">
         <div class="col-12 col-md-8 col-lg-6">
-            <div class="p-5 shadow-lg" style="background-color: #161614; border: 1px solid #2a2a26;">
-                <span style="color: #c9a84c; font-size: 10px; letter-spacing: 0.4em; text-transform: uppercase; display: block; margin-bottom: 20px;">CARTA</span>
-                <h3 class="mb-5" style="font-family: 'Cormorant Garamond', serif; font-size: 2.5rem; color: #f5f2eb; font-weight: 300;">Editar <em style="color: #c9a84c; font-style: italic;">Plato</em></h3>
-                
+            <div class="form-card">
+                <span class="section-tag">CARTA</span>
+                <h3 class="form-title">Editar <em class="text-gold">Plato</em></h3>
+
                 <form th:action="@{/productos/editar/{id}(id=${producto.id})}" method="post" th:object="${producto}">
                     <input type="hidden" th:field="*{id}" />
-                    
+
                     <div class="mb-4">
-                        <label style="font-size: 9px; letter-spacing: 0.3em; color: #7a7a72; text-transform: uppercase; margin-bottom: 8px; display: block;">Nombre del Plato</label>
-                        <input type="text" th:field="*{nombre}" class="form-control" style="background-color: #0a0a08; color: #fff; border: 1px solid #2a2a26; border-radius: 0; padding: 14px 16px;" required />
+                        <label class="form-label">Nombre del Plato</label>
+                        <input type="text" th:field="*{nombre}" class="form-input" required />
                     </div>
-                    
+
                     <div class="mb-4">
-                        <label style="font-size: 9px; letter-spacing: 0.3em; color: #7a7a72; text-transform: uppercase; margin-bottom: 8px; display: block;">Precio (€)</label>
-                        <input type="number" step="0.01" th:field="*{precio}" class="form-control" style="background-color: #0a0a08; color: #fff; border: 1px solid #2a2a26; border-radius: 0; padding: 14px 16px;" required />
+                        <label class="form-label">Precio (€)</label>
+                        <input type="number" step="0.01" th:field="*{precio}" class="form-input" required />
                     </div>
-                    
+
                     <div class="mb-4">
-                        <label style="font-size: 9px; letter-spacing: 0.3em; color: #7a7a72; text-transform: uppercase; margin-bottom: 8px; display: block;">Categoría</label>
-                        <select th:field="*{tipoProductoId}" class="form-select" style="background-color: #0a0a08; color: #fff; border: 1px solid #2a2a26; border-radius: 0; padding: 14px 16px;" required>
+                        <label class="form-label">Categoría</label>
+                        <select th:field="*{tipoProductoId}" class="form-input" required>
                             <option value="1">Entrante</option>
                             <option value="2">Principal / Plato Fuerte</option>
                             <option value="3">Postre</option>
                             <option value="4">Bebida</option>
                         </select>
                     </div>
-                    
+
                     <div class="mb-5">
-                        <label style="font-size: 9px; letter-spacing: 0.3em; color: #7a7a72; text-transform: uppercase; margin-bottom: 8px; display: block;">Descripción</label>
-                        <textarea th:field="*{descripcion}" class="form-control" rows="3" style="background-color: #0a0a08; color: #fff; border: 1px solid #2a2a26; border-radius: 0; padding: 14px 16px;"></textarea>
+                        <label class="form-label">Descripción</label>
+                        <textarea th:field="*{descripcion}" class="form-input" rows="3"></textarea>
                     </div>
-                    
+
                     <div class="d-flex gap-3">
-                        <button type="submit" class="w-50" style="background-color: #c9a84c; color: #0a0a08; border: none; padding: 16px; font-size: 11px; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; cursor: pointer;">GUARDAR</button>
-                        <a th:href="@{/productos}" class="w-50 text-center text-decoration-none d-flex align-items-center justify-content-center" style="background-color: transparent; color: #f5f2eb; border: 1px solid #2a2a26; padding: 16px; font-size: 11px; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; transition: 0.3s;">CANCELAR</a>
+                        <button type="submit" class="btn-primary w-50">GUARDAR</button>
+                        <a th:href="@{/productos}" class="btn-secondary w-50 text-center text-decoration-none d-flex align-items-center justify-content-center">CANCELAR</a>
                     </div>
                 </form>
             </div>
