@@ -31,21 +31,30 @@ public class TipoProductoService {
         return tipoProductoDAO.findById(id).orElse(null);
     }
 
-    /** Persiste un nuevo tipo de producto. Siempre devuelve true. */
+    /** Persiste un nuevo tipo de producto. Devuelve {@code false} si ocurre un error de base de datos. */
     public boolean guardarTipoProducto(TipoProducto tipoProducto) {
-        tipoProductoDAO.save(tipoProducto);
-        return true;
+        try {
+            tipoProductoDAO.save(tipoProducto);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 
-    /** Actualiza un tipo de producto existente. Devuelve false si no tiene id asignado. */
+    /** Actualiza un tipo de producto existente. Devuelve {@code false} si no tiene id o falla la BD. */
     public boolean actualizarTipoProducto(TipoProducto tipoProducto) {
         if (tipoProducto.getId() == null) return false;
-        tipoProductoDAO.save(tipoProducto);
-        return true;
+        try {
+            tipoProductoDAO.save(tipoProducto);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 
-    /** Elimina el tipo de producto con el id indicado. Siempre devuelve true. */
+    /** Elimina el tipo de producto con el id indicado. Devuelve {@code false} si no existe. */
     public boolean borrarTipoProducto(Long id) {
+        if (!tipoProductoDAO.existsById(id)) return false;
         tipoProductoDAO.deleteById(id);
         return true;
     }

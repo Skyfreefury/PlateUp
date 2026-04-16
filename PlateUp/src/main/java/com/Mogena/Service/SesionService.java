@@ -23,9 +23,10 @@ public class SesionService {
 
     /**
      * Abre una nueva sesión de caja con el fondo inicial indicado.
-     * Si ya existe una sesión abierta, devuelve {@code null} sin crear una nueva.
+     * Devuelve {@code null} si ya hay una sesión abierta o si el monto inicial es negativo o nulo.
      */
     public Sesion abrirSesion(Double montoInicial) {
+        if (montoInicial == null || montoInicial < 0) return null;
         if (obtenerSesionActiva() != null) return null;
 
         Sesion s = new Sesion();

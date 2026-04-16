@@ -31,21 +31,30 @@ public class LineaProductoService {
         return lineaProductoDAO.findById(id).orElse(null);
     }
 
-    /** Persiste una nueva línea de producto. Siempre devuelve true. */
+    /** Persiste una nueva línea de producto. Devuelve {@code false} si ocurre un error de base de datos. */
     public boolean guardarLinea(LineaProducto linea) {
-        lineaProductoDAO.save(linea);
-        return true;
+        try {
+            lineaProductoDAO.save(linea);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 
-    /** Actualiza una línea de producto existente. Devuelve false si no tiene id asignado. */
+    /** Actualiza una línea de producto existente. Devuelve {@code false} si no tiene id o falla la BD. */
     public boolean actualizarLinea(LineaProducto linea) {
         if (linea.getId() == null) return false;
-        lineaProductoDAO.save(linea);
-        return true;
+        try {
+            lineaProductoDAO.save(linea);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 
-    /** Elimina la línea de producto con el id indicado. Siempre devuelve true. */
+    /** Elimina la línea de producto con el id indicado. Devuelve {@code false} si no existe. */
     public boolean borrarLinea(Long id) {
+        if (!lineaProductoDAO.existsById(id)) return false;
         lineaProductoDAO.deleteById(id);
         return true;
     }

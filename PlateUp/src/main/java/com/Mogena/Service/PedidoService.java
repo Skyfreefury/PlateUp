@@ -29,14 +29,17 @@ public class PedidoService {
         return pedidoDAO.findById(id).orElse(null);
     }
 
-    /** Persiste un pedido nuevo o actualiza uno existente. */
+    /** Persiste un pedido nuevo o actualiza uno existente. Devuelve {@code null} si el pedido es nulo. */
     public Pedido guardarPedido(Pedido pedido) {
+        if (pedido == null) return null;
         return pedidoDAO.save(pedido);
     }
 
-    /** Elimina el pedido con el ID indicado. */
+    /** Elimina el pedido con el ID indicado. No hace nada si no existe. */
     public void borrarPedido(Long id) {
-        pedidoDAO.deleteById(id);
+        if (pedidoDAO.existsById(id)) {
+            pedidoDAO.deleteById(id);
+        }
     }
 
     /** Devuelve todos los pedidos asociados a una sesión de caja concreta. */

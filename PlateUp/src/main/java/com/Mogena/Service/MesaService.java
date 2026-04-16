@@ -59,8 +59,10 @@ public class MesaService {
         return false;
     }
 
-    /** Elimina la mesa con el ID indicado. */
+    /** Elimina la mesa con el ID indicado. No hace nada si no existe. */
     public void borrarMesa(Long id) {
-        mesaDAO.deleteById(id);
+        if (mesaDAO.existsById(id)) {
+            mesaDAO.deleteById(id);
+        }
     }
 }

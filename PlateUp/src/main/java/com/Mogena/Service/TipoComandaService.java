@@ -31,21 +31,30 @@ public class TipoComandaService {
         return tipoComandaDAO.findById(id).orElse(null);
     }
 
-    /** Persiste un nuevo tipo de comanda. Siempre devuelve true. */
+    /** Persiste un nuevo tipo de comanda. Devuelve {@code false} si ocurre un error de base de datos. */
     public boolean guardarTipoComanda(TipoComanda tipoComanda) {
-        tipoComandaDAO.save(tipoComanda);
-        return true;
+        try {
+            tipoComandaDAO.save(tipoComanda);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 
-    /** Actualiza un tipo de comanda existente. Devuelve false si no tiene id asignado. */
+    /** Actualiza un tipo de comanda existente. Devuelve {@code false} si no tiene id o falla la BD. */
     public boolean actualizarTipoComanda(TipoComanda tipoComanda) {
         if (tipoComanda.getId() == null) return false;
-        tipoComandaDAO.save(tipoComanda);
-        return true;
+        try {
+            tipoComandaDAO.save(tipoComanda);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 
-    /** Elimina el tipo de comanda con el id indicado. Siempre devuelve true. */
+    /** Elimina el tipo de comanda con el id indicado. Devuelve {@code false} si no existe. */
     public boolean borrarTipoComanda(Long id) {
+        if (!tipoComandaDAO.existsById(id)) return false;
         tipoComandaDAO.deleteById(id);
         return true;
     }

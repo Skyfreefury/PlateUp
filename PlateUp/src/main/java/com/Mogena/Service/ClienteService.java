@@ -25,21 +25,30 @@ public class ClienteService {
         return clienteDAO.findById(id).orElse(null);
     }
 
-    /** Persiste un cliente nuevo. */
+    /** Persiste un cliente nuevo. Devuelve {@code false} si ocurre un error de base de datos. */
     public boolean guardarCliente(Cliente cliente) {
-        clienteDAO.save(cliente);
-        return true;
+        try {
+            clienteDAO.save(cliente);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 
-    /** Actualiza un cliente existente. Devuelve {@code false} si no tiene ID asignado. */
+    /** Actualiza un cliente existente. Devuelve {@code false} si no tiene ID asignado o falla la BD. */
     public boolean actualizarCliente(Cliente cliente) {
         if (cliente.getId() == null) return false;
-        clienteDAO.save(cliente);
-        return true;
+        try {
+            clienteDAO.save(cliente);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 
-    /** Elimina el cliente con el ID indicado. */
+    /** Elimina el cliente con el ID indicado. Devuelve {@code false} si no existe. */
     public boolean borrarCliente(Long id) {
+        if (!clienteDAO.existsById(id)) return false;
         clienteDAO.deleteById(id);
         return true;
     }
