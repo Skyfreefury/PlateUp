@@ -7,14 +7,19 @@ package com.Mogena.Model;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 
+/**
+ * Entidad que representa una categoría de producto de la carta (p. ej. "Bebidas", "Entrantes", "Postres").
+ * Permite agrupar los productos para facilitar su visualización y filtrado.
+ */
 @Entity
 @Table(name = "tipos_producto")
 public class TipoProducto {
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    /** Nombre de la categoría del producto. No puede estar vacío. */
     @NotBlank(message = "El nombre del tipo de producto no puede estar vacío")
     private String nombre;
 

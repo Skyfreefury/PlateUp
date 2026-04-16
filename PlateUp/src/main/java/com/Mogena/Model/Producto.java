@@ -1,25 +1,30 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.Mogena.Model;
 
 import jakarta.persistence.*;
 
+/**
+ * Entidad que representa un producto de la carta del restaurante.
+ *
+ * <p>El ID se asigna manualmente mediante reciclaje de huecos en {@link com.Mogena.Service.ProductoService},
+ * por lo que no usa {@code @GeneratedValue}.
+ */
 @Entity
 @Table(name = "productos")
 public class Producto {
 
     @Id
-    // 🚨 Sin @GeneratedValue para que funcione tu lógica de reciclaje de IDs
     private Long id;
 
     private String nombre;
     private Double precio;
     private String descripcion;
 
+    /**
+     * Categoría del producto: 1 = Entrante, 2 = Principal, 3 = Postre, 4 = Bebida.
+     * Determina en qué sección de la carta aparece y a qué estación se marcha.
+     */
     @Column(name = "tipo_producto_id")
-    private Long tipoProductoId; // Este es el ID de la categoría (1, 2, 3 o 4)
+    private Long tipoProductoId;
 
     public Producto() {}
 
@@ -31,7 +36,6 @@ public class Producto {
         this.tipoProductoId = tipoProductoId;
     }
 
-    // --- Getters y Setters ---
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 

@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.Mogena.WebController;
 
 import com.Mogena.Model.Producto;
@@ -13,30 +9,37 @@ import org.springframework.web.bind.annotation.GetMapping;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Controlador de la página de inicio pública del restaurante.
+ * Carga los productos de la carta y los pasa al template {@code index.html}
+ * separados por categoría para mostrar las pestañas de la carta al cliente.
+ */
 @Controller
 public class HomeWebController {
 
     @Autowired
     private ProductoService productoService;
 
+    /**
+     * Renderiza la página de inicio con la carta del restaurante.
+     * Si la base de datos no está disponible, renderiza el index igualmente
+     * con listas vacías para evitar un error 500.
+     */
     @GetMapping("/")
     public String index(Model model) {
         try {
-            // 1. Obtenemos todos los productos de la base de datos
             List<Producto> todosLosProductos = productoService.obtenerTodos();
-
-            // 2. Los pasamos al modelo para el diseño general
             model.addAttribute("productos", todosLosProductos);
 
-            // 3. (Opcional) Si quieres mantener las pestañas del index funcionando con datos reales:
+            // Filtrado por categoría para las pestañas de la carta en el index
             List<Producto> entrantes = todosLosProductos.stream()
                     .filter(p -> p.getTipoProductoId() == 1)
                     .collect(Collectors.toList());
-            
+
             List<Producto> principales = todosLosProductos.stream()
                     .filter(p -> p.getTipoProductoId() == 2)
                     .collect(Collectors.toList());
-            
+
             List<Producto> postres = todosLosProductos.stream()
                     .filter(p -> p.getTipoProductoId() == 3)
                     .collect(Collectors.toList());
@@ -45,10 +48,10 @@ public class HomeWebController {
             model.addAttribute("principales", principales);
             model.addAttribute("postres", postres);
 
-            return "index"; // Carga index.html
+            return "index";
         } catch (Exception e) {
-            System.out.println("Error en Home: " + e.getMessage());
-            return "index"; // Retorna el index aunque esté vacío para no dar error 500
+            System.out.println("Error al cargar la carta en el inicio: " + e.getMessage());
+            return "index";
         }
     }
 }

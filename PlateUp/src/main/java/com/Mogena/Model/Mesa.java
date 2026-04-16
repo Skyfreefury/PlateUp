@@ -1,31 +1,36 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.Mogena.Model;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
+/**
+ * Entidad que representa una mesa física del restaurante.
+ *
+ * <p>El ID se asigna manualmente mediante reciclaje de huecos en {@link com.Mogena.Service.MesaService},
+ * por lo que no usa {@code @GeneratedValue}. El ID coincide con el número de mesa.
+ */
 @Entity
 @Table(name = "mesas")
 public class Mesa {
 
     @Id
-    // 🚨 HEMOS QUITADO @GeneratedValue para que funcione tu sistema de reciclaje manual
     private Long id;
 
-    private Integer numero;    // El número físico de la mesa (Mesa 1, Mesa 2...)
-    private Integer capacidad; // Cuánta gente cabe
-    private String estado;     // LIBRE, OCUPADA, RESERVADA
-    private String ubicacion;  // Interior, Terraza...
+    /** Número visible de la mesa (Mesa 1, Mesa 2…). Coincide con el ID. */
+    private Integer numero;
 
-    // Constructor vacío (Obligatorio para Hibernate)
-    public Mesa() {
-    }
+    /** Número máximo de comensales que admite la mesa. */
+    private Integer capacidad;
 
-    // Constructor con campos (Opcional, útil para pruebas)
+    /** Estado actual de la mesa: {@code LIBRE}, {@code OCUPADA} o {@code RESERVADA}. */
+    private String estado;
+
+    /** Zona del restaurante donde se ubica la mesa (ej. Interior, Terraza). */
+    private String ubicacion;
+
+    public Mesa() {}
+
     public Mesa(Long id, Integer numero, Integer capacidad, String estado, String ubicacion) {
         this.id = id;
         this.numero = numero;
@@ -34,45 +39,18 @@ public class Mesa {
         this.ubicacion = ubicacion;
     }
 
-    // --- GETTERS Y SETTERS (Fundamentales para que el Formulario funcione) ---
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
 
-    public Long getId() {
-        return id;
-    }
+    public Integer getNumero() { return numero; }
+    public void setNumero(Integer numero) { this.numero = numero; }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+    public Integer getCapacidad() { return capacidad; }
+    public void setCapacidad(Integer capacidad) { this.capacidad = capacidad; }
 
-    public Integer getNumero() {
-        return numero;
-    }
+    public String getEstado() { return estado; }
+    public void setEstado(String estado) { this.estado = estado; }
 
-    public void setNumero(Integer numero) {
-        this.numero = numero;
-    }
-
-    public Integer getCapacidad() {
-        return capacidad;
-    }
-
-    public void setCapacidad(Integer capacidad) {
-        this.capacidad = capacidad;
-    }
-
-    public String getEstado() {
-        return estado;
-    }
-
-    public void setEstado(String estado) {
-        this.estado = estado;
-    }
-
-    public String getUbicacion() {
-        return ubicacion;
-    }
-
-    public void setUbicacion(String ubicacion) {
-        this.ubicacion = ubicacion;
-    }
+    public String getUbicacion() { return ubicacion; }
+    public void setUbicacion(String ubicacion) { this.ubicacion = ubicacion; }
 }

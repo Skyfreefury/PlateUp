@@ -7,14 +7,19 @@ package com.Mogena.Model;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 
+/**
+ * Entidad que representa un tipo de comanda (p. ej. "Mesa", "Barra", "Para llevar").
+ * Se usa para clasificar las comandas y determinar cómo se gestionan en sala.
+ */
 @Entity
 @Table(name = "tipos_comanda")
 public class TipoComanda {
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    /** Nombre descriptivo del tipo de comanda. No puede estar vacío. */
     @NotBlank(message = "El nombre del tipo de comanda no puede estar vacío")
     private String nombre;
 

@@ -7,6 +7,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+/**
+ * Controlador web para la gestión del directorio de clientes.
+ * Cubre el CRUD completo: listar, crear, editar, guardar y borrar.
+ */
 @Controller
 @RequestMapping("/clientes")
 public class ClienteWebController {

@@ -17,16 +17,21 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Controlador web para la gestión de pedidos (cuentas de mesa).
+ * Cubre el ciclo completo: apertura de cuenta, edición, cobro y visualización del ticket.
+ * Solo muestra las cuentas de la sesión de caja activa.
+ */
 @Controller
 @RequestMapping("/pedidos")
 public class PedidoWebController {
 
     @Autowired
     private PedidoService pedidoService;
-    
+
     @Autowired
     private MesaService mesaService;
-    
+
     @Autowired
     private ClienteService clienteService;
 
@@ -36,64 +41,71 @@ public class PedidoWebController {
     @Autowired
     private SesionService sesionService;
 
-    // ==========================================
-    // LISTAR SOLO PEDIDOS DE LA SESIÓN ACTUAL
-    // ==========================================
+    /**
+     * Muestra la lista de cuentas abiertas y cerradas de la sesión activa.
+     * Si no hay sesión abierta, la lista aparece vacía.
+     */
     @GetMapping
     public String listarPedidos(Model model) {
         Sesion activa = sesionService.obtenerSesionActiva();
-        
+
         if (activa != null) {
-            // Si hay caja abierta, mostramos solo las cuentas de hoy
             model.addAttribute("pedidos", pedidoService.obtenerPedidosPorSesion(activa.getId()));
         } else {
-            // Si la caja está cerrada, enviamos una lista vacía para que la pantalla esté limpia
             model.addAttribute("pedidos", java.util.List.of());
         }
-        
+
         return "pedidos";
     }
 
+    /**
+     * Muestra el formulario para abrir una nueva cuenta.
+     * Redirige a la página de caja si no hay sesión activa.
+     */
     @GetMapping("/nuevo")
     public String mostrarFormularioNuevo(Model model) {
-        // Bloqueo: Si no hay caja abierta, no dejamos abrir mesa
         Sesion activa = sesionService.obtenerSesionActiva();
         if (activa == null) {
-            return "redirect:/cierre"; // Redirigimos a abrir la caja
+            return "redirect:/cierre";
         }
-        
+
         model.addAttribute("pedido", new Pedido());
         model.addAttribute("mesas", mesaService.obtenerTodas());
         model.addAttribute("clientes", clienteService.obtenerTodos());
         return "pedido-form";
     }
 
+    /**
+     * Guarda un pedido nuevo o actualiza uno existente.
+     * Al crear uno nuevo, asigna automáticamente la sesión activa, la fecha/hora
+     * y el número de ticket correlativo dentro de la sesión.
+     */
     @PostMapping("/guardar")
     public String guardarPedido(@ModelAttribute("pedido") Pedido pedido) {
-        if (pedido.getId() == null) { 
-            // ES UN PEDIDO NUEVO
+        if (pedido.getId() == null) {
             Sesion activa = sesionService.obtenerSesionActiva();
             if (activa == null) return "redirect:/cierre";
-            
+
             pedido.setSesionId(activa.getId());
-            
-            // LÓGICA DE NUMERACIÓN DE TICKETS
+
+            // Número de ticket correlativo dentro de la sesión
             Optional<Pedido> ultimo = pedidoService.obtenerUltimoDeSesion(activa.getId());
             if (ultimo.isPresent() && ultimo.get().getNumeroTicket() != null) {
                 pedido.setNumeroTicket(ultimo.get().getNumeroTicket() + 1);
             } else {
                 pedido.setNumeroTicket(1);
             }
-            
+
             pedido.setEstado("ABIERTA");
             pedido.setFechaHora(LocalDateTime.now());
             pedido.setTotal(0.0);
         }
-        
+
         pedidoService.guardarPedido(pedido);
         return "redirect:/pedidos";
     }
 
+    /** Muestra el formulario de edición de una cuenta existente. */
     @GetMapping("/editar/{id}")
     public String mostrarFormularioEditar(@PathVariable Long id, Model model) {
         Pedido pedido = pedidoService.obtenerPorId(id);
@@ -106,20 +118,23 @@ public class PedidoWebController {
         return "redirect:/pedidos";
     }
 
-    // BORRADO SEGURO (Borra platos y luego cuenta)
+    /**
+     * Elimina un pedido junto con todas sus comandas asociadas.
+     * Las comandas se borran primero para evitar violaciones de integridad referencial.
+     */
     @GetMapping("/borrar/{id}")
     public String borrarPedido(@PathVariable Long id) {
         List<Comanda> comandas = comandaService.obtenerPorPedidoId(id);
         if (comandas != null) {
             for (Comanda c : comandas) {
-                comandaService.borrarComanda(c.getId()); 
+                comandaService.borrarComanda(c.getId());
             }
         }
         pedidoService.borrarPedido(id);
         return "redirect:/pedidos?borrado=true";
     }
 
-    // MOSTRAR FORMULARIO DE COBRO
+    /** Muestra el formulario de cobro para una cuenta abierta. */
     @GetMapping("/cobrar/{id}")
     public String mostrarFormularioCobro(@PathVariable Long id, Model model) {
         Pedido p = pedidoService.obtenerPorId(id);
@@ -130,7 +145,10 @@ public class PedidoWebController {
         return "cobrar-form";
     }
 
-    // PROCESAR COBRO (efectivo + tarjeta)
+    /**
+     * Procesa el cobro de una cuenta registrando los importes por efectivo y tarjeta.
+     * Marca la cuenta como CERRADA.
+     */
     @PostMapping("/cobrar")
     public String procesarCobro(@RequestParam Long pedidoId,
                                 @RequestParam(defaultValue = "0") Double pagoEfectivo,
@@ -140,6 +158,7 @@ public class PedidoWebController {
             p.setPagoEfectivo(pagoEfectivo);
             p.setPagoTarjeta(pagoTarjeta);
             p.setEstado("CERRADA");
+            // Asegurar que la cuenta queda ligada a la sesión activa si no lo estaba
             if (p.getSesionId() == null) {
                 Sesion activa = sesionService.obtenerSesionActiva();
                 if (activa != null) p.setSesionId(activa.getId());
@@ -149,7 +168,7 @@ public class PedidoWebController {
         return "redirect:/pedidos?cobrado=true";
     }
 
-    // VER EL TICKET
+    /** Muestra el ticket imprimible de una cuenta. */
     @GetMapping("/ticket/{id}")
     public String verTicket(@PathVariable Long id, Model model) {
         Pedido pedido = pedidoService.obtenerPorId(id);

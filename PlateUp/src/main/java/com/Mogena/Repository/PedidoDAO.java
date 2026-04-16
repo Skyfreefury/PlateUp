@@ -7,12 +7,19 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Repositorio JPA para la entidad {@link com.Mogena.Model.Pedido}.
+ * Spring Data genera automáticamente la implementación SQL a partir del nombre de los métodos.
+ */
 @Repository
 public interface PedidoDAO extends JpaRepository<Pedido, Long> {
-    
-    // Busca todos los pedidos de una sesión concreta
+
+    /** Devuelve todos los pedidos pertenecientes a una sesión de caja. */
     List<Pedido> findBySesionId(Long sesionId);
-    
-    // Busca el último ticket generado en una sesión específica
+
+    /**
+     * Devuelve el pedido con el número de ticket más alto dentro de una sesión.
+     * Se usa para calcular el número correlativo del siguiente ticket.
+     */
     Optional<Pedido> findTopBySesionIdOrderByNumeroTicketDesc(Long sesionId);
 }

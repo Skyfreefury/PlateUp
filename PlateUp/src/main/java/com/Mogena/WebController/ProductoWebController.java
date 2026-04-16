@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 /**
- * Controlador para la gestión visual de la Carta (Productos).
- * Sigue el patrón de diseño de Tablas de Visualización y Formularios Dedicados.
+ * Controlador web para la gestión de la carta de productos del restaurante.
+ * Cubre el CRUD completo: listar por categoría, crear, editar, guardar y borrar.
  */
 @Controller
 @RequestMapping("/productos")
@@ -20,59 +20,42 @@ public class ProductoWebController {
     @Autowired
     private ProductoService productoService;
 
-    // =========================================================
-    // 1. LISTAR PRODUCTOS (Vista Principal de la Carta)
-    // =========================================================
     @GetMapping
     public String listarProductos(Model model) {
         try {
             List<Producto> lista = productoService.obtenerTodos();
             model.addAttribute("productos", lista);
-            // Retorna la vista de la tabla (productos.html)
-            return "productos"; 
+            return "productos";
         } catch (Exception e) {
             System.err.println("ERROR AL CARGAR LA CARTA: " + e.getMessage());
             return "redirect:/?error=true";
         }
     }
 
-    // =========================================================
-    // 2. MOSTRAR FORMULARIO PARA NUEVO PLATO
-    // =========================================================
     @GetMapping("/nuevo")
     public String mostrarFormularioNuevo(Model model) {
-        // Pasamos un objeto Producto vacío para vincularlo al th:object
         model.addAttribute("producto", new Producto());
-        // Retorna la vista del formulario (producto-form.html)
         return "producto-form";
     }
 
-    // =========================================================
-    // 3. MOSTRAR FORMULARIO PARA EDITAR PLATO EXISTENTE
-    // =========================================================
     @GetMapping("/editar/{id}")
     public String mostrarFormularioEditar(@PathVariable Long id, Model model) {
         Producto productoExistente = productoService.obtenerPorId(id);
-        
         if (productoExistente != null) {
             model.addAttribute("producto", productoExistente);
-            // Reutilizamos el mismo formulario (producto-form.html)
             return "producto-form";
         }
-        
         return "redirect:/productos?error=no_encontrado";
     }
 
-    // =========================================================
-    // 4. GUARDAR / ACTUALIZAR (Método Unificado)
-    // =========================================================
+    /**
+     * Guarda un producto nuevo o actualiza uno existente.
+     * El servicio detecta automáticamente si es una inserción o una actualización
+     * basándose en la presencia del ID.
+     */
     @PostMapping("/guardar")
     public String guardarProducto(@ModelAttribute("producto") Producto producto) {
         try {
-            /* * Spring Boot detecta automáticamente el ID:
-             * - Si id es null -> JPA hace un INSERT (Nuevo)
-             * - Si id tiene valor -> JPA hace un UPDATE (Edición)
-             */
             productoService.guardarProducto(producto);
             return "redirect:/productos?exito=true";
         } catch (Exception e) {
@@ -81,9 +64,6 @@ public class ProductoWebController {
         }
     }
 
-    // =========================================================
-    // 5. ELIMINAR PRODUCTO
-    // =========================================================
     @GetMapping("/borrar/{id}")
     public String borrarProducto(@PathVariable Long id) {
         try {

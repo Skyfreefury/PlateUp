@@ -16,6 +16,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Controlador web para la gestión de la sesión de caja (apertura y cierre de turno).
+ * Calcula los totales de ingresos por efectivo, tarjeta y el efectivo físico en caja.
+ */
 @Controller
 @RequestMapping("/cierre")
 public class CierreWebController {
@@ -29,11 +33,15 @@ public class CierreWebController {
     @Autowired
     private SesionService sesionService;
 
-    // 1. VER EL RESUMEN DE LA SESIÓN ACTUAL
+    /**
+     * Muestra el resumen de caja de la sesión activa:
+     * total de ingresos, desglose efectivo/tarjeta, fondo de caja y platos vendidos.
+     * Si no hay sesión abierta, muestra la pantalla de apertura.
+     */
     @GetMapping
     public String verCierreDeCaja(Model model) {
         Sesion sesionActiva = sesionService.obtenerSesionActiva();
-        
+
         if (sesionActiva == null) {
             model.addAttribute("mensajeEstado", "No hay ninguna sesión de caja abierta.");
             model.addAttribute("totalCaja", 0.0);
@@ -43,18 +51,19 @@ public class CierreWebController {
             return "cierre";
         }
 
-        // Buscamos solo los pedidos CERRADOS que pertenecen a esta sesión
+        // Solo contabilizamos los pedidos CERRADOS (cobrados) de esta sesión
         List<Pedido> pedidosPagados = pedidoService.obtenerTodos().stream()
                 .filter(p -> p.getSesionId() != null && p.getSesionId().equals(sesionActiva.getId()))
                 .filter(p -> "CERRADA".equals(p.getEstado()))
                 .toList();
 
-        double totalCaja       = pedidosPagados.stream().mapToDouble(p -> p.getTotal()       != null ? p.getTotal()       : 0.0).sum();
-        double totalEfectivo   = pedidosPagados.stream().mapToDouble(p -> p.getPagoEfectivo() != null ? p.getPagoEfectivo() : 0.0).sum();
-        double totalTarjeta    = pedidosPagados.stream().mapToDouble(p -> p.getPagoTarjeta()  != null ? p.getPagoTarjeta()  : 0.0).sum();
-        double efectivoEnCaja  = (sesionActiva.getMontoInicial() != null ? sesionActiva.getMontoInicial() : 0.0) + totalEfectivo;
+        double totalCaja      = pedidosPagados.stream().mapToDouble(p -> p.getTotal()       != null ? p.getTotal()       : 0.0).sum();
+        double totalEfectivo  = pedidosPagados.stream().mapToDouble(p -> p.getPagoEfectivo() != null ? p.getPagoEfectivo() : 0.0).sum();
+        double totalTarjeta   = pedidosPagados.stream().mapToDouble(p -> p.getPagoTarjeta()  != null ? p.getPagoTarjeta()  : 0.0).sum();
+        // Efectivo en caja = fondo inicial + cobros en metálico durante el turno
+        double efectivoEnCaja = (sesionActiva.getMontoInicial() != null ? sesionActiva.getMontoInicial() : 0.0) + totalEfectivo;
 
-        // Conteo de platos vendidos en esta sesión
+        // Conteo de platos vendidos para el resumen de cocina
         Map<String, Integer> platosVendidos = new HashMap<>();
         for (Pedido p : pedidosPagados) {
             List<Comanda> comandas = comandaService.obtenerPorPedidoId(p.getId());
@@ -79,7 +88,7 @@ public class CierreWebController {
         return "cierre";
     }
 
-    // 2. ACCIÓN DE CERRAR LA SESIÓN
+    /** Cierra la sesión de caja activa registrando la hora de cierre. */
     @PostMapping("/cerrar")
     public String finalizarSesion(@RequestParam("sesionId") Long sesionId) {
         Sesion s = sesionService.obtenerSesionActiva();
@@ -89,20 +98,18 @@ public class CierreWebController {
         }
         return "redirect:/cierre?error=true";
     }
-    // ==========================================
-    // 3. ACCIÓN DE ABRIR NUEVA SESIÓN
-    // ==========================================
+
+    /**
+     * Abre una nueva sesión de caja con el fondo inicial indicado.
+     * Si ya hay una sesión activa, redirige con un aviso de error.
+     */
     @PostMapping("/abrir")
     public String iniciarSesion(@RequestParam(value = "montoInicial", defaultValue = "0.0") Double montoInicial) {
-        
-        // Comprobamos si ya hay una activa por seguridad
         Sesion activa = sesionService.obtenerSesionActiva();
-        
         if (activa == null) {
             sesionService.abrirSesion(montoInicial);
             return "redirect:/pedidos?exitoApertura=true";
         }
-        
         return "redirect:/cierre?error=ya_abierta";
     }
 }

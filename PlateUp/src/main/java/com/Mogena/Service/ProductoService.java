@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.Mogena.Service;
 
 import com.Mogena.Model.Producto;
@@ -13,64 +9,75 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Servicio para la gestión de los productos de la carta del restaurante.
+ * Implementa un patrón de reciclaje de IDs para reutilizar los huecos que dejan
+ * los productos eliminados, evitando que el contador de IDs crezca indefinidamente.
+ */
 @Service
 public class ProductoService {
 
     @Autowired
     private ProductoDAO productoDAO;
 
-    // Límite de productos en la carta (puedes ampliarlo si el restaurante crece)
+    /** Número máximo de productos en la carta. */
     private final int LIMITE_PRODUCTOS = 500;
 
-    // 1. OBTENER TODOS LOS PRODUCTOS
+    /** Devuelve todos los productos de la carta. */
     public List<Producto> obtenerTodos() {
         return productoDAO.findAll();
     }
 
-    // 2. OBTENER PRODUCTO POR ID
+    /** Devuelve el producto con el ID indicado, o {@code null} si no existe. */
     public Producto obtenerPorId(Long id) {
         Optional<Producto> o = productoDAO.findById(id);
         return o.orElse(null);
     }
 
-    // 3. GUARDAR O ACTUALIZAR PRODUCTO (CON RECICLAJE DE IDS)
+    /**
+     * Persiste un producto nuevo o actualiza uno existente.
+     * Si el producto ya tiene ID, se actualiza directamente.
+     * Si es nuevo, se busca el primer ID libre (hueco) entre 1 y {@code LIMITE_PRODUCTOS}.
+     *
+     * @return {@code true} si se guardó correctamente, {@code false} si la carta está llena.
+     */
     @Transactional
     public boolean guardarProducto(Producto producto) {
-        // A) Si el producto YA TIENE ID (viene de un Editar), actualizamos directamente
         if (producto.getId() != null) {
             productoDAO.saveAndFlush(producto);
             return true;
         }
 
-        // B) Si es un PRODUCTO NUEVO, buscamos el primer ID libre (hueco)
         List<Long> idsOcupados = productoDAO.findAll().stream()
                                             .map(Producto::getId)
                                             .toList();
-        
+
         for (long i = 1; i <= LIMITE_PRODUCTOS; i++) {
             if (!idsOcupados.contains(i)) {
-                // ¡Hueco encontrado! Asignamos el ID manualmente
                 producto.setId(i);
-                
-                // Forzamos el guardado inmediato para evitar el error de IdentifierGeneration
                 productoDAO.saveAndFlush(producto);
                 return true;
             }
         }
 
-        // Si llegamos aquí, es que la carta está llena
         return false;
     }
 
-    // 4. BORRAR PRODUCTO
+    /** Elimina el producto con el ID indicado si existe. */
     @Transactional
     public void borrarProducto(Long id) {
         if (productoDAO.existsById(id)) {
             productoDAO.deleteById(id);
-            // Opcional: flush para asegurar que el ID queda libre al instante
             productoDAO.flush();
         }
     }
+
+    /**
+     * Busca un producto por su nombre exacto.
+     * Se usa para calcular el precio al recalcular el total de un pedido.
+     *
+     * @return el producto encontrado, o {@code null} si el nombre es nulo, vacío o no existe.
+     */
     public Producto obtenerPorNombre(String nombre) {
         if (nombre == null || nombre.isBlank()) return null;
         return productoDAO.findByNombre(nombre);

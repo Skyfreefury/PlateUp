@@ -3,6 +3,14 @@ package com.Mogena.Model;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
+/**
+ * Entidad que representa un pedido (cuenta de mesa) en el restaurante.
+ * Cada pedido pertenece a una sesión de caja, está asignado a una mesa
+ * y puede estar en estado {@code ABIERTA} o {@code CERRADA}.
+ *
+ * <p>El {@code numeroTicket} es el número correlativo visible para el personal,
+ * reiniciándose en cada sesión de caja.
+ */
 @Entity
 @Table(name = "pedidos")
 public class Pedido {
@@ -20,28 +28,30 @@ public class Pedido {
     @Column(name = "fecha_hora", nullable = false)
     private LocalDateTime fechaHora;
 
+    /** Importe total calculado sumando precio × cantidad de cada comanda asociada. */
     private Double total;
 
+    /** Parte del total abonada en metálico al cerrar la cuenta. */
     @Column(name = "pago_efectivo")
     private Double pagoEfectivo;
 
+    /** Parte del total abonada con tarjeta al cerrar la cuenta. */
     @Column(name = "pago_tarjeta")
     private Double pagoTarjeta;
 
-    private String estado; // ABIERTA, CERRADA
+    /** Estado del pedido: {@code ABIERTA} mientras se sirve, {@code CERRADA} tras el cobro. */
+    private String estado;
 
+    /** Clave foránea a la sesión de caja en la que se abrió este pedido. */
     @Column(name = "sesion_id")
     private Long sesionId;
 
-    // NUEVO: El número de ticket de cara al cliente y camarero
+    /** Número de ticket correlativo dentro de la sesión, visible para el personal de sala. */
     @Column(name = "numero_ticket")
     private Integer numeroTicket;
 
     public Pedido() {}
 
-    // ==========================================
-    // GETTERS Y SETTERS
-    // ==========================================
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 

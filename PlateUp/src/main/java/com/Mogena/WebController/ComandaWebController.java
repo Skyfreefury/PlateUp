@@ -15,6 +15,10 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDateTime;
 import java.util.List;
 
+/**
+ * Controlador web para la gestión de comandas (platos y bebidas pedidos por las mesas).
+ * Sirve tanto al panel de cocina como al de barra, filtrando los productos según el origen.
+ */
 @Controller
 @RequestMapping("/comandas")
 public class ComandaWebController {
@@ -31,24 +35,23 @@ public class ComandaWebController {
     @Autowired
     private SesionService sesionService;
 
-    // =========================================================
-    // 1. PANEL DE COCINA (Lista solo los platos de esta sesión)
-    // =========================================================
+    /**
+     * Muestra el panel de cocina con los platos de la sesión activa.
+     * Si no hay sesión abierta, el panel aparece vacío.
+     */
     @GetMapping
     public String verComandas(Model model) {
         Sesion activa = sesionService.obtenerSesionActiva();
-        
-        // Si no hay caja abierta, la pantalla de cocina sale limpia
+
         if (activa == null) {
             model.addAttribute("comandas", java.util.List.of());
             return "comandas";
         }
 
-        // Buscamos qué tickets (pedidos) pertenecen a esta sesión
+        // Filtramos por pedidos de la sesión activa para no mezclar turnos
         List<Long> idsPedidosActivos = pedidoService.obtenerPedidosPorSesion(activa.getId())
                 .stream().map(Pedido::getId).toList();
 
-        // Filtramos los platos para que solo salgan los de esos tickets activos
         List<Comanda> comandasActivas = comandaService.obtenerTodas().stream()
                 .filter(c -> idsPedidosActivos.contains(c.getPedidoId()))
                 .toList();
@@ -57,20 +60,23 @@ public class ComandaWebController {
         return "comandas";
     }
 
-    // =========================================================
-    // 2. FORMULARIO PARA MARCHAR PLATO / BEBIDA
-    // =========================================================
+    /**
+     * Muestra el formulario para marchar un nuevo plato o bebida.
+     * El parámetro {@code from} controla qué productos se ofrecen:
+     * <ul>
+     *   <li>{@code barra} — solo bebidas (tipoProductoId = 4)</li>
+     *   <li>{@code cocina} — platos sin bebidas</li>
+     *   <li>cualquier otro — todos los productos</li>
+     * </ul>
+     */
     @GetMapping("/nuevo")
     public String mostrarFormularioNuevo(Model model,
             @RequestParam(required = false, defaultValue = "general") String from) {
         Sesion activa = sesionService.obtenerSesionActiva();
-
-        // No dejamos pedir platos si la caja está cerrada
         if (activa == null) {
             return "redirect:/cierre";
         }
 
-        // Filtrar productos según el origen: barra → solo bebidas; cocina → sin bebidas
         List<com.Mogena.Model.Producto> productos = productoService.obtenerTodos();
         if ("barra".equals(from)) {
             productos = productos.stream()
@@ -90,9 +96,7 @@ public class ComandaWebController {
         return "comanda-form";
     }
 
-    // =========================================================
-    // 3. GUARDAR COMANDA EN BASE DE DATOS
-    // =========================================================
+    /** Persiste la comanda y recalcula el total del pedido al que pertenece. */
     @PostMapping("/guardar")
     public String guardarComanda(@ModelAttribute("comanda") Comanda comanda) {
         if (comanda.getId() == null) {
@@ -100,30 +104,23 @@ public class ComandaWebController {
             comanda.setCreadoEn(LocalDateTime.now());
         }
         comandaService.guardarComanda(comanda);
-
-        // Recalcular el total del pedido tras añadir/editar la comanda
         recalcularTotalPedido(comanda.getPedidoId());
 
-        // Si es una bebida (ID 4), redirigimos a la barra para no marear al camarero
+        // Redirigir a la pantalla correspondiente según el destino de preparación
         if (comanda.getTipoComandaId() != null && comanda.getTipoComandaId() == 4) {
             return "redirect:/barra";
         }
-
-        // Si es comida, redirigimos a cocina
         return "redirect:/comandas";
     }
 
-    // =========================================================
-    // 4. MARCAR COMO LISTO (Botón verde Check)
-    // =========================================================
+    /** Marca una comanda como LISTO y redirige al panel correspondiente. */
     @GetMapping("/listo/{id}")
     public String marcarComandaLista(@PathVariable Long id) {
         Comanda comanda = comandaService.obtenerPorId(id);
         if (comanda != null) {
             comanda.setEstado("LISTO");
-            comandaService.guardarComanda(comanda); 
-            
-            // Redirigir a barra o cocina dependiendo de quién pulsó el botón
+            comandaService.guardarComanda(comanda);
+
             if (comanda.getTipoComandaId() != null && comanda.getTipoComandaId() == 4) {
                 return "redirect:/barra";
             }
@@ -131,9 +128,10 @@ public class ComandaWebController {
         return "redirect:/comandas";
     }
 
-    // =========================================================
-    // 5. BORRAR COMANDA (Anulación real por error)
-    // =========================================================
+    /**
+     * Anula (elimina) una comanda y recalcula el total del pedido afectado.
+     * Redirige al panel de barra si era una bebida, o al de cocina en caso contrario.
+     */
     @GetMapping("/borrar/{id}")
     public String borrarComanda(@PathVariable Long id) {
         Comanda comanda = comandaService.obtenerPorId(id);
@@ -146,21 +144,22 @@ public class ComandaWebController {
             comandaService.borrarComanda(id);
         }
 
-        // Recalcular el total del pedido tras eliminar la comanda
         if (pedidoId != null) {
             recalcularTotalPedido(pedidoId);
         }
 
-        // Redirigimos a la pantalla correcta tras anular
         if (tipo != null && tipo == 4) {
             return "redirect:/barra";
         }
         return "redirect:/comandas";
     }
 
-    // =========================================================
-    // HELPER: Recalcula y persiste el total de un pedido
-    // =========================================================
+    /**
+     * Recalcula el importe total de un pedido sumando precio × cantidad de cada comanda.
+     * Persiste el nuevo total directamente en el pedido para mantenerlo actualizado.
+     *
+     * @param pedidoId ID del pedido cuyo total se debe recalcular
+     */
     private void recalcularTotalPedido(Long pedidoId) {
         if (pedidoId == null) return;
         Pedido pedido = pedidoService.obtenerPorId(pedidoId);

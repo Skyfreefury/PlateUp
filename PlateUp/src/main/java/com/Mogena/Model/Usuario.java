@@ -2,6 +2,11 @@ package com.Mogena.Model;
 
 import jakarta.persistence.*;
 
+/**
+ * Entidad que representa un usuario del panel de administración.
+ * Las contraseñas se almacenan cifradas con BCrypt.
+ * Spring Security utiliza {@code username} y {@code password} para la autenticación.
+ */
 @Entity
 @Table(name = "usuarios")
 public class Usuario {
@@ -16,9 +21,11 @@ public class Usuario {
     @Column(nullable = false)
     private String password;
 
+    /** Nombre real del empleado, usado para mostrarlo en la interfaz. */
     private String nombre;
 
-    private String rol; // ADMIN, EMPLEADO
+    /** Rol del usuario en el sistema: {@code ADMIN} o {@code EMPLEADO}. */
+    private String rol;
 
     public Usuario() {}
 

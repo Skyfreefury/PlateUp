@@ -14,32 +14,38 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.List;
 
+/**
+ * Controlador web para el panel de barra.
+ * Muestra únicamente las bebidas (tipoComandaId = 4) de la sesión activa.
+ * El marcado como "listo" se gestiona desde {@link ComandaWebController}.
+ */
 @Controller
 @RequestMapping("/barra")
 public class BarraWebController {
 
     @Autowired
     private SesionService sesionService;
-    
+
     @Autowired
     private PedidoService pedidoService;
-    
+
     @Autowired
     private ComandaService comandaService;
 
-    // ==========================================
-    // LISTAR SOLO BEBIDAS DE LA SESIÓN ACTUAL
-    // ==========================================
+    /**
+     * Muestra el panel de barra con las bebidas pendientes y listas de la sesión activa.
+     * Si no hay sesión abierta, el panel aparece vacío.
+     */
     @GetMapping
     public String verPanelBarra(Model model) {
         Sesion activa = sesionService.obtenerSesionActiva();
-        
+
         if (activa == null) {
             model.addAttribute("comandas", java.util.List.of());
             return "barra";
         }
 
-        // Filtramos para obtener solo bebidas de esta caja
+        // Filtramos por pedidos de la sesión activa para no mezclar turnos
         List<Long> idsPedidosActivos = pedidoService.obtenerPedidosPorSesion(activa.getId())
                 .stream().map(Pedido::getId).toList();
 
