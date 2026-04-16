@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <title>Ticket Mesa | Eclipse PlateUp</title>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet"/>
-    <link rel="stylesheet" th:href="@{/css/style.css?v=10.0}">
+    <link rel="stylesheet" th:href="@{/css/style.css?v=11.0}">
 </head>
 <body class="ticket-page-body">
 
@@ -17,14 +17,14 @@
 
         <p class="ticket-num" th:text="'Ticket Nº: ' + (${pedido.numeroTicket != null ? pedido.numeroTicket : pedido.id})"></p>
         <p th:text="'Mesa: ' + ${pedido.mesaId}"></p>
-        <p th:text="'Fecha: ' + ${#temporals.format(pedido.fechaHora, 'dd/MM/yyyy HH:mm')}"></p>
+        <p th:text="'Fecha: ' + (${pedido.fechaHora != null} ? ${#temporals.format(pedido.fechaHora, 'dd/MM/yyyy HH:mm')} : '-')"></p>
     </div>
 
     <div class="ticket-divider"></div>
     <p class="ticket-col-header">CANT.   CONCEPTO</p>
 
     <div th:each="c : ${comandas}" class="ticket-item">
-        <div class="item-name" th:text="${c.cantidad} + 'x ' + ${c.nombrePlato}"></div>
+        <div class="item-name" th:text="(${c.cantidad != null} ? ${c.cantidad} : '?') + 'x ' + (${c.nombrePlato != null} ? ${c.nombrePlato} : 'Producto')"></div>
     </div>
 
     <div class="ticket-divider"></div>

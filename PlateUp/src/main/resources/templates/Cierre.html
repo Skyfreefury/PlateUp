@@ -5,7 +5,12 @@
     <title>Gestión de Caja | Eclipse PlateUp</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet"/>
-    <link rel="stylesheet" th:href="@{/css/style.css?v=10.2}">
+    <link rel="stylesheet" th:href="@{/css/style.css?v=11.0}">
+    <style>
+        @media print {
+            #navbar, .confirm-box, .apertura-card { display: none !important; }
+        }
+    </style>
     <script>
         if (localStorage.getItem('theme') === 'light') {
             document.documentElement.setAttribute('data-theme', 'light');
@@ -21,18 +26,24 @@
         <li><a th:href="@{/pedidos}">Cuentas</a></li>
         <li><a th:href="@{/comandas}">Cocina</a></li>
         <li><a th:href="@{/barra}">Barra</a></li>
+        <li><a th:href="@{/productos}">Carta</a></li>
+        <li><a th:href="@{/clientes}">Clientes</a></li>
+        <li><a th:href="@{/cierre}" class="text-gold">Caja</a></li>
     </ul>
     <div class="nav-actions">
         <button id="theme-toggle" class="btn-icon btn-circle" title="Cambiar Tema">
             <span id="theme-icon">☀️</span>
         </button>
-        <button class="nav-cta" onclick="window.print()">🖨️ Imprimir Resumen</button>
+        <button class="nav-cta" onclick="imprimirResumen()">🖨️ Imprimir Resumen</button>
+        <form th:action="@{/logout}" method="post" style="display:inline;">
+            <button type="submit" class="nav-cta">🔒 Salir</button>
+        </form>
     </div>
 </nav>
 
-<section class="reveal dashboard-container visible pt-section">
+<section class="reveal dashboard-container pt-section" id="main-content">
 
-    <div class="dashboard-header">
+    <div class="dashboard-header reveal">
         <div>
             <span class="section-tag">Administración</span>
             <h2 class="section-title m-0">Gestión de <em>Caja</em></h2>
@@ -40,7 +51,7 @@
         </div>
     </div>
 
-    <div th:if="${sesionActivaId == null}" class="apertura-card">
+    <div th:if="${sesionActivaId == null}" class="apertura-card reveal">
         <h3>Apertura de Turno</h3>
         <p>No hay ninguna sesión activa. Introduce el fondo de caja inicial para comenzar a registrar ventas y abrir mesas.</p>
         <form th:action="@{/cierre/abrir}" method="post">
@@ -52,11 +63,25 @@
         </form>
     </div>
 
-    <div th:if="${sesionActivaId != null}">
-        <div class="kpi-grid">
+    <div th:if="${sesionActivaId != null}" id="print-area">
+        <div class="kpi-grid reveal">
             <div class="kpi-card">
-                <div class="kpi-title">Ingresos de la Sesión</div>
-                <p class="kpi-value" th:text="${totalCaja} + ' €'"></p>
+                <div class="kpi-title">Total Ingresos</div>
+                <p class="kpi-value" th:text="${#numbers.formatDecimal(totalCaja, 1, 2)} + ' €'"></p>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-title">💵 Ingresos Efectivo</div>
+                <p class="kpi-value" th:text="${#numbers.formatDecimal(totalEfectivo, 1, 2)} + ' €'"></p>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-title">💳 Ingresos Tarjeta</div>
+                <p class="kpi-value" th:text="${#numbers.formatDecimal(totalTarjeta, 1, 2)} + ' €'"></p>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-title">🏦 Efectivo en Caja</div>
+                <p class="kpi-value" style="color: #28a745;" th:text="${#numbers.formatDecimal(efectivoEnCaja, 1, 2)} + ' €'"></p>
+                <div class="kpi-title" style="font-size:0.75rem; margin-top:4px;"
+                     th:text="'(Fondo: ' + ${#numbers.formatDecimal(fondoInicial, 1, 2)} + ' € + Cobros: ' + ${#numbers.formatDecimal(totalEfectivo, 1, 2)} + ' €)'"></div>
             </div>
             <div class="kpi-card">
                 <div class="kpi-title">Cuentas Pagadas</div>
@@ -101,5 +126,30 @@
 </section>
 
 <script th:src="@{/js/main.js}"></script>
+<script>
+    function imprimirResumen() {
+        // Forzar visibilidad de todos los elementos antes de imprimir
+        document.querySelectorAll('body, body *').forEach(function(el) {
+            el.style.setProperty('visibility', 'visible', 'important');
+            el.style.setProperty('opacity', '1', 'important');
+            el.style.setProperty('transform', 'none', 'important');
+        });
+        // Ocultar lo que no debe salir en papel
+        ['navbar', 'main-content'].forEach(function(id) {});
+        document.getElementById('navbar').style.setProperty('display', 'none', 'important');
+        document.querySelector('.confirm-box') && document.querySelector('.confirm-box').style.setProperty('display', 'none', 'important');
+
+        window.print();
+
+        // Restaurar estilos tras imprimir
+        document.querySelectorAll('body, body *').forEach(function(el) {
+            el.style.removeProperty('visibility');
+            el.style.removeProperty('opacity');
+            el.style.removeProperty('transform');
+        });
+        document.getElementById('navbar').style.removeProperty('display');
+        document.querySelector('.confirm-box') && document.querySelector('.confirm-box').style.removeProperty('display');
+    }
+</script>
 </body>
 </html>

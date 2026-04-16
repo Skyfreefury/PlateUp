@@ -49,14 +49,18 @@ public class CierreWebController {
                 .filter(p -> "CERRADA".equals(p.getEstado()))
                 .toList();
 
-        double totalCaja = pedidosPagados.stream().mapToDouble(Pedido::getTotal).sum();
+        double totalCaja       = pedidosPagados.stream().mapToDouble(p -> p.getTotal()       != null ? p.getTotal()       : 0.0).sum();
+        double totalEfectivo   = pedidosPagados.stream().mapToDouble(p -> p.getPagoEfectivo() != null ? p.getPagoEfectivo() : 0.0).sum();
+        double totalTarjeta    = pedidosPagados.stream().mapToDouble(p -> p.getPagoTarjeta()  != null ? p.getPagoTarjeta()  : 0.0).sum();
+        double efectivoEnCaja  = (sesionActiva.getMontoInicial() != null ? sesionActiva.getMontoInicial() : 0.0) + totalEfectivo;
 
         // Conteo de platos vendidos en esta sesión
         Map<String, Integer> platosVendidos = new HashMap<>();
         for (Pedido p : pedidosPagados) {
             List<Comanda> comandas = comandaService.obtenerPorPedidoId(p.getId());
             for (Comanda c : comandas) {
-                platosVendidos.put(c.getNombrePlato(), 
+                if (c.getNombrePlato() == null || c.getCantidad() == null) continue;
+                platosVendidos.put(c.getNombrePlato(),
                     platosVendidos.getOrDefault(c.getNombrePlato(), 0) + c.getCantidad());
             }
         }
@@ -64,6 +68,10 @@ public class CierreWebController {
         String fechaFormateada = sesionActiva.getApertura().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"));
         model.addAttribute("mensajeEstado", "Sesión iniciada el: " + fechaFormateada);
         model.addAttribute("totalCaja", totalCaja);
+        model.addAttribute("totalEfectivo", totalEfectivo);
+        model.addAttribute("totalTarjeta", totalTarjeta);
+        model.addAttribute("efectivoEnCaja", efectivoEnCaja);
+        model.addAttribute("fondoInicial", sesionActiva.getMontoInicial() != null ? sesionActiva.getMontoInicial() : 0.0);
         model.addAttribute("totalTickets", pedidosPagados.size());
         model.addAttribute("platosVendidos", platosVendidos);
         model.addAttribute("sesionActivaId", sesionActiva.getId());

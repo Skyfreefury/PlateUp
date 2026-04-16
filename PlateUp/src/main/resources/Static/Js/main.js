@@ -57,8 +57,9 @@ function handleTheme() {
     
     if (!themeToggleBtn) return;
 
-    // Sincronizar icono inicial
+    // Restaurar tema guardado al cargar la página
     if (localStorage.getItem('theme') === 'light') {
+        document.documentElement.setAttribute('data-theme', 'light');
         if (themeIcon) themeIcon.innerText = '🌙';
     }
 
@@ -75,6 +76,31 @@ function handleTheme() {
             if (themeIcon) themeIcon.innerText = '🌙';
         }
     });
+}
+
+// --- CONTADORES ANIMADOS (SECCIÓN FUEGO) ---
+function initCounters() {
+    const counters = document.querySelectorAll('.fuego-stat-num[data-count]');
+    if (!counters.length) return;
+
+    const obs = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+            if (!entry.isIntersecting) return;
+            obs.unobserve(entry.target);
+            const target = parseInt(entry.target.dataset.count, 10);
+            const duration = 1800;
+            const startTime = performance.now();
+            function step(now) {
+                const progress = Math.min((now - startTime) / duration, 1);
+                const ease = 1 - Math.pow(1 - progress, 3); // easeOutCubic
+                entry.target.textContent = Math.round(ease * target);
+                if (progress < 1) requestAnimationFrame(step);
+            }
+            requestAnimationFrame(step);
+        });
+    }, { threshold: 0.3 });
+
+    counters.forEach(c => obs.observe(c));
 }
 
 // --- TEMPORIZADORES DE ESPERA EN COMANDAS ---
@@ -108,6 +134,7 @@ function initWaitTimers() {
 document.addEventListener('DOMContentLoaded', () => {
     handleTheme();
     initHoverEffects();
+    initCounters();
     initWaitTimers();
 
     // Animaciones Reveal

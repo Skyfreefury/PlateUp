@@ -5,7 +5,7 @@
     <title>Gestión de Mesas | Eclipse PlateUp</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet"/>
-    <link rel="stylesheet" th:href="@{/css/style.css?v=10.9}">
+    <link rel="stylesheet" th:href="@{/css/style.css?v=11.0}">
     <script>
         if (localStorage.getItem('theme') === 'light') {
             document.documentElement.setAttribute('data-theme', 'light');
@@ -30,6 +30,9 @@
             <span id="theme-icon">☀️</span>
         </button>
         <button class="nav-cta" th:onclick="|window.location.href='@{/}'|">Inicio</button>
+        <form th:action="@{/logout}" method="post" style="display:inline;">
+            <button type="submit" class="nav-cta">🔒 Salir</button>
+        </form>
     </div>
 </nav>
 
@@ -41,7 +44,7 @@
             <h2 class="section-title m-0">Gestión de <em>Mesas</em></h2>
         </div>
         <div class="header-actions">
-            <a th:href="@{/mesas/nuevo}" class="btn-primary">+ Añadir Nueva Mesa</a>
+            <a th:href="@{/mesas/nuevo}" class="btn-primary btn-link-action">+ Añadir Nueva Mesa</a>
         </div>
     </div>
 

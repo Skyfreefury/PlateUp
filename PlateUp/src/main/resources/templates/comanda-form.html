@@ -5,7 +5,7 @@
     <title>Marchar Producto | Eclipse PlateUp</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet"/>
-    <link rel="stylesheet" th:href="@{/css/style.css?v=10.2}">
+    <link rel="stylesheet" th:href="@{/css/style.css?v=11.0}">
     <script>
         if (localStorage.getItem('theme') === 'light') {
             document.documentElement.setAttribute('data-theme', 'light');
@@ -21,6 +21,9 @@
             <span id="theme-icon">☀️</span>
         </button>
         <button class="nav-cta" onclick="history.back()">Volver Atrás</button>
+        <form th:action="@{/logout}" method="post" style="display:inline;">
+            <button type="submit" class="nav-cta">🔒 Salir</button>
+        </form>
     </div>
 </nav>
 
@@ -58,7 +61,22 @@
                     </div>
                 </div>
                 <div class="col-md-8">
-                    <div class="form-group mb-40">
+                    <!-- BARRA: categoría fija a Bebida, no se muestra -->
+                    <div th:if="${from == 'barra'}">
+                        <input type="hidden" name="tipoComandaId" value="4" />
+                    </div>
+                    <!-- COCINA: solo opciones de cocina, sin barra -->
+                    <div th:if="${from == 'cocina'}" class="form-group mb-40">
+                        <label class="form-label">Tipo de Plato</label>
+                        <select th:field="*{tipoComandaId}" class="form-input" required>
+                            <option value="" disabled selected>-- Tipo de plato --</option>
+                            <option value="1">🥗 Entrante</option>
+                            <option value="2">🥩 Principal</option>
+                            <option value="3">🍰 Postre</option>
+                        </select>
+                    </div>
+                    <!-- GENERAL: todas las opciones -->
+                    <div th:if="${from != 'barra' and from != 'cocina'}" class="form-group mb-40">
                         <label class="form-label">Destino de Preparación</label>
                         <select th:field="*{tipoComandaId}" class="form-input" required>
                             <option value="" disabled selected>-- Enviar a... --</option>

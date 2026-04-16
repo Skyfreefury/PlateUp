@@ -21,6 +21,63 @@
     --accent:     #8b1a1a;
 }
 
+/* Modo claro — sobreescribe las variables del :root */
+[data-theme="light"] {
+    --black:      #faf9f5;
+    --dark:       #f0ede4;
+    --card:       #ffffff;
+    --border:     #d0cdc4;
+    --white:      #1a1a16;
+    --text-muted: #1a1a16;
+    --text-dim:   #1a1a16;
+}
+
+/* Overrides para elementos con colores hardcodeados (no usan variables) */
+[data-theme="light"] nav {
+    background: linear-gradient(to bottom, rgba(250, 249, 245, 0.95), transparent);
+}
+
+[data-theme="light"] nav.scrolled {
+    background: rgba(250, 249, 245, 0.97);
+}
+
+[data-theme="light"] .hero-bg {
+    background:
+        radial-gradient(ellipse 80% 60% at 50% 40%, rgba(139, 26, 26, 0.06) 0%, transparent 70%),
+        radial-gradient(ellipse 60% 80% at 20% 80%, rgba(201, 168, 76, 0.08) 0%, transparent 60%),
+        linear-gradient(180deg, #faf9f5 0%, #f0ede4 100%);
+}
+
+[data-theme="light"] .fuego-overlay {
+    background: linear-gradient(
+        to bottom,
+        rgba(250, 249, 245, 0.6) 0%,
+        rgba(250, 249, 245, 0.3) 50%,
+        rgba(250, 249, 245, 0.7) 100%
+    );
+}
+
+[data-theme="light"] .fuego-stats {
+    background: rgba(250, 249, 245, 0.55);
+}
+
+[data-theme="light"] .team-overlay {
+    background: linear-gradient(to top, rgba(250, 249, 245, 0.95) 0%, rgba(250, 249, 245, 0.4) 40%, transparent 100%);
+}
+
+/* Legibilidad del texto en modo claro — elementos con opacity hardcodeada */
+[data-theme="light"] .nav-links a {
+    opacity: 0.85;
+}
+
+[data-theme="light"] .hero-divider i {
+    opacity: 0.9;
+}
+
+[data-theme="light"] .hero-divider span {
+    opacity: 0.6;
+}
+
 /* =========================================
    2. RESET Y BASE
    ========================================= */
@@ -184,7 +241,16 @@ nav.scrolled {
     cursor: pointer;
     font-family: 'Montserrat', sans-serif;
     font-weight: 500;
-    transition: all 0.35s;
+    text-decoration: none;
+    transition: transform 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
+}
+
+.btn-primary:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 24px rgba(201, 168, 76, 0.45);
+    background: #d4b050;
+    color: var(--black);
+    text-decoration: none;
 }
 
 .btn-secondary {
@@ -251,7 +317,13 @@ nav.scrolled {
 
 .btn-link-action {
     text-decoration: none;
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.btn-link-action:hover {
+    text-decoration: none;
 }
 
 .btn-ver-mas {
@@ -1354,6 +1426,11 @@ footer {
    26. IMPRESIÓN
    ========================================= */
 @media print {
+    .reveal {
+        opacity: 1 !important;
+        transform: none !important;
+    }
+
     body * {
         visibility: hidden;
     }
@@ -1371,6 +1448,22 @@ footer {
         box-shadow: none;
         border: none;
         width: 100%;
+    }
+
+    #print-area,
+    #print-area * {
+        visibility: visible;
+        opacity: 1 !important;
+        transform: none !important;
+    }
+
+    #print-area {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        margin: 0;
+        padding: 20px;
     }
 }
 

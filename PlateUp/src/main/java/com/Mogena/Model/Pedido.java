@@ -21,7 +21,13 @@ public class Pedido {
     private LocalDateTime fechaHora;
 
     private Double total;
-    
+
+    @Column(name = "pago_efectivo")
+    private Double pagoEfectivo;
+
+    @Column(name = "pago_tarjeta")
+    private Double pagoTarjeta;
+
     private String estado; // ABIERTA, CERRADA
 
     @Column(name = "sesion_id")
@@ -50,6 +56,12 @@ public class Pedido {
 
     public Double getTotal() { return total; }
     public void setTotal(Double total) { this.total = total; }
+
+    public Double getPagoEfectivo() { return pagoEfectivo; }
+    public void setPagoEfectivo(Double pagoEfectivo) { this.pagoEfectivo = pagoEfectivo; }
+
+    public Double getPagoTarjeta() { return pagoTarjeta; }
+    public void setPagoTarjeta(Double pagoTarjeta) { this.pagoTarjeta = pagoTarjeta; }
 
     public String getEstado() { return estado; }
     public void setEstado(String estado) { this.estado = estado; }

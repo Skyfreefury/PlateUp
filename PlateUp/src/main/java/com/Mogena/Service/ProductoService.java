@@ -72,6 +72,7 @@ public class ProductoService {
         }
     }
     public Producto obtenerPorNombre(String nombre) {
-    return productoDAO.findByNombre(nombre);
-}
+        if (nombre == null || nombre.isBlank()) return null;
+        return productoDAO.findByNombre(nombre);
+    }
 }

@@ -61,18 +61,32 @@ public class ComandaWebController {
     // 2. FORMULARIO PARA MARCHAR PLATO / BEBIDA
     // =========================================================
     @GetMapping("/nuevo")
-    public String mostrarFormularioNuevo(Model model) {
+    public String mostrarFormularioNuevo(Model model,
+            @RequestParam(required = false, defaultValue = "general") String from) {
         Sesion activa = sesionService.obtenerSesionActiva();
-        
+
         // No dejamos pedir platos si la caja está cerrada
         if (activa == null) {
-            return "redirect:/cierre"; 
+            return "redirect:/cierre";
+        }
+
+        // Filtrar productos según el origen: barra → solo bebidas; cocina → sin bebidas
+        List<com.Mogena.Model.Producto> productos = productoService.obtenerTodos();
+        if ("barra".equals(from)) {
+            productos = productos.stream()
+                .filter(p -> p.getTipoProductoId() != null && p.getTipoProductoId() == 4)
+                .toList();
+        } else if ("cocina".equals(from)) {
+            productos = productos.stream()
+                .filter(p -> p.getTipoProductoId() == null || p.getTipoProductoId() != 4)
+                .toList();
         }
 
         model.addAttribute("comanda", new Comanda());
-        model.addAttribute("pedidos", pedidoService.obtenerTodos()); 
-        model.addAttribute("productos", productoService.obtenerTodos()); // La carta
-        
+        model.addAttribute("pedidos", pedidoService.obtenerTodos());
+        model.addAttribute("productos", productos);
+        model.addAttribute("from", from);
+
         return "comanda-form";
     }
 
@@ -86,12 +100,15 @@ public class ComandaWebController {
             comanda.setCreadoEn(LocalDateTime.now());
         }
         comandaService.guardarComanda(comanda);
-        
+
+        // Recalcular el total del pedido tras añadir/editar la comanda
+        recalcularTotalPedido(comanda.getPedidoId());
+
         // Si es una bebida (ID 4), redirigimos a la barra para no marear al camarero
         if (comanda.getTipoComandaId() != null && comanda.getTipoComandaId() == 4) {
             return "redirect:/barra";
         }
-        
+
         // Si es comida, redirigimos a cocina
         return "redirect:/comandas";
     }
@@ -121,16 +138,44 @@ public class ComandaWebController {
     public String borrarComanda(@PathVariable Long id) {
         Comanda comanda = comandaService.obtenerPorId(id);
         Long tipo = null;
-        
+        Long pedidoId = null;
+
         if (comanda != null) {
             tipo = comanda.getTipoComandaId();
+            pedidoId = comanda.getPedidoId();
             comandaService.borrarComanda(id);
         }
-        
+
+        // Recalcular el total del pedido tras eliminar la comanda
+        if (pedidoId != null) {
+            recalcularTotalPedido(pedidoId);
+        }
+
         // Redirigimos a la pantalla correcta tras anular
         if (tipo != null && tipo == 4) {
             return "redirect:/barra";
         }
         return "redirect:/comandas";
+    }
+
+    // =========================================================
+    // HELPER: Recalcula y persiste el total de un pedido
+    // =========================================================
+    private void recalcularTotalPedido(Long pedidoId) {
+        if (pedidoId == null) return;
+        Pedido pedido = pedidoService.obtenerPorId(pedidoId);
+        if (pedido == null) return;
+
+        double total = comandaService.obtenerPorPedidoId(pedidoId).stream()
+            .mapToDouble(c -> {
+                if (c.getNombrePlato() == null || c.getCantidad() == null) return 0.0;
+                var producto = productoService.obtenerPorNombre(c.getNombrePlato());
+                if (producto == null || producto.getPrecio() == null) return 0.0;
+                return producto.getPrecio() * c.getCantidad();
+            })
+            .sum();
+
+        pedido.setTotal(total);
+        pedidoService.guardarPedido(pedido);
     }
 }

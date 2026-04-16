@@ -119,11 +119,26 @@ public class PedidoWebController {
         return "redirect:/pedidos?borrado=true";
     }
 
-    // COBRO RÁPIDO (Cierra la cuenta y la enlaza a la sesión)
+    // MOSTRAR FORMULARIO DE COBRO
     @GetMapping("/cobrar/{id}")
-    public String cobrarPedidoRapido(@PathVariable Long id) {
+    public String mostrarFormularioCobro(@PathVariable Long id, Model model) {
         Pedido p = pedidoService.obtenerPorId(id);
+        if (p == null || !"ABIERTA".equals(p.getEstado())) {
+            return "redirect:/pedidos";
+        }
+        model.addAttribute("pedido", p);
+        return "cobrar-form";
+    }
+
+    // PROCESAR COBRO (efectivo + tarjeta)
+    @PostMapping("/cobrar")
+    public String procesarCobro(@RequestParam Long pedidoId,
+                                @RequestParam(defaultValue = "0") Double pagoEfectivo,
+                                @RequestParam(defaultValue = "0") Double pagoTarjeta) {
+        Pedido p = pedidoService.obtenerPorId(pedidoId);
         if (p != null) {
+            p.setPagoEfectivo(pagoEfectivo);
+            p.setPagoTarjeta(pagoTarjeta);
             p.setEstado("CERRADA");
             if (p.getSesionId() == null) {
                 Sesion activa = sesionService.obtenerSesionActiva();
