@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Marchar Producto | Eclipse PlateUp</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+    <link rel="stylesheet" th:href="@{/css/style.css?v=11.0}">
+    <script>
+        if (localStorage.getItem('theme') === 'light') {
+            document.documentElement.setAttribute('data-theme', 'light');
+        }
+    </script>
+</head>
+<body>
+
+<nav id="navbar" class="scrolled dashboard-nav">
+    <a th:href="@{/}" class="nav-logo">Eclipse PlateUp</a>
+    <div class="nav-actions">
+        <button id="theme-toggle" class="btn-icon btn-circle" title="Cambiar Tema">
+            <span id="theme-icon">☀️</span>
+        </button>
+        <button class="nav-cta" onclick="history.back()">Volver Atrás</button>
+        <form th:action="@{/logout}" method="post" style="display:inline;">
+            <button type="submit" class="nav-cta">🔒 Salir</button>
+        </form>
+    </div>
+</nav>
+
+<section class="reveal visible form-section">
+    <div class="card form-card">
+        <span class="section-tag text-center">Servicio en Vivo</span>
+        <h3 class="form-title">Marchar <em>Producto</em></h3>
+        
+        <form th:action="@{/comandas/guardar}" method="post" th:object="${comanda}" class="reserva-form">
+            <input type="hidden" th:field="*{id}" />
+            <input type="hidden" th:field="*{estado}" />
+            <input type="hidden" th:field="*{creadoEn}" />
+            
+            <div class="form-group mb-25">
+                <label class="form-label">Asignar a la Cuenta</label>
+                <select th:field="*{pedidoId}" class="form-input" required>
+                    <option value="" disabled selected>-- Seleccione la cuenta abierta --</option>
+                    <option th:each="p : ${pedidos}" th:if="${p.estado == 'ABIERTA'}" th:value="${p.id}" th:text="${p.numeroTicket != null ? 'Ticket #' + p.numeroTicket : 'Ref #' + p.id} + ' (Mesa ' + ${p.mesaId} + ')'"></option>
+                </select>
+            </div>
+
+            <div class="form-group mb-25">
+                <label class="form-label">Producto / Plato</label>
+                <select th:field="*{nombrePlato}" class="form-input" required>
+                    <option value="" disabled selected>-- Selecciona un plato de la carta --</option>
+                    <option th:each="prod : ${productos}" th:value="${prod.nombre}" th:text="${prod.nombre} + ' (' + ${prod.precio} + '€)'"></option>
+                </select>
+            </div>
+            
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group mb-25">
+                        <label class="form-label">Cantidad</label>
+                        <input type="number" th:field="*{cantidad}" class="form-input" min="1" value="1" required />
+                    </div>
+                </div>
+                <div class="col-md-8">
+                    <!-- BARRA: categoría fija a Bebida, no se muestra -->
+                    <div th:if="${from == 'barra'}">
+                        <input type="hidden" name="tipoComandaId" value="4" />
+                    </div>
+                    <!-- COCINA: solo opciones de cocina, sin barra -->
+                    <div th:if="${from == 'cocina'}" class="form-group mb-40">
+                        <label class="form-label">Tipo de Plato</label>
+                        <select th:field="*{tipoComandaId}" class="form-input" required>
+                            <option value="" disabled selected>-- Tipo de plato --</option>
+                            <option value="1">🥗 Entrante</option>
+                            <option value="2">🥩 Principal</option>
+                            <option value="3">🍰 Postre</option>
+                        </select>
+                    </div>
+                    <!-- GENERAL: todas las opciones -->
+                    <div th:if="${from != 'barra' and from != 'cocina'}" class="form-group mb-40">
+                        <label class="form-label">Destino de Preparación</label>
+                        <select th:field="*{tipoComandaId}" class="form-input" required>
+                            <option value="" disabled selected>-- Enviar a... --</option>
+                            <option value="1">🥗 Entrante (Cocina)</option>
+                            <option value="2">🥩 Principal (Cocina)</option>
+                            <option value="3">🍰 Postre (Cocina)</option>
+                            <option value="4" style="color: #0dcaf0; font-weight: 600;">🍹 Bebida (Barra)</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <button type="submit" class="btn-primary w-100"><span>Marchar Pedido</span></button>
+        </form>
+    </div>
+</section>
+
+<script th:src="@{/js/main.js}"></script>
+</body>
+</html>

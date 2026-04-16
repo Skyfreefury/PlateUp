@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.Mogena.Model;
 
 import jakarta.persistence.Column;
@@ -11,39 +7,52 @@ import jakarta.persistence.Table;
 import jakarta.persistence.PrePersist;
 import java.time.LocalDateTime;
 
+/**
+ * Entidad que representa una línea de comanda: un plato o bebida marchado a cocina o barra.
+ * Cada comanda pertenece a un pedido y tiene un tipo que indica su destino de preparación
+ * (Entrante, Principal, Postre o Bebida).
+ *
+ * <p>El ID se asigna manualmente mediante reciclaje de huecos en {@link com.Mogena.Service.ComandaService},
+ * por lo que no usa {@code @GeneratedValue}.
+ */
 @Entity
 @Table(name = "comandas")
 public class Comanda {
 
     @Id
-    // Nota: Dejo el ID sin @GeneratedValue asumiendo que controlas la inserción manualmente
-    // como hiciste en Producto. Si la BD lo auto-genera, puedes añadir @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    /** Clave foránea al pedido al que pertenece esta comanda. */
     @Column(name = "pedido_id")
     private Long pedidoId;
 
+    /** Estado de preparación: {@code PENDIENTE}, {@code EN_PREPARACION} o {@code LISTO}. */
     private String estado;
-    
+
     private String comentarios;
-    
+
     @Column(name = "nombre_plato")
-    private String nombrePlato; 
-    
+    private String nombrePlato;
+
     private Integer cantidad;
 
-    // ✨ CAMPO CLAVE PARA EL PANEL DE COCINA (Filtra por Entrante, Principal, Postre)
+    /**
+     * Tipo de comanda que determina el destino de preparación:
+     * 1 = Entrante (Cocina), 2 = Principal (Cocina), 3 = Postre (Cocina), 4 = Bebida (Barra).
+     */
     @Column(name = "tipo_comanda_id")
     private Long tipoComandaId;
 
-    // ✨ CAMPO CLAVE PARA LOS TEMPORIZADORES
+    /** Marca temporal de cuándo se marchó la comanda, usada para temporizadores en cocina. */
     @Column(name = "creado_en")
     private LocalDateTime creadoEn;
 
-    // Constructor vacío obligatorio para JPA
     public Comanda() {}
 
-    // TRUCO MÁGICO: Este método se ejecuta automáticamente justo antes de guardar en MySQL
+    /**
+     * Se ejecuta automáticamente antes de persistir la entidad en la base de datos.
+     * Establece el estado inicial y la marca temporal si no han sido asignados.
+     */
     @PrePersist
     public void preGuardar() {
         if (this.estado == null || this.estado.isEmpty()) {
@@ -54,71 +63,27 @@ public class Comanda {
         }
     }
 
-    // ==========================================
-    //          GETTERS Y SETTERS
-    // ==========================================
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
 
-    public Long getId() { 
-        return id; 
-    }
-    
-    public void setId(Long id) { 
-        this.id = id; 
-    }
+    public Long getPedidoId() { return pedidoId; }
+    public void setPedidoId(Long pedidoId) { this.pedidoId = pedidoId; }
 
-    public Long getPedidoId() { 
-        return pedidoId; 
-    }
-    
-    public void setPedidoId(Long pedidoId) { 
-        this.pedidoId = pedidoId; 
-    }
+    public String getEstado() { return estado; }
+    public void setEstado(String estado) { this.estado = estado; }
 
-    public String getEstado() { 
-        return estado; 
-    }
-    
-    public void setEstado(String estado) { 
-        this.estado = estado; 
-    }
+    public String getComentarios() { return comentarios; }
+    public void setComentarios(String comentarios) { this.comentarios = comentarios; }
 
-    public String getComentarios() { 
-        return comentarios; 
-    }
-    
-    public void setComentarios(String comentarios) { 
-        this.comentarios = comentarios; 
-    }
+    public String getNombrePlato() { return nombrePlato; }
+    public void setNombrePlato(String nombrePlato) { this.nombrePlato = nombrePlato; }
 
-    public String getNombrePlato() { 
-        return nombrePlato; 
-    }
-    
-    public void setNombrePlato(String nombrePlato) { 
-        this.nombrePlato = nombrePlato; 
-    }
+    public Integer getCantidad() { return cantidad; }
+    public void setCantidad(Integer cantidad) { this.cantidad = cantidad; }
 
-    public Integer getCantidad() { 
-        return cantidad; 
-    }
-    
-    public void setCantidad(Integer cantidad) { 
-        this.cantidad = cantidad; 
-    }
+    public Long getTipoComandaId() { return tipoComandaId; }
+    public void setTipoComandaId(Long tipoComandaId) { this.tipoComandaId = tipoComandaId; }
 
-    public Long getTipoComandaId() { 
-        return tipoComandaId; 
-    }
-    
-    public void setTipoComandaId(Long tipoComandaId) { 
-        this.tipoComandaId = tipoComandaId; 
-    }
-
-    public LocalDateTime getCreadoEn() { 
-        return creadoEn; 
-    }
-    
-    public void setCreadoEn(LocalDateTime creadoEn) { 
-        this.creadoEn = creadoEn; 
-    }
+    public LocalDateTime getCreadoEn() { return creadoEn; }
+    public void setCreadoEn(LocalDateTime creadoEn) { this.creadoEn = creadoEn; }
 }

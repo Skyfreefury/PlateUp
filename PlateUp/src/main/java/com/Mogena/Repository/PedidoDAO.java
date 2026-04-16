@@ -1,14 +1,25 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.Mogena.Repository;
 
 import com.Mogena.Model.Pedido;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+import java.util.Optional;
+
+/**
+ * Repositorio JPA para la entidad {@link com.Mogena.Model.Pedido}.
+ * Spring Data genera automáticamente la implementación SQL a partir del nombre de los métodos.
+ */
 @Repository
 public interface PedidoDAO extends JpaRepository<Pedido, Long> {
-    // ¡Vacío! Spring Data JPA domina el SQL por ti.
+
+    /** Devuelve todos los pedidos pertenecientes a una sesión de caja. */
+    List<Pedido> findBySesionId(Long sesionId);
+
+    /**
+     * Devuelve el pedido con el número de ticket más alto dentro de una sesión.
+     * Se usa para calcular el número correlativo del siguiente ticket.
+     */
+    Optional<Pedido> findTopBySesionIdOrderByNumeroTicketDesc(Long sesionId);
 }

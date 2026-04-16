@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.Mogena.Controller;
 
 import com.Mogena.Model.Pedido;
@@ -30,16 +26,29 @@ public class PedidoController {
 
     @PostMapping
     public String guardar(@RequestBody Pedido pedido) {
-        return pedidoService.guardarPedido(pedido) ? "Guardado" : "Error";
+        // Guardamos el pedido y comprobamos si el resultado NO es nulo
+        Pedido guardado = pedidoService.guardarPedido(pedido);
+        return (guardado != null) ? "Guardado exitosamente" : "Error al guardar";
     }
 
     @PutMapping
     public String actualizar(@RequestBody Pedido pedido) {
-        return pedidoService.actualizarPedido(pedido) ? "Actualizado" : "Error";
+        // En Spring Data JPA, "save" (guardarPedido) se usa tanto para crear como para actualizar.
+        // Si el objeto ya tiene un ID, lo actualiza automáticamente.
+        Pedido actualizado = pedidoService.guardarPedido(pedido);
+        return (actualizado != null) ? "Actualizado exitosamente" : "Error al actualizar";
     }
 
     @DeleteMapping("/{id}")
     public String borrar(@PathVariable Long id) {
-        return pedidoService.borrarPedido(id) ? "Borrado" : "Error";
+        // Como borrarPedido es "void" (no devuelve nada), primero comprobamos que exista
+        Pedido existente = pedidoService.obtenerPorId(id);
+        
+        if (existente != null) {
+            pedidoService.borrarPedido(id);
+            return "Borrado exitosamente";
+        }
+        
+        return "Error: El pedido no existe o ya fue borrado";
     }
 }

@@ -1,15 +1,16 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Interface.java to edit this template
- */
 package com.Mogena.Repository;
 
 import com.Mogena.Model.Producto;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+/**
+ * Repositorio JPA para la entidad {@link com.Mogena.Model.Producto}.
+ * Spring Data genera automáticamente la implementación SQL a partir del nombre de los métodos.
+ */
 @Repository
 public interface ProductoDAO extends JpaRepository<Producto, Long> {
-    // ¡Vacío! Spring Boot hace el SQL automáticamente.
+
+    /** Devuelve el producto con el nombre exacto indicado, o {@code null} si no existe. */
     Producto findByNombre(String nombre);
 }
