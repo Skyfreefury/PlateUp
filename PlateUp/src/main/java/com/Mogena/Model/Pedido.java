@@ -50,6 +50,10 @@ public class Pedido {
     @Column(name = "numero_ticket")
     private Integer numeroTicket;
 
+    /** Mesa anterior antes del último cambio. Si es null, la mesa nunca se ha cambiado. */
+    @Column(name = "mesa_anterior_id")
+    private Long mesaAnteriorId;
+
     public Pedido() {}
 
     public Long getId() { return id; }
@@ -81,4 +85,7 @@ public class Pedido {
 
     public Integer getNumeroTicket() { return numeroTicket; }
     public void setNumeroTicket(Integer numeroTicket) { this.numeroTicket = numeroTicket; }
+
+    public Long getMesaAnteriorId() { return mesaAnteriorId; }
+    public void setMesaAnteriorId(Long mesaAnteriorId) { this.mesaAnteriorId = mesaAnteriorId; }
 }

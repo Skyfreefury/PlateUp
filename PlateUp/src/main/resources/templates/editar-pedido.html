@@ -27,49 +27,111 @@
 
 <div class="container mt-5 pt-4 pb-5">
     <div class="row justify-content-center">
-        <div class="col-12 col-md-8 col-lg-6">
-            <div class="form-card">
+        <div class="col-12 col-md-10 col-lg-8">
+
+            <!-- Datos de la cuenta -->
+            <div class="form-card mb-4">
                 <span class="section-tag">FACTURACIÓN</span>
                 <h3 class="form-title">Editar <em class="text-gold">Cuenta</em></h3>
 
-                <form th:action="@{/pedidos/editar/{id}(id=${pedido.id})}" method="post" th:object="${pedido}">
-                    <input type="hidden" th:field="*{id}" />
-                    <input type="hidden" th:field="*{fechaHora}" />
-                    <input type="hidden" th:field="*{total}" />
+                <form th:action="@{/pedidos/editar/{id}(id=${pedido.id})}" method="post">
+                    <input type="hidden" name="id" th:value="${pedido.id}" />
 
                     <div class="mb-4">
                         <label class="form-label">Mesa Asignada</label>
-                        <select th:field="*{mesaId}" class="form-input" required>
+                        <select name="mesaId" class="form-input" required>
                             <option value="" disabled>Selecciona una mesa...</option>
-                            <option th:each="m : ${mesas}" th:value="${m.id}" th:text="'Mesa ' + ${m.numero}"></option>
+                            <option th:each="m : ${mesas}"
+                                    th:value="${m.id}"
+                                    th:text="'Mesa ' + ${m.numero}"
+                                    th:selected="${m.id == pedido.mesaId}"></option>
                         </select>
                     </div>
 
                     <div class="mb-4">
                         <label class="form-label">Cliente (Opcional)</label>
-                        <select th:field="*{clienteId}" class="form-input">
+                        <select name="clienteId" class="form-input">
                             <option value="">-- Cliente de paso (Sin registrar) --</option>
-                            <option th:each="c : ${clientes}" th:value="${c.id}" th:text="${c.nombre}"></option>
+                            <option th:each="c : ${clientes}"
+                                    th:value="${c.id}"
+                                    th:text="${c.nombre}"
+                                    th:selected="${c.id == pedido.clienteId}"></option>
                         </select>
                     </div>
 
                     <div class="mb-5">
                         <label class="form-label">Estado de la Cuenta</label>
-                        <select th:field="*{estado}" class="form-input" required>
-                            <option value="ABIERTA">Abierta (Comiendo)</option>
-                            <option value="CERRADA">Cerrada / Finalizada</option>
+                        <select name="estado" class="form-input" required>
+                            <option value="ABIERTA"  th:selected="${pedido.estado == 'ABIERTA'}">Abierta (Comiendo)</option>
+                            <option value="CERRADA"  th:selected="${pedido.estado == 'CERRADA'}">Cerrada / Finalizada</option>
                         </select>
                     </div>
 
                     <div class="d-flex gap-3">
-                        <button type="submit" class="btn-primary w-50">GUARDAR</button>
+                        <button type="submit" class="btn-primary w-50">GUARDAR CAMBIOS</button>
                         <a th:href="@{/pedidos}" class="btn-secondary w-50 text-center text-decoration-none d-flex align-items-center justify-content-center">CANCELAR</a>
                     </div>
                 </form>
             </div>
+
+            <!-- Comandas de la cuenta -->
+            <div class="form-card">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <div>
+                        <span class="section-tag">PLATOS Y BEBIDAS</span>
+                        <h4 class="form-title mb-0">Comandas de la <em class="text-gold">Cuenta</em></h4>
+                    </div>
+                    <a th:href="@{/comandas/nuevo(from='general')}" class="btn-primary btn-sm">+ Añadir</a>
+                </div>
+
+                <div th:if="${#lists.isEmpty(comandas)}" class="text-muted text-center py-3">
+                    No hay platos ni bebidas en esta cuenta.
+                </div>
+
+                <div th:unless="${#lists.isEmpty(comandas)}" class="table-responsive">
+                    <table class="solstice-table w-100">
+                        <thead>
+                            <tr>
+                                <th>Plato / Bebida</th>
+                                <th>Cant.</th>
+                                <th>Estado</th>
+                                <th class="text-right">Quitar</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="c : ${comandas}">
+                                <td class="text-gold font-medium" th:text="${c.nombrePlato}">-</td>
+                                <td th:text="'x' + ${c.cantidad}">x1</td>
+                                <td>
+                                    <span th:text="${c.estado}"
+                                          th:classappend="${c.estado == 'LISTO'} ? ' badge-listo' : (${c.estado == 'EN_PREPARACION'} ? ' badge-preparando' : ' badge-pendiente')"
+                                          class="badge-estado">-</span>
+                                </td>
+                                <td class="text-right">
+                                    <a th:href="@{/pedidos/quitarComanda/{pid}/{cid}(pid=${pedido.id},cid=${c.id})}"
+                                       class="btn-icon btn-icon-danger"
+                                       title="Quitar de la cuenta"
+                                       onclick="return confirm('¿Quitar este plato/bebida de la cuenta?')">
+                                        <svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16">
+                                            <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zm2.46-7.12l1.41-1.41L12 12.59l2.12-2.12 1.41 1.41L13.41 14l2.12 2.12-1.41 1.41L12 15.41l-2.12 2.12-1.41-1.41L10.59 14l-2.13-2.12zM15.5 4l-1-1h-5l-1 1H5v2h14V4z"/>
+                                        </svg>
+                                    </a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="mt-3 text-right">
+                    <strong class="text-gold">Total: </strong>
+                    <span th:text="${#numbers.formatDecimal(pedido.total != null ? pedido.total : 0, 1, 2)} + ' €'">0.00 €</span>
+                </div>
+            </div>
+
         </div>
     </div>
 </div>
 
+<script th:src="@{/js/main.js}"></script>
 </body>
 </html>

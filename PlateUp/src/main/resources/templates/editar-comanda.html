@@ -52,17 +52,18 @@
                         <input type="hidden" th:field="*{tipoComandaId}" id="tipoOcultoEdit" />
                     </div>
 
-                    <div class="mb-4">
-                        <label class="form-label">Cantidad</label>
-                        <input type="number" th:field="*{cantidad}" class="form-input" required min="1" />
-                    </div>
-
-                    <div class="mb-5">
-                        <label class="form-label">Estado</label>
-                        <select th:field="*{estado}" class="form-input">
-                            <option value="EN_PREPARACION">En Preparación</option>
-                            <option value="SERVIDO">Servido</option>
-                        </select>
+                    <div class="form-row mb-5">
+                        <div class="form-group">
+                            <label class="form-label">Cantidad</label>
+                            <input type="number" th:field="*{cantidad}" class="form-input" required min="1" />
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Estado</label>
+                            <select th:field="*{estado}" class="form-input">
+                                <option value="EN_PREPARACION">En Preparación</option>
+                                <option value="SERVIDO">Servido</option>
+                            </select>
+                        </div>
                     </div>
 
                     <div class="d-flex gap-3">

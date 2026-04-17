@@ -1301,7 +1301,99 @@ footer {
 .bg-sofia     { background: url('../Img/SofiaAguilar.png')   center/cover no-repeat; }
 
 /* =========================================
-   23. KEYFRAMES
+   23. BADGES DE ESTADO Y CAMBIO DE MESA
+   ========================================= */
+
+.badge-estado {
+    display: inline-block;
+    padding: 2px 10px;
+    border-radius: 20px;
+    font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+.badge-pendiente  { background: rgba(201, 168, 76, 0.15); color: var(--gold); border: 1px solid var(--gold-dim); }
+.badge-preparando { background: rgba(59, 130, 246, 0.15); color: #60a5fa;    border: 1px solid rgba(59,130,246,0.3); }
+.badge-listo      { background: rgba(34, 197, 94, 0.15);  color: #4ade80;    border: 1px solid rgba(34,197,94,0.3); }
+
+/* Badges de ubicación de mesa */
+.badge-ubicacion {
+    display: inline-block;
+    margin-left: 5px;
+    padding: 1px 8px;
+    border-radius: 20px;
+    font-size: 0.68rem;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    vertical-align: middle;
+}
+.badge-terraza { background: rgba(56, 189, 248, 0.12); color: #38bdf8; border: 1px solid rgba(56,189,248,0.3); }
+.badge-salon   { background: rgba(201, 168, 76, 0.12);  color: var(--gold); border: 1px solid var(--gold-dim); }
+
+/* Badges de estado de mesa */
+.badge-libre     { background: rgba(34, 197, 94, 0.12);  color: #4ade80; border: 1px solid rgba(34,197,94,0.3); }
+.badge-ocupada   { background: rgba(239, 68, 68, 0.12);  color: #f87171; border: 1px solid rgba(239,68,68,0.3); }
+.badge-reservada { background: rgba(251, 191, 36, 0.12); color: #fbbf24; border: 1px solid rgba(251,191,36,0.3); }
+
+/* Etiquetas de categoría — carta del index */
+.menu-tag-entrante { background: rgba(52, 211, 153, 0.12); color: #34d399; border: 1px solid rgba(52,211,153,0.3); }
+.menu-tag-principal{ background: rgba(201, 168, 76, 0.15); color: var(--gold); border: 1px solid var(--gold-dim); }
+.menu-tag-postre   { background: rgba(244, 114, 182, 0.12); color: #f472b6; border: 1px solid rgba(244,114,182,0.3); }
+.menu-tag-bebida   { background: rgba(56, 189, 248, 0.12);  color: #38bdf8;  border: 1px solid rgba(56,189,248,0.25); }
+
+/* Línea inferior y número de la card según categoría */
+.menu-card[data-cat="entrante"]::before  { background: linear-gradient(90deg, #34d399, #059669); }
+.menu-card[data-cat="principal"]::before { background: linear-gradient(90deg, var(--gold), #a07530); }
+.menu-card[data-cat="postre"]::before    { background: linear-gradient(90deg, #f472b6, #db2777); }
+.menu-card[data-cat="bebida"]::before    { background: linear-gradient(90deg, #38bdf8, #0284c7); }
+
+.menu-card[data-cat="entrante"]  .menu-card-num { color: #34d399; }
+.menu-card[data-cat="principal"] .menu-card-num { color: var(--gold); }
+.menu-card[data-cat="postre"]    .menu-card-num { color: #f472b6; }
+.menu-card[data-cat="bebida"]    .menu-card-num { color: #38bdf8; }
+
+/* Fila de cocina/barra: mesa cambiada */
+.mesa-cambiada { color: var(--gold); font-weight: 500; }
+.badge-mesa-cambio {
+    display: inline-block;
+    margin-left: 4px;
+    padding: 1px 7px;
+    border-radius: 20px;
+    font-size: 0.7rem;
+    background: rgba(239, 68, 68, 0.15);
+    color: #f87171;
+    border: 1px solid rgba(239, 68, 68, 0.35);
+    animation: pulseMesa 2s ease-in-out infinite;
+}
+@keyframes pulseMesa {
+    0%, 100% { opacity: 1; }
+    50%       { opacity: 0.55; }
+}
+
+/* Botón eliminar (rojo) en tablas */
+.btn-icon-danger {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 6px;
+    background: rgba(239, 68, 68, 0.1);
+    color: #f87171;
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+    text-decoration: none;
+}
+.btn-icon-danger:hover {
+    background: rgba(239, 68, 68, 0.25);
+    color: #ef4444;
+}
+
+/* =========================================
+   24. KEYFRAMES
    ========================================= */
 @keyframes fadeDown {
     from { opacity: 0; transform: translateY(-20px); }

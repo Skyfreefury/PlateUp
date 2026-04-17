@@ -44,9 +44,14 @@ public class HomeWebController {
                     .filter(p -> p.getTipoProductoId() == 3)
                     .collect(Collectors.toList());
 
+            List<Producto> bebidas = todosLosProductos.stream()
+                    .filter(p -> p.getTipoProductoId() == 4)
+                    .collect(Collectors.toList());
+
             model.addAttribute("entrantes", entrantes);
             model.addAttribute("principales", principales);
             model.addAttribute("postres", postres);
+            model.addAttribute("bebidas", bebidas);
 
             return "index";
         } catch (Exception e) {

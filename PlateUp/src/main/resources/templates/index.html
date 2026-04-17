@@ -145,46 +145,56 @@
       <h2 class="section-title">Nuestros <em>Platos</em></h2>
     </div>
     <div class="menu-tabs">
-      <button class="menu-tab active" onclick="tabMenu('entrantes-grid', this)">Entrantes</button>
-      <button class="menu-tab" onclick="tabMenu('principales-grid', this)">Principales</button>
-      <button class="menu-tab" onclick="tabMenu('postres-grid', this)">Postres</button>
+      <button class="menu-tab active"  onclick="filterMenu('todos',     this)">Todos</button>
+      <button class="menu-tab"         onclick="filterMenu('entrante',  this)">Entrantes</button>
+      <button class="menu-tab"         onclick="filterMenu('principal', this)">Principales</button>
+      <button class="menu-tab"         onclick="filterMenu('postre',    this)">Postres</button>
+      <button class="menu-tab"         onclick="filterMenu('bebida',    this)">Bebidas</button>
     </div>
   </div>
 
-  <div id="entrantes-grid" class="menu-grid">
-    <article th:each="p, iter : ${entrantes}" class="menu-card">
-      <span class="menu-card-num" th:text="${iter.count < 10 ? '0' + iter.count : iter.count}">01</span>
-      <h3 class="menu-card-name" th:text="${p.nombre}">Nombre</h3>
-      <p class="menu-card-desc" th:text="${p.descripcion}">Descripción</p>
-      <div class="menu-card-footer">
-        <span class="menu-price" th:text="${p.precio} + '€'">0€</span>
-        <span class="menu-tag">Entrante</span>
-      </div>
-    </article>
-  </div>
+  <div id="carta-grid" class="menu-grid">
 
-  <div id="principales-grid" class="menu-grid hidden">
-    <article th:each="p, iter : ${principales}" class="menu-card">
+    <article th:each="p, iter : ${entrantes}" class="menu-card" data-cat="entrante">
       <span class="menu-card-num" th:text="${iter.count < 10 ? '0' + iter.count : iter.count}">01</span>
       <h3 class="menu-card-name" th:text="${p.nombre}">Nombre</h3>
       <p class="menu-card-desc" th:text="${p.descripcion}">Descripción</p>
       <div class="menu-card-footer">
         <span class="menu-price" th:text="${p.precio} + '€'">0€</span>
-        <span class="menu-tag">Principal</span>
+        <span class="menu-tag menu-tag-entrante">Entrante</span>
       </div>
     </article>
-  </div>
 
-  <div id="postres-grid" class="menu-grid hidden">
-    <article th:each="p, iter : ${postres}" class="menu-card">
+    <article th:each="p, iter : ${principales}" class="menu-card" data-cat="principal">
       <span class="menu-card-num" th:text="${iter.count < 10 ? '0' + iter.count : iter.count}">01</span>
       <h3 class="menu-card-name" th:text="${p.nombre}">Nombre</h3>
       <p class="menu-card-desc" th:text="${p.descripcion}">Descripción</p>
       <div class="menu-card-footer">
         <span class="menu-price" th:text="${p.precio} + '€'">0€</span>
-        <span class="menu-tag">Postre</span>
+        <span class="menu-tag menu-tag-principal">Principal</span>
       </div>
     </article>
+
+    <article th:each="p, iter : ${postres}" class="menu-card" data-cat="postre">
+      <span class="menu-card-num" th:text="${iter.count < 10 ? '0' + iter.count : iter.count}">01</span>
+      <h3 class="menu-card-name" th:text="${p.nombre}">Nombre</h3>
+      <p class="menu-card-desc" th:text="${p.descripcion}">Descripción</p>
+      <div class="menu-card-footer">
+        <span class="menu-price" th:text="${p.precio} + '€'">0€</span>
+        <span class="menu-tag menu-tag-postre">Postre</span>
+      </div>
+    </article>
+
+    <article th:each="p, iter : ${bebidas}" class="menu-card" data-cat="bebida">
+      <span class="menu-card-num" th:text="${iter.count < 10 ? '0' + iter.count : iter.count}">01</span>
+      <h3 class="menu-card-name" th:text="${p.nombre}">Nombre</h3>
+      <p class="menu-card-desc" th:text="${p.descripcion}">Descripción</p>
+      <div class="menu-card-footer">
+        <span class="menu-price" th:text="${p.precio} + '€'">0€</span>
+        <span class="menu-tag menu-tag-bebida">Bebida</span>
+      </div>
+    </article>
+
   </div>
 </section>
 

@@ -7,6 +7,7 @@ import com.Mogena.Service.ClienteService;
 import com.Mogena.Service.ComandaService;
 import com.Mogena.Service.MesaService;
 import com.Mogena.Service.PedidoService;
+import com.Mogena.Service.ProductoService;
 import com.Mogena.Service.SesionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -40,6 +41,9 @@ public class PedidoWebController {
 
     @Autowired
     private SesionService sesionService;
+
+    @Autowired
+    private ProductoService productoService;
 
     /**
      * Muestra la lista de cuentas abiertas y cerradas de la sesión activa.
@@ -99,13 +103,21 @@ public class PedidoWebController {
             pedido.setEstado("ABIERTA");
             pedido.setFechaHora(LocalDateTime.now());
             pedido.setTotal(0.0);
+
+            // Heredar el cliente asignado a la mesa si no se especificó uno manualmente
+            if (pedido.getClienteId() == null && pedido.getMesaId() != null) {
+                com.Mogena.Model.Mesa mesa = mesaService.obtenerPorId(pedido.getMesaId());
+                if (mesa != null && mesa.getClienteId() != null) {
+                    pedido.setClienteId(mesa.getClienteId());
+                }
+            }
         }
 
         pedidoService.guardarPedido(pedido);
         return "redirect:/pedidos";
     }
 
-    /** Muestra el formulario de edición de una cuenta existente. */
+    /** Muestra el formulario de edición de una cuenta existente con sus comandas. */
     @GetMapping("/editar/{id}")
     public String mostrarFormularioEditar(@PathVariable Long id, Model model) {
         Pedido pedido = pedidoService.obtenerPorId(id);
@@ -113,9 +125,56 @@ public class PedidoWebController {
             model.addAttribute("pedido", pedido);
             model.addAttribute("mesas", mesaService.obtenerTodas());
             model.addAttribute("clientes", clienteService.obtenerTodos());
-            return "pedido-form";
+            model.addAttribute("comandas", comandaService.obtenerPorPedidoId(id));
+            return "editar-pedido";
         }
         return "redirect:/pedidos";
+    }
+
+    /** Guarda los cambios de edición de una cuenta. Detecta y registra cambios de mesa. */
+    @PostMapping("/editar/{id}")
+    public String guardarEdicion(@PathVariable Long id,
+                                  @RequestParam Long mesaId,
+                                  @RequestParam(required = false) Long clienteId,
+                                  @RequestParam String estado) {
+        Pedido existente = pedidoService.obtenerPorId(id);
+        if (existente == null) return "redirect:/pedidos";
+
+        if (!existente.getMesaId().equals(mesaId)) {
+            existente.setMesaAnteriorId(existente.getMesaId());
+        }
+        existente.setMesaId(mesaId);
+        existente.setClienteId(clienteId);
+        existente.setEstado(estado);
+
+        pedidoService.guardarPedido(existente);
+        return "redirect:/pedidos?editado=true";
+    }
+
+    /** Elimina una comanda de una cuenta y recalcula el total. */
+    @GetMapping("/quitarComanda/{pedidoId}/{comandaId}")
+    public String quitarComanda(@PathVariable Long pedidoId, @PathVariable Long comandaId) {
+        Comanda comanda = comandaService.obtenerPorId(comandaId);
+        if (comanda != null && pedidoId.equals(comanda.getPedidoId())) {
+            comandaService.borrarComanda(comandaId);
+            recalcularTotalPedido(pedidoId);
+        }
+        return "redirect:/pedidos/editar/" + pedidoId;
+    }
+
+    private void recalcularTotalPedido(Long pedidoId) {
+        Pedido pedido = pedidoService.obtenerPorId(pedidoId);
+        if (pedido == null) return;
+        double total = comandaService.obtenerPorPedidoId(pedidoId).stream()
+            .mapToDouble(c -> {
+                if (c.getNombrePlato() == null || c.getCantidad() == null) return 0.0;
+                var producto = productoService.obtenerPorNombre(c.getNombrePlato());
+                if (producto == null || producto.getPrecio() == null) return 0.0;
+                return producto.getPrecio() * c.getCantidad();
+            })
+            .sum();
+        pedido.setTotal(total);
+        pedidoService.guardarPedido(pedido);
     }
 
     /**
@@ -158,12 +217,21 @@ public class PedidoWebController {
             p.setPagoEfectivo(pagoEfectivo);
             p.setPagoTarjeta(pagoTarjeta);
             p.setEstado("CERRADA");
-            // Asegurar que la cuenta queda ligada a la sesión activa si no lo estaba
             if (p.getSesionId() == null) {
                 Sesion activa = sesionService.obtenerSesionActiva();
                 if (activa != null) p.setSesionId(activa.getId());
             }
             pedidoService.guardarPedido(p);
+
+            // Liberar cliente y marcar mesa como LIBRE al cobrar
+            if (p.getMesaId() != null) {
+                com.Mogena.Model.Mesa mesa = mesaService.obtenerPorId(p.getMesaId());
+                if (mesa != null) {
+                    mesa.setClienteId(null);
+                    mesa.setEstado("LIBRE");
+                    mesaService.guardarMesa(mesa);
+                }
+            }
         }
         return "redirect:/pedidos?cobrado=true";
     }

@@ -35,7 +35,7 @@ public class SecurityConfig {
             .authenticationProvider(authProvider())
             .authorizeHttpRequests(auth -> auth
                 // Rutas públicas: index del cliente y recursos estáticos
-                .requestMatchers("/", "/css/**", "/js/**", "/images/**", "/Static/**").permitAll()
+                .requestMatchers("/", "/css/**", "/js/**", "/Css/**", "/Img/**", "/Js/**", "/images/**", "/Static/**").permitAll()
                 // Login siempre accesible
                 .requestMatchers("/login").permitAll()
                 // Todo lo demás requiere estar autenticado

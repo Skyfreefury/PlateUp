@@ -166,6 +166,15 @@ function tabMenu(gridId, btn) {
     btn.classList.add('active');
 }
 
+function filterMenu(cat, btn) {
+    document.querySelectorAll('.menu-tab').forEach(t => t.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('#carta-grid .menu-card').forEach(card => {
+        const visible = cat === 'todos' || card.dataset.cat === cat;
+        card.style.display = visible ? '' : 'none';
+    });
+}
+
 function handleReserva(e) {
     e.preventDefault();
     showToast('✦ Reserva confirmada — Le contactaremos en breve');

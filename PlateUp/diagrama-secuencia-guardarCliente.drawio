@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxGraphModel dx="1422" dy="762" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1654" pageHeight="1169" math="0" shadow="0">
+  <root>
+    <mxCell id="0" />
+    <mxCell id="1" parent="0" />
+
+    <!-- ===== TÍTULO ===== -->
+    <mxCell id="99" value="&lt;b&gt;&lt;font style=&quot;font-size: 16px;&quot;&gt;Diagrama de Secuencia: guardarCliente()&lt;/font&gt;&lt;/b&gt;&lt;br&gt;PlateUP · Spring Boot MVC · Operación CREATE/UPDATE Cliente" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;" vertex="1" parent="1">
+      <mxGeometry x="260" y="10" width="700" height="50" as="geometry" />
+    </mxCell>
+
+    <!-- ===== PARTICIPANTES ===== -->
+
+    <!-- Usuario (Navegador) -->
+    <mxCell id="2" value="&lt;b&gt;:Usuario&lt;/b&gt;&lt;br&gt;(Navegador)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;" vertex="1" parent="1">
+      <mxGeometry x="30" y="70" width="110" height="45" as="geometry" />
+    </mxCell>
+
+    <!-- ClienteWebController -->
+    <mxCell id="3" value="&lt;b&gt;:ClienteWebController&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;" vertex="1" parent="1">
+      <mxGeometry x="220" y="70" width="170" height="45" as="geometry" />
+    </mxCell>
+
+    <!-- ClienteService -->
+    <mxCell id="4" value="&lt;b&gt;:ClienteService&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;" vertex="1" parent="1">
+      <mxGeometry x="490" y="70" width="150" height="45" as="geometry" />
+    </mxCell>
+
+    <!-- ClienteDAO -->
+    <mxCell id="5" value="&lt;b&gt;:ClienteDAO&lt;/b&gt;&lt;br&gt;(JpaRepository)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;" vertex="1" parent="1">
+      <mxGeometry x="740" y="70" width="140" height="45" as="geometry" />
+    </mxCell>
+
+    <!-- MySQL -->
+    <mxCell id="6" value="&lt;b&gt;:MySQL&lt;/b&gt;&lt;br&gt;(clientes)" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=13;fillColor=#ffe6cc;strokeColor=#d6b656;fontSize=11;" vertex="1" parent="1">
+      <mxGeometry x="980" y="62" width="110" height="60" as="geometry" />
+    </mxCell>
+
+    <!-- ===== LÍNEAS DE VIDA (dashed vertical) ===== -->
+    <!-- x_centro: Usuario=85, Controller=305, Service=565, DAO=810, MySQL=1035 -->
+
+    <mxCell id="20" value="" style="endArrow=none;dashed=1;html=1;strokeColor=#666666;" edge="1" parent="1">
+      <mxGeometry relative="0" as="geometry">
+        <mxPoint x="85" y="115" as="sourcePoint" />
+        <mxPoint x="85" y="730" as="targetPoint" />
+      </mxGeometry>
+    </mxCell>
+
+    <mxCell id="21" value="" style="endArrow=none;dashed=1;html=1;strokeColor=#666666;" edge="1" parent="1">
+      <mxGeometry relative="0" as="geometry">
+        <mxPoint x="305" y="115" as="sourcePoint" />
+        <mxPoint x="305" y="730" as="targetPoint" />
+      </mxGeometry>
+    </mxCell>
+
+    <mxCell id="22" value="" style="endArrow=none;dashed=1;html=1;strokeColor=#666666;" edge="1" parent="1">
+      <mxGeometry relative="0" as="geometry">
+        <mxPoint x="565" y="115" as="sourcePoint" />
+        <mxPoint x="565" y="730" as="targetPoint" />
+      </mxGeometry>
+    </mxCell>
+
+    <mxCell id="23" value="" style="endArrow=none;dashed=1;html=1;strokeColor=#666666;" edge="1" parent="1">
+      <mxGeometry relative="0" as="geometry">
+        <mxPoint x="810" y="115" as="sourcePoint" />
+        <mxPoint x="810" y="730" as="targetPoint" />
+      </mxGeometry>
+    </mxCell>
+
+    <mxCell id="24" value="" style="endArrow=none;dashed=1;html=1;strokeColor=#666666;" edge="1" parent="1">
+      <mxGeometry relative="0" as="geometry">
+        <mxPoint x="1035" y="122" as="sourcePoint" />
+        <mxPoint x="1035" y="730" as="targetPoint" />
+      </mxGeometry>
+    </mxCell>
+
+    <!-- ===== CAJAS DE ACTIVACIÓN ===== -->
+
+    <!-- Controller activo: desde msg 1 (y=165) hasta msg 8 (y=670) -->
+    <mxCell id="60" value="" style="fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+      <mxGeometry x="299" y="165" width="12" height="505" as="geometry" />
+    </mxCell>
+
+    <!-- Service activo: desde msg 2 (y=240) hasta msg 7 (y=600) -->
+    <mxCell id="61" value="" style="fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+      <mxGeometry x="559" y="240" width="12" height="360" as="geometry" />
+    </mxCell>
+
+    <!-- DAO activo: desde msg 3 (y=315) hasta msg 6 (y=525) -->
+    <mxCell id="62" value="" style="fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+      <mxGeometry x="804" y="315" width="12" height="210" as="geometry" />
+    </mxCell>
+
+    <!-- MySQL activo: desde msg 4 (y=390) hasta msg 5 (y=455) -->
+    <mxCell id="63" value="" style="fillColor=#ffe6cc;strokeColor=#d6b656;" vertex="1" parent="1">
+      <mxGeometry x="1029" y="390" width="12" height="65" as="geometry" />
+    </mxCell>
+
+    <!-- ===== MENSAJES (flechas sólidas hacia adelante) ===== -->
+
+    <!-- Msg 1: Usuario → Controller -->
+    <mxCell id="30" value="1: POST /clientes/guardar&lt;br&gt;(@ModelAttribute Cliente)" style="html=1;verticalAlign=bottom;endArrow=block;endFill=1;fontSize=10;" edge="1" parent="1">
+      <mxGeometry relative="0" as="geometry">
+        <mxPoint x="85" y="165" as="sourcePoint" />
+        <mxPoint x="299" y="165" as="targetPoint" />
+      </mxGeometry>
+    </mxCell>
+
+    <!-- Msg 2: Controller → Service -->
+    <mxCell id="31" value="2: guardarCliente(cliente : Cliente)" style="html=1;verticalAlign=bottom;endArrow=block;endFill=1;fontSize=10;" edge="1" parent="1">
+      <mxGeometry relative="0" as="geometry">
+        <mxPoint x="311" y="240" as="sourcePoint" />
+        <mxPoint x="559" y="240" as="targetPoint" />
+      </mxGeometry>
+    </mxCell>
+
+    <!-- Msg 3: Service → DAO -->
+    <mxCell id="32" value="3: save(cliente : Cliente)" style="html=1;verticalAlign=bottom;endArrow=block;endFill=1;fontSize=10;" edge="1" parent="1">
+      <mxGeometry relative="0" as="geometry">
+        <mxPoint x="571" y="315" as="sourcePoint" />
+        <mxPoint x="804" y="315" as="targetPoint" />
+      </mxGeometry>
+    </mxCell>
+
+    <!-- Msg 4: DAO → MySQL -->
+    <mxCell id="33" value="4: INSERT INTO clientes (...) VALUES (...)" style="html=1;verticalAlign=bottom;endArrow=block;endFill=1;fontSize=10;" edge="1" parent="1">
+      <mxGeometry relative="0" as="geometry">
+        <mxPoint x="816" y="390" as="sourcePoint" />
+        <mxPoint x="1029" y="390" as="targetPoint" />
+      </mxGeometry>
+    </mxCell>
+
+    <!-- ===== MENSAJES DE RETORNO (flechas dashed hacia atrás) ===== -->
+
+    <!-- Msg 5: MySQL → DAO (retorno) -->
+    <mxCell id="40" value="5: Cliente (guardado, id generado)" style="html=1;verticalAlign=bottom;endArrow=open;endFill=0;dashed=1;fontSize=10;" edge="1" parent="1">
+      <mxGeometry relative="0" as="geometry">
+        <mxPoint x="1029" y="455" as="sourcePoint" />
+        <mxPoint x="816" y="455" as="targetPoint" />
+      </mxGeometry>
+    </mxCell>
+
+    <!-- Msg 6: DAO → Service (retorno) -->
+    <mxCell id="41" value="6: Cliente (guardado)" style="html=1;verticalAlign=bottom;endArrow=open;endFill=0;dashed=1;fontSize=10;" edge="1" parent="1">
+      <mxGeometry relative="0" as="geometry">
+        <mxPoint x="804" y="525" as="sourcePoint" />
+        <mxPoint x="571" y="525" as="targetPoint" />
+      </mxGeometry>
+    </mxCell>
+
+    <!-- Msg 7: Service → Controller (retorno) -->
+    <mxCell id="42" value="7: true : boolean" style="html=1;verticalAlign=bottom;endArrow=open;endFill=0;dashed=1;fontSize=10;" edge="1" parent="1">
+      <mxGeometry relative="0" as="geometry">
+        <mxPoint x="559" y="600" as="sourcePoint" />
+        <mxPoint x="311" y="600" as="targetPoint" />
+      </mxGeometry>
+    </mxCell>
+
+    <!-- Msg 8: Controller → Usuario (retorno HTTP) -->
+    <mxCell id="43" value="8: HTTP 302 redirect:/clientes" style="html=1;verticalAlign=bottom;endArrow=open;endFill=0;dashed=1;fontSize=10;" edge="1" parent="1">
+      <mxGeometry relative="0" as="geometry">
+        <mxPoint x="299" y="670" as="sourcePoint" />
+        <mxPoint x="85" y="670" as="targetPoint" />
+      </mxGeometry>
+    </mxCell>
+
+    <!-- ===== NOTAS ACLARATORIAS ===== -->
+
+    <!-- Nota sobre JPA -->
+    <mxCell id="70" value="&lt;i&gt;Spring Data JPA comprueba:&lt;/i&gt;&lt;br&gt;· id == null → INSERT&lt;br&gt;· id != null → UPDATE" style="text;html=1;strokeColor=#d6b656;fillColor=#ffffc0;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=1;fontSize=9;" vertex="1" parent="1">
+      <mxGeometry x="840" y="310" width="175" height="55" as="geometry" />
+    </mxCell>
+
+    <!-- Nota sobre try-catch en Service -->
+    <mxCell id="71" value="&lt;i&gt;try-catch: devuelve&lt;/i&gt;&lt;br&gt;&lt;i&gt;false si hay excepción&lt;/i&gt;" style="text;html=1;strokeColor=#82b366;fillColor=#f0fff0;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=1;fontSize=9;" vertex="1" parent="1">
+      <mxGeometry x="600" y="235" width="150" height="40" as="geometry" />
+    </mxCell>
+
+    <!-- ===== ANOTACIÓN DE CAPAS ===== -->
+    <mxCell id="80" value="Capa Presentación" style="text;html=1;strokeColor=none;fillColor=none;align=center;fontSize=9;fontColor=#6c8ebf;fontStyle=2;" vertex="1" parent="1">
+      <mxGeometry x="220" y="750" width="170" height="20" as="geometry" />
+    </mxCell>
+    <mxCell id="81" value="Capa Negocio" style="text;html=1;strokeColor=none;fillColor=none;align=center;fontSize=9;fontColor=#82b366;fontStyle=2;" vertex="1" parent="1">
+      <mxGeometry x="490" y="750" width="150" height="20" as="geometry" />
+    </mxCell>
+    <mxCell id="82" value="Capa Datos" style="text;html=1;strokeColor=none;fillColor=none;align=center;fontSize=9;fontColor=#82b366;fontStyle=2;" vertex="1" parent="1">
+      <mxGeometry x="740" y="750" width="140" height="20" as="geometry" />
+    </mxCell>
+    <mxCell id="83" value="Base de Datos" style="text;html=1;strokeColor=none;fillColor=none;align=center;fontSize=9;fontColor=#d6b656;fontStyle=2;" vertex="1" parent="1">
+      <mxGeometry x="980" y="750" width="110" height="20" as="geometry" />
+    </mxCell>
+
+  </root>
+</mxGraphModel>

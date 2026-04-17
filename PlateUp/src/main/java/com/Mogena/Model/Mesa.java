@@ -1,5 +1,6 @@
 package com.Mogena.Model;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
@@ -29,6 +30,10 @@ public class Mesa {
     /** Zona del restaurante donde se ubica la mesa (ej. Interior, Terraza). */
     private String ubicacion;
 
+    /** Cliente asignado a esta mesa. Se limpia automáticamente al cobrar la cuenta. */
+    @Column(name = "cliente_id")
+    private Long clienteId;
+
     public Mesa() {}
 
     public Mesa(Long id, Integer numero, Integer capacidad, String estado, String ubicacion) {
@@ -53,4 +58,7 @@ public class Mesa {
 
     public String getUbicacion() { return ubicacion; }
     public void setUbicacion(String ubicacion) { this.ubicacion = ubicacion; }
+
+    public Long getClienteId() { return clienteId; }
+    public void setClienteId(Long clienteId) { this.clienteId = clienteId; }
 }
