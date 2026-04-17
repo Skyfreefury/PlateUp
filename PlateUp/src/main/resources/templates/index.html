@@ -55,7 +55,9 @@
 <div class="cursor" id="cursor"></div>
 <div class="cursor-ring" id="cursorRing"></div>
 
+<header>
 <nav id="navbar">
+
   <a th:href="@{/}" class="nav-logo">Eclipse PlateUp</a>
   
   <button class="mobile-menu-btn" id="burger-btn" aria-label="Menú">
@@ -99,7 +101,9 @@
     <button class="nav-cta" onclick="scrollToReserva()">Reservar Mesa</button>
   </div>
 </nav>
+</header>
 
+<main>
 <section id="hero">
   <div class="hero-bg"></div>
   <div class="hero-grain"></div>
@@ -148,7 +152,7 @@
   </div>
 
   <div id="entrantes-grid" class="menu-grid">
-    <div th:each="p, iter : ${entrantes}" class="menu-card">
+    <article th:each="p, iter : ${entrantes}" class="menu-card">
       <span class="menu-card-num" th:text="${iter.count < 10 ? '0' + iter.count : iter.count}">01</span>
       <h3 class="menu-card-name" th:text="${p.nombre}">Nombre</h3>
       <p class="menu-card-desc" th:text="${p.descripcion}">Descripción</p>
@@ -156,11 +160,11 @@
         <span class="menu-price" th:text="${p.precio} + '€'">0€</span>
         <span class="menu-tag">Entrante</span>
       </div>
-    </div>
+    </article>
   </div>
 
   <div id="principales-grid" class="menu-grid hidden">
-    <div th:each="p, iter : ${principales}" class="menu-card">
+    <article th:each="p, iter : ${principales}" class="menu-card">
       <span class="menu-card-num" th:text="${iter.count < 10 ? '0' + iter.count : iter.count}">01</span>
       <h3 class="menu-card-name" th:text="${p.nombre}">Nombre</h3>
       <p class="menu-card-desc" th:text="${p.descripcion}">Descripción</p>
@@ -168,11 +172,11 @@
         <span class="menu-price" th:text="${p.precio} + '€'">0€</span>
         <span class="menu-tag">Principal</span>
       </div>
-    </div>
+    </article>
   </div>
 
   <div id="postres-grid" class="menu-grid hidden">
-    <div th:each="p, iter : ${postres}" class="menu-card">
+    <article th:each="p, iter : ${postres}" class="menu-card">
       <span class="menu-card-num" th:text="${iter.count < 10 ? '0' + iter.count : iter.count}">01</span>
       <h3 class="menu-card-name" th:text="${p.nombre}">Nombre</h3>
       <p class="menu-card-desc" th:text="${p.descripcion}">Descripción</p>
@@ -180,7 +184,7 @@
         <span class="menu-price" th:text="${p.precio} + '€'">0€</span>
         <span class="menu-tag">Postre</span>
       </div>
-    </div>
+    </article>
   </div>
 </section>
 
@@ -271,6 +275,7 @@
     </div>
   </div>
 </section>
+</main>
 
 <footer>
   <div class="footer-inner">
