@@ -269,15 +269,32 @@
       </div>
     </div>
     <div class="reveal">
-      <form class="reserva-form" onsubmit="handleReserva(event)">
+      <form class="reserva-form" id="reserva-form" onsubmit="handleReserva(event)">
         <div class="form-row">
-          <div class="form-group"><label class="form-label">Nombre</label><input type="text" class="form-input" required /></div>
-          <div class="form-group"><label class="form-label">Teléfono</label><input type="tel" class="form-input" /></div>
+          <div class="form-group"><label class="form-label">Nombre</label><input id="r-nombre" type="text" class="form-input" required /></div>
+          <div class="form-group"><label class="form-label">Teléfono</label><input id="r-telefono" type="tel" class="form-input" /></div>
         </div>
         <div class="form-row">
-          <div class="form-group"><label class="form-label">Fecha</label><input type="date" class="form-input" required /></div>
+          <div class="form-group"><label class="form-label">Email</label><input id="r-email" type="email" class="form-input" /></div>
+          <div class="form-group"><label class="form-label">Comensales</label>
+            <select id="r-comensales" class="form-input">
+              <option value="1">1 persona</option>
+              <option value="2" selected>2 personas</option>
+              <option value="3">3 personas</option>
+              <option value="4">4 personas</option>
+              <option value="5">5 personas</option>
+              <option value="6">6 personas</option>
+              <option value="8">7-8 personas</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label class="form-label">Fecha</label><input id="r-fecha" type="date" class="form-input" required /></div>
           <div class="form-group"><label class="form-label">Hora</label>
-            <select class="form-select form-input"><option>13:30</option><option>21:00</option></select>
+            <select id="r-hora" class="form-input">
+              <option>13:00</option><option>13:30</option><option>14:00</option><option>14:30</option>
+              <option>20:00</option><option>20:30</option><option>21:00</option><option>21:30</option><option>22:00</option>
+            </select>
           </div>
         </div>
         <button type="submit" class="btn-primary w-100"><span>Confirmar Reserva</span></button>

@@ -80,9 +80,23 @@
                         <span th:unless="${c != null}" class="text-muted">—</span>
                     </td>
 
-                    <td>
-                        <span th:text="${m.estado}"
-                              th:classappend="${m.estado == 'LIBRE'} ? ' badge-libre' : (${m.estado == 'OCUPADA'} ? ' badge-ocupada' : ' badge-reservada')"
+                    <td th:with="c=${m.clienteId != null ? clientesMap[m.clienteId] : null}">
+                        <!-- RESERVADA: badge clickable con datos de la reserva -->
+                        <span th:if="${m.estado == 'RESERVADA'}"
+                              class="badge-estado badge-reservada badge-clickable"
+                              th:data-mesa="${m.numero}"
+                              th:data-cliente="${c != null ? c.nombre : 'Sin nombre'}"
+                              th:data-fecha="${m.fechaReserva != null ? m.fechaReserva : '—'}"
+                              th:data-hora="${m.horaReserva != null ? m.horaReserva : '—'}"
+                              th:data-pax="${m.capacidad}"
+                              onclick="abrirReservaModal(this)"
+                              title="Ver detalles de la reserva">
+                            RESERVADA &#9432;
+                        </span>
+                        <!-- LIBRE / OCUPADA: badge normal -->
+                        <span th:unless="${m.estado == 'RESERVADA'}"
+                              th:text="${m.estado}"
+                              th:classappend="${m.estado == 'LIBRE'} ? ' badge-libre' : ' badge-ocupada'"
                               class="badge-estado">—</span>
                     </td>
 
@@ -109,7 +123,49 @@
     <div style="text-align:center; padding:16px; font-size:0.8rem; opacity:0.5;">© 2026 Eclipse PlateUp</div>
 </footer>
 
+<!-- Modal detalle de reserva -->
+<div class="reserva-modal-overlay" id="reservaModal" onclick="cerrarReservaModal(event)">
+    <div class="reserva-modal-card">
+        <button class="reserva-modal-close" onclick="cerrarReservaModal()">&times;</button>
+        <div class="reserva-modal-title">Detalle de Reserva — <span id="modal-mesa"></span></div>
+        <div class="reserva-modal-row">
+            <span class="reserva-modal-label">Cliente</span>
+            <span class="reserva-modal-value" id="modal-cliente"></span>
+        </div>
+        <div class="reserva-modal-row">
+            <span class="reserva-modal-label">Fecha</span>
+            <span class="reserva-modal-value" id="modal-fecha"></span>
+        </div>
+        <div class="reserva-modal-row">
+            <span class="reserva-modal-label">Hora</span>
+            <span class="reserva-modal-value" id="modal-hora"></span>
+        </div>
+        <div class="reserva-modal-row">
+            <span class="reserva-modal-label">Comensales</span>
+            <span class="reserva-modal-value" id="modal-pax"></span>
+        </div>
+    </div>
+</div>
+
 <script th:src="@{/js/main.js}"></script>
+<script>
+// Los datos de la reserva viajan en data-* del propio badge para evitar una llamada extra al servidor
+function abrirReservaModal(el) {
+    document.getElementById('modal-mesa').textContent    = 'Mesa ' + (el.dataset.mesa || '—');
+    document.getElementById('modal-cliente').textContent = el.dataset.cliente || '—';
+    document.getElementById('modal-fecha').textContent   = el.dataset.fecha   || '—';
+    document.getElementById('modal-hora').textContent    = el.dataset.hora    || '—';
+    document.getElementById('modal-pax').textContent     = el.dataset.pax ? el.dataset.pax + ' pax' : '—';
+    document.getElementById('reservaModal').classList.add('open');
+}
+// Cierra si se hace click en el overlay (fuera del card) o en el botón ×
+function cerrarReservaModal(e) {
+    if (!e || e.target === document.getElementById('reservaModal') || !e.target) {
+        document.getElementById('reservaModal').classList.remove('open');
+    }
+}
+document.addEventListener('keydown', e => { if (e.key === 'Escape') cerrarReservaModal(); });
+</script>
 
 </body>
 </html>

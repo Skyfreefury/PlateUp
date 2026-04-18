@@ -32,10 +32,13 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
+            .csrf(csrf -> csrf.ignoringRequestMatchers("/reservas"))
             .authenticationProvider(authProvider())
             .authorizeHttpRequests(auth -> auth
                 // Rutas públicas: index del cliente y recursos estáticos
                 .requestMatchers("/", "/css/**", "/js/**", "/Css/**", "/Img/**", "/Js/**", "/images/**", "/Static/**").permitAll()
+                // Reservas públicas desde el index
+                .requestMatchers("/reservas").permitAll()
                 // Login siempre accesible
                 .requestMatchers("/login").permitAll()
                 // Todo lo demás requiere estar autenticado

@@ -159,6 +159,8 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // --- FUNCIONES GLOBALES (FUERA DEL DOMCONTENTLOADED) ---
+// Deben estar en scope global porque se llaman desde atributos onclick del HTML
+
 function tabMenu(gridId, btn) {
     document.querySelectorAll('.menu-grid').forEach(grid => grid.classList.add('hidden'));
     document.querySelectorAll('.menu-tab').forEach(t => t.classList.remove('active'));
@@ -175,10 +177,35 @@ function filterMenu(cat, btn) {
     });
 }
 
+// Envía el formulario de reserva vía fetch para evitar recarga de página
 function handleReserva(e) {
     e.preventDefault();
-    showToast('✦ Reserva confirmada — Le contactaremos en breve');
-    e.target.reset();
+
+    const body = new URLSearchParams({
+        nombre:     document.getElementById('r-nombre').value.trim(),
+        telefono:   document.getElementById('r-telefono').value.trim(),
+        email:      document.getElementById('r-email').value.trim(),
+        comensales: document.getElementById('r-comensales').value,
+        fecha:      document.getElementById('r-fecha').value,
+        hora:       document.getElementById('r-hora').value,
+    });
+
+    // Deshabilitar el botón durante el fetch evita envíos duplicados
+    const btn = e.target.querySelector('button[type="submit"]');
+    btn.disabled = true;
+    btn.querySelector('span').textContent = 'Procesando...';
+
+    fetch('/reservas', { method: 'POST', body, headers: { 'Content-Type': 'application/x-www-form-urlencoded' } })
+        .then(r => r.json())
+        .then(data => {
+            showToast(data.exito ? '✦ ' + data.mensaje : '✖ ' + data.mensaje);
+            if (data.exito) e.target.reset();
+        })
+        .catch(() => showToast('✖ Error de conexión. Inténtelo de nuevo.'))
+        .finally(() => {
+            btn.disabled = false;
+            btn.querySelector('span').textContent = 'Confirmar Reserva';
+        });
 }
 
 function showToast(msg) {
