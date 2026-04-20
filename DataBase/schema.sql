@@ -27,12 +27,20 @@ CREATE TABLE clientes (
 -- 2. MESAS
 --    Mesas físicas del restaurante.
 --    Estado: LIBRE | OCUPADA | RESERVADA
+--    FK: cliente_id → ON DELETE SET NULL  (reserva o cliente activo)
 -- ============================================================
 CREATE TABLE mesas (
-    id        BIGINT      AUTO_INCREMENT PRIMARY KEY,
-    numero    INT         NOT NULL UNIQUE,
-    capacidad INT         NOT NULL,
-    estado    VARCHAR(20) DEFAULT 'LIBRE'
+    id            BIGINT      AUTO_INCREMENT PRIMARY KEY,
+    numero        INT         NOT NULL UNIQUE,
+    capacidad     INT         NOT NULL,
+    estado        VARCHAR(20) DEFAULT 'LIBRE',
+    ubicacion     VARCHAR(100),
+    cliente_id    BIGINT,
+    fecha_reserva DATE,
+    hora_reserva  VARCHAR(10),
+
+    CONSTRAINT fk_mesa_cliente FOREIGN KEY (cliente_id)
+        REFERENCES clientes(id) ON DELETE SET NULL
 );
 
 

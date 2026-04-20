@@ -68,12 +68,14 @@ Cliente (navegador)
 La base de datos `restaurante_db` contiene **8 tablas** con las siguientes relaciones:
 
 ```
-clientes ──────────────────────────┐
-                                   │ 0..1
-mesas ─────────────────────────┐   │
-                               │   │
-                           1   ▼   ▼
-sesiones ──────────── pedidos (cuenta de mesa)
+clientes ──────────────────────────┬──────────────────────┐
+                                   │ 0..1 (reserva)       │ 0..1 (pedido)
+                                   ▼                      │
+mesas ─────────────────────────────┘                      │
+  (cliente_id, fecha_reserva, hora_reserva)               │
+                               │                          │
+                           1   ▼                          ▼
+sesiones ──────────── pedidos (cuenta de mesa) ◄──────────┘
                            │
                            │ 1:N
                            ▼
@@ -85,8 +87,19 @@ sesiones ──────────── pedidos (cuenta de mesa)
                                                   └──── tipos_comanda
 ```
 
+### Columnas destacadas de `mesas`
+
+| Columna | Tipo | Descripción |
+|---------|------|-------------|
+| `estado` | VARCHAR(20) | `LIBRE` \| `OCUPADA` \| `RESERVADA` |
+| `ubicacion` | VARCHAR(100) | Zona del restaurante (Interior, Terraza…) |
+| `cliente_id` | BIGINT (FK) | Cliente asignado (reserva activa o mesa ocupada) |
+| `fecha_reserva` | DATE | Fecha de la reserva pública |
+| `hora_reserva` | VARCHAR(10) | Hora de la reserva (ej. `21:00`) |
+
 ### Relaciones destacadas
 
+- **Mesa → Cliente**: N:1 opcional. Una mesa puede tener un cliente asignado al reservar o al abrir pedido.
 - **Mesa → Pedidos**: 1:N. Una mesa puede tener varios pedidos a lo largo del tiempo.
 - **Pedido → Comandas**: 1:N. Un pedido agrupa múltiples comandas.
 - **Comanda → LineasProducto**: 1:N. Cada comanda contiene líneas individuales de producto.
@@ -99,7 +112,7 @@ sesiones ──────────── pedidos (cuenta de mesa)
 ### 5.1 Autenticación
 - Spring Security con formulario de login propio.
 - Usuario administrador creado automáticamente al arrancar si no existe (`DataInitializer`).
-- Rutas públicas: `/`, `/login`, recursos estáticos.
+- Rutas públicas: `/`, `/login`, `/reservas`, recursos estáticos.
 - Rutas protegidas: todo el panel `/mesas`, `/pedidos`, `/comandas`, etc.
 
 ### 5.2 Gestión de Mesas
@@ -131,6 +144,15 @@ sesiones ──────────── pedidos (cuenta de mesa)
 - KPIs en tiempo real: total ingresos, efectivo, tarjeta, efectivo en caja.
 - Desglose de ventas por producto.
 - Cierre de sesión con impresión de resumen.
+
+### 5.8 Sistema de Reservas (Web Pública)
+- Formulario público en `index.html` (sección `#reserva`) accesible sin autenticación.
+- Endpoint `POST /reservas` (`ReservaWebController`) que:
+  1. Busca la mesa `LIBRE` con capacidad suficiente y menor exceso (algoritmo best-fit).
+  2. Crea un `Cliente` nuevo con nombre, teléfono y email del formulario.
+  3. Asigna `cliente_id`, `fecha_reserva` y `hora_reserva` a la mesa y cambia su estado a `RESERVADA`.
+- Devuelve JSON `{ exito, mesa, mensaje }` al frontend, que muestra un toast al cliente.
+- Si no hay mesas disponibles, responde con `exito: false` y un mensaje de contacto telefónico.
 
 ---
 
