@@ -1,19 +1,22 @@
-// --- CURSOR MÁGICO ---
+// --- CURSOR MÁGICO (solo en dispositivos con ratón) ---
 const cursor = document.getElementById('cursor');
 const ring = document.getElementById('cursorRing');
 let mx = 0, my = 0, rx = 0, ry = 0;
 
-document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+const isTouchDevice = window.matchMedia('(hover: none) and (pointer: coarse)').matches;
 
-function animCursor() {
-    if (cursor && ring) {
-        cursor.style.left = mx + 'px'; cursor.style.top = my + 'px';
-        rx += (mx - rx) * 0.12; ry += (my - ry) * 0.12;
-        ring.style.left = rx + 'px'; ring.style.top = ry + 'px';
+if (!isTouchDevice) {
+    document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+    function animCursor() {
+        if (cursor && ring) {
+            cursor.style.left = mx + 'px'; cursor.style.top = my + 'px';
+            rx += (mx - rx) * 0.12; ry += (my - ry) * 0.12;
+            ring.style.left = rx + 'px'; ring.style.top = ry + 'px';
+        }
+        requestAnimationFrame(animCursor);
     }
-    requestAnimationFrame(animCursor);
+    animCursor();
 }
-animCursor();
 
 function initHoverEffects() {
     document.querySelectorAll('a, button, .menu-tab').forEach(el => {
@@ -235,4 +238,16 @@ function showToast(msg) {
 function scrollToReserva() {
     const res = document.getElementById('reserva');
     if (res) res.scrollIntoView({ behavior: 'smooth' });
+}
+
+function toggleCardExtra(btn) {
+    const row = btn.closest('tr');
+    const open = row.classList.toggle('card-expanded');
+    btn.textContent = open ? '▲ Menos' : '▼ Más';
+}
+
+function toggleDesc(btn) {
+    const desc = btn.previousElementSibling;
+    const open = desc.classList.toggle('desc-open');
+    btn.textContent = open ? '▲ Ocultar' : 'ℹ Ver';
 }
