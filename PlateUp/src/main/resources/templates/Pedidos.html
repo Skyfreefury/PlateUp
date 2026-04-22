@@ -16,6 +16,8 @@
     </script>
 </head>
 <body>
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
 
 <header>
 <nav id="navbar" class="scrolled dashboard-nav">
@@ -81,9 +83,9 @@
                         <span th:if="${p.estado == 'ABIERTA'}" class="timer-badge timer-green">Abierta</span>
                         <span th:if="${p.estado == 'CERRADA'}" class="timer-badge timer-red">Cerrada</span>
                     </td>
-                    <td data-label="Mesa" class="card-extra" th:text="'Mesa ' + ${p.mesaId}"></td>
-                    <td data-label="Fecha" class="card-extra" th:text="${p.fechaHora != null} ? ${#temporals.format(p.fechaHora, 'dd/MM/yyyy HH:mm')} : '-'"></td>
-                    <td data-label="Total" class="text-gold font-medium card-extra" th:text="${p.total != null} ? ${p.total} + ' €' : '0.00 €'"></td>
+                    <td data-label="Mesa" th:text="'Mesa ' + ${p.mesaId}"></td>
+                    <td data-label="Fecha" th:text="${p.fechaHora != null} ? ${#temporals.format(p.fechaHora, 'dd/MM/yyyy HH:mm')} : '-'"></td>
+                    <td data-label="Total" class="text-gold font-medium" th:text="${p.total != null} ? ${p.total} + ' €' : '0.00 €'"></td>
                     <td data-label="Detalles">
                         <div class="action-row">
                             <a th:if="${p.estado == 'ABIERTA'}" th:href="@{/pedidos/cobrar/{id}(id=${p.id})}" class="btn-cobrar">💵 Cobrar</a>
@@ -91,7 +93,6 @@
                         </div>
                     </td>
                     <td data-label="Acciones" class="text-right">
-                        <button class="btn-card-toggle" type="button" onclick="toggleCardExtra(this)">▼ Más</button>
                         <div class="action-buttons">
                             <a th:href="@{/pedidos/editar/{id}(id=${p.id})}" class="btn-icon btn-edit"><svg viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg></a>
                             <a th:href="@{/pedidos/borrar/{id}(id=${p.id})}" class="btn-icon btn-delete" onclick="return confirm('¿Eliminar cuenta permanentemente?')"><svg viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg></a>

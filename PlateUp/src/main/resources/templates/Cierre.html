@@ -2,6 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="es">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <meta name="description" content="Gestión de caja y cierre de sesión diario — Eclipse PlateUp." />
     <meta name="robots" content="noindex, nofollow" />
     <title>Gestión de Caja | Eclipse PlateUp</title>
@@ -10,7 +11,127 @@
     <link rel="stylesheet" th:href="@{/css/style.css?v=11.0}">
     <style>
         @media print {
-            #navbar, .confirm-box, .apertura-card { display: none !important; }
+            @page {
+                size: 80mm auto;
+                margin: 5mm 4mm;
+            }
+
+            header, footer, .confirm-box, .apertura-card,
+            .dashboard-header, .section-tag { display: none !important; }
+
+            body {
+                background: #fff !important;
+                color: #000 !important;
+                font-family: 'Courier New', Courier, monospace !important;
+                font-size: 11px !important;
+            }
+
+            section, .dashboard-container { padding: 0 !important; }
+
+            .reveal { opacity: 1 !important; transform: none !important; }
+
+            /* ── Cabecera del recibo ── */
+            #print-area::before {
+                content: "ECLIPSE PLATEUP\A --------------------------------\A    RESUMEN DE CAJA";
+                display: block;
+                text-align: center;
+                white-space: pre;
+                font-size: 12px;
+                font-weight: bold;
+                padding-bottom: 6px;
+                border-bottom: 1px dashed #000;
+                margin-bottom: 8px;
+            }
+
+            /* ── KPIs en fila nombre / valor ── */
+            .kpi-grid { display: block !important; margin-bottom: 8px !important; }
+
+            .kpi-card {
+                background: transparent !important;
+                border: none !important;
+                border-top: none !important;
+                padding: 2px 0 !important;
+                display: flex !important;
+                justify-content: space-between !important;
+                align-items: baseline !important;
+            }
+
+            .kpi-title {
+                font-size: 10px !important;
+                color: #000 !important;
+                letter-spacing: 0 !important;
+                text-transform: none !important;
+                margin: 0 !important;
+            }
+
+            .kpi-value {
+                font-family: 'Courier New', monospace !important;
+                font-size: 11px !important;
+                font-weight: bold !important;
+                color: #000 !important;
+                line-height: 1 !important;
+                margin: 0 !important;
+            }
+
+            /* ── Separador y título de desglose ── */
+            .section-divider-header {
+                border: none !important;
+                border-top: 1px dashed #000 !important;
+                margin: 8px 0 4px !important;
+                padding-top: 6px !important;
+                padding-bottom: 0 !important;
+            }
+
+            .section-heading {
+                font-size: 10px !important;
+                font-weight: bold !important;
+                color: #000 !important;
+                font-family: 'Courier New', monospace !important;
+            }
+
+            .section-heading em { color: #000 !important; font-style: normal !important; }
+
+            /* ── Tabla de ventas ── */
+            .table-responsive { overflow: visible !important; }
+
+            .solstice-table {
+                width: 100% !important;
+                border: none !important;
+                background: transparent !important;
+                border-collapse: collapse !important;
+            }
+
+            .solstice-table th {
+                background: transparent !important;
+                color: #000 !important;
+                font-size: 9px !important;
+                padding: 2px 0 !important;
+                border-bottom: 1px solid #000 !important;
+                font-family: 'Courier New', monospace !important;
+                font-weight: bold !important;
+            }
+
+            .solstice-table td {
+                color: #000 !important;
+                font-size: 9px !important;
+                padding: 1px 0 !important;
+                border: none !important;
+                font-family: 'Courier New', monospace !important;
+            }
+
+            .text-gold, .font-medium, .font-semibold { color: #000 !important; }
+
+            /* ── Pie del recibo ── */
+            #print-area::after {
+                content: "--------------------------------\A   © 2026 Eclipse PlateUp";
+                display: block;
+                text-align: center;
+                white-space: pre;
+                font-size: 9px;
+                margin-top: 8px;
+                border-top: 1px dashed #000;
+                padding-top: 6px;
+            }
         }
     </style>
     <script>
@@ -20,11 +141,20 @@
     </script>
 </head>
 <body>
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
 
 <header>
 <nav id="navbar" class="scrolled dashboard-nav">
     <a th:href="@{/}" class="nav-logo">Eclipse PlateUp</a>
-    <ul class="nav-links">
+    <button class="mobile-menu-btn" id="burger-btn" aria-label="Menú">
+        <svg viewBox="0 0 100 80" width="24" height="24" fill="var(--gold)">
+            <rect width="100" height="10" rx="5"></rect>
+            <rect y="35" width="100" height="10" rx="5"></rect>
+            <rect y="70" width="100" height="10" rx="5"></rect>
+        </svg>
+    </button>
+    <ul class="nav-links" id="nav-links">
         <li><a th:href="@{/mesas}">Mesas</a></li>
         <li><a th:href="@{/pedidos}">Cuentas</a></li>
         <li><a th:href="@{/comandas}">Cocina</a></li>
@@ -137,29 +267,7 @@
 
 <script th:src="@{/js/main.js}"></script>
 <script>
-    function imprimirResumen() {
-        // Forzar visibilidad de todos los elementos antes de imprimir
-        document.querySelectorAll('body, body *').forEach(function(el) {
-            el.style.setProperty('visibility', 'visible', 'important');
-            el.style.setProperty('opacity', '1', 'important');
-            el.style.setProperty('transform', 'none', 'important');
-        });
-        // Ocultar lo que no debe salir en papel
-        ['navbar', 'main-content'].forEach(function(id) {});
-        document.getElementById('navbar').style.setProperty('display', 'none', 'important');
-        document.querySelector('.confirm-box') && document.querySelector('.confirm-box').style.setProperty('display', 'none', 'important');
-
-        window.print();
-
-        // Restaurar estilos tras imprimir
-        document.querySelectorAll('body, body *').forEach(function(el) {
-            el.style.removeProperty('visibility');
-            el.style.removeProperty('opacity');
-            el.style.removeProperty('transform');
-        });
-        document.getElementById('navbar').style.removeProperty('display');
-        document.querySelector('.confirm-box') && document.querySelector('.confirm-box').style.removeProperty('display');
-    }
+    function imprimirResumen() { window.print(); }
 </script>
 </body>
 </html>
