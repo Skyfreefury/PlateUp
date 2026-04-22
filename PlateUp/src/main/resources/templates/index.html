@@ -151,7 +151,19 @@
       <button class="menu-tab"         onclick="filterMenu('postre',    this)">Postres</button>
       <button class="menu-tab"         onclick="filterMenu('bebida',    this)">Bebidas</button>
     </div>
+    <select id="menu-select" class="menu-select-mobile" onchange="filterMenuMobile(this.value)">
+      <option value="todos">Todos los platos</option>
+      <option value="entrante">Entrantes</option>
+      <option value="principal">Principales</option>
+      <option value="postre">Postres</option>
+      <option value="bebida">Bebidas</option>
+    </select>
   </div>
+
+  <button id="menu-toggle-btn" class="menu-toggle-mobile" onclick="toggleCartaMobile(this)">
+    <span class="menu-toggle-text">Ver la Carta</span>
+    <span class="menu-toggle-arrow">▼</span>
+  </button>
 
   <div id="carta-grid" class="menu-grid">
 

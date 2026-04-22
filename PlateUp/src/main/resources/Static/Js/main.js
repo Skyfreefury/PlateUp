@@ -177,6 +177,21 @@ function filterMenu(cat, btn) {
     });
 }
 
+function filterMenuMobile(cat) {
+    document.querySelectorAll('#carta-grid .menu-card').forEach(card => {
+        card.style.display = (cat === 'todos' || card.dataset.cat === cat) ? '' : 'none';
+    });
+}
+
+function toggleCartaMobile(btn) {
+    const grid = document.getElementById('carta-grid');
+    const textEl = btn.querySelector('.menu-toggle-text');
+    const arrowEl = btn.querySelector('.menu-toggle-arrow');
+    const isOpen = grid.classList.toggle('carta-open');
+    textEl.textContent = isOpen ? 'Cerrar Carta' : 'Ver la Carta';
+    arrowEl.style.transform = isOpen ? 'rotate(180deg)' : 'rotate(0deg)';
+}
+
 // Envía el formulario de reserva vía fetch para evitar recarga de página
 function handleReserva(e) {
     e.preventDefault();
