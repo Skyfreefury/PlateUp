@@ -1489,7 +1489,7 @@ footer {
     .cursor-ring { display: none !important; }
 
     nav {
-        padding: 15px 20px;
+        padding: 15px 10px 15px 6px;
     }
 
     .mobile-menu-btn {
