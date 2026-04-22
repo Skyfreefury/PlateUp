@@ -2,6 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="es">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <meta name="description" content="Gestión de la carta de productos del restaurante Eclipse PlateUp." />
     <meta name="robots" content="noindex, nofollow" />
     <title>La Carta | Eclipse PlateUp</title>
@@ -19,7 +20,14 @@
 <header>
 <nav id="navbar" class="scrolled dashboard-nav">
     <a th:href="@{/}" class="nav-logo">Eclipse PlateUp</a>
-    <ul class="nav-links">
+    <button class="mobile-menu-btn" id="burger-btn" aria-label="Menú">
+        <svg viewBox="0 0 100 80" width="24" height="24" fill="var(--gold)">
+            <rect width="100" height="10" rx="5"></rect>
+            <rect y="35" width="100" height="10" rx="5"></rect>
+            <rect y="70" width="100" height="10" rx="5"></rect>
+        </svg>
+    </button>
+    <ul class="nav-links" id="nav-links">
         <li><a th:href="@{/mesas}">Mesas</a></li>
         <li><a th:href="@{/pedidos}">Cuentas</a></li>
         <li><a th:href="@{/comandas}">Cocina</a></li>
@@ -61,10 +69,13 @@
             </thead>
             <tbody>
                 <tr th:each="p : ${productos.?[tipoProductoId == 1]}">
-                    <td class="text-gold font-medium" th:text="${p.nombre}"></td>
-                    <td class="opacity-70" th:text="${p.descripcion}"></td>
-                    <td th:text="${p.precio} + ' €'"></td>
-                    <td class="text-right">
+                    <td data-label="Nombre" class="text-gold font-medium" th:text="${p.nombre}"></td>
+                    <td data-label="Descripción">
+                        <span class="desc-full opacity-70" th:text="${p.descripcion}"></span>
+                        <button class="btn-desc-mobile" type="button" onclick="toggleDesc(this)">ℹ Ver</button>
+                    </td>
+                    <td data-label="Precio" th:text="${p.precio} + ' €'"></td>
+                    <td data-label="Acciones" class="text-right">
                         <div class="action-buttons">
                             <a th:href="@{/productos/editar/{id}(id=${p.id})}" class="btn-icon btn-edit"><svg viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg></a>
                             <a th:href="@{/productos/borrar/{id}(id=${p.id})}" class="btn-icon btn-delete" onclick="return confirm('¿Eliminar producto?')"><svg viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg></a>

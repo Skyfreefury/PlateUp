@@ -25,25 +25,33 @@ public class ClienteService {
         return clienteDAO.findById(id).orElse(null);
     }
 
-    /** Persiste un cliente nuevo. Devuelve {@code false} si ocurre un error de base de datos. */
-    public boolean guardarCliente(Cliente cliente) {
-        try {
-            clienteDAO.save(cliente);
-            return true;
-        } catch (Exception e) {
-            return false;
-        }
+    public Cliente obtenerPorEmail(String email) {
+        return clienteDAO.findByEmail(email);
     }
 
-    /** Actualiza un cliente existente. Devuelve {@code false} si no tiene ID asignado o falla la BD. */
+    public boolean guardarCliente(Cliente cliente) {
+        validar(cliente);
+        clienteDAO.save(cliente);
+        return true;
+    }
+
     public boolean actualizarCliente(Cliente cliente) {
         if (cliente.getId() == null) return false;
-        try {
-            clienteDAO.save(cliente);
-            return true;
-        } catch (Exception e) {
-            return false;
-        }
+        validar(cliente);
+        clienteDAO.save(cliente);
+        return true;
+    }
+
+    private void validar(Cliente cliente) {
+        if (cliente.getNombre() == null || cliente.getNombre().isBlank())
+            throw new IllegalArgumentException("El nombre del cliente no puede estar vacío.");
+        if (cliente.getEmail() == null || cliente.getEmail().isBlank())
+            throw new IllegalArgumentException("El correo electrónico es obligatorio.");
+        boolean duplicado = (cliente.getId() == null)
+            ? clienteDAO.existsByEmail(cliente.getEmail())
+            : clienteDAO.existsByEmailAndIdNot(cliente.getEmail(), cliente.getId());
+        if (duplicado)
+            throw new IllegalArgumentException("Ya existe un cliente con el email «" + cliente.getEmail() + "».");
     }
 
     /** Elimina el cliente con el ID indicado. Devuelve {@code false} si no existe. */

@@ -2,6 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="es">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <meta name="description" content="Panel de gestión de cuentas y pedidos — Eclipse PlateUp." />
     <meta name="robots" content="noindex, nofollow" />
     <title>Cuentas (Pedidos) | Eclipse PlateUp</title>
@@ -19,6 +20,13 @@
 <header>
 <nav id="navbar" class="scrolled dashboard-nav">
     <a th:href="@{/}" class="nav-logo">Eclipse PlateUp</a>
+    <button class="mobile-menu-btn" id="burger-btn" aria-label="Menú">
+        <svg viewBox="0 0 100 80" width="24" height="24" fill="var(--gold)">
+            <rect width="100" height="10" rx="5"></rect>
+            <rect y="35" width="100" height="10" rx="5"></rect>
+            <rect y="70" width="100" height="10" rx="5"></rect>
+        </svg>
+    </button>
     <ul class="nav-links" id="nav-links">
         <li><a th:href="@{/mesas}">Mesas</a></li>
         <li><a th:href="@{/pedidos}" class="text-gold">Cuentas</a></li>
@@ -68,21 +76,22 @@
             </thead>
             <tbody>
                 <tr th:each="p : ${pedidos}">
-                    <td class="text-gold font-semibold" th:text="${p.numeroTicket != null} ? 'Ticket #' + ${p.numeroTicket} : 'Ref. #' + ${p.id}"></td>
-                    <td th:text="'Mesa ' + ${p.mesaId}"></td>
-                    <td th:text="${p.fechaHora != null} ? ${#temporals.format(p.fechaHora, 'dd/MM/yyyy HH:mm')} : '-'"></td>
-                    <td class="text-gold font-medium" th:text="${p.total != null} ? ${p.total} + ' €' : '0.00 €'"></td>
-                    <td>
+                    <td data-label="Ticket" class="text-gold font-semibold" th:text="${p.numeroTicket != null} ? 'Ticket #' + ${p.numeroTicket} : 'Ref. #' + ${p.id}"></td>
+                    <td data-label="Estado">
                         <span th:if="${p.estado == 'ABIERTA'}" class="timer-badge timer-green">Abierta</span>
                         <span th:if="${p.estado == 'CERRADA'}" class="timer-badge timer-red">Cerrada</span>
                     </td>
-                    <td>
+                    <td data-label="Mesa" class="card-extra" th:text="'Mesa ' + ${p.mesaId}"></td>
+                    <td data-label="Fecha" class="card-extra" th:text="${p.fechaHora != null} ? ${#temporals.format(p.fechaHora, 'dd/MM/yyyy HH:mm')} : '-'"></td>
+                    <td data-label="Total" class="text-gold font-medium card-extra" th:text="${p.total != null} ? ${p.total} + ' €' : '0.00 €'"></td>
+                    <td data-label="Detalles">
                         <div class="action-row">
                             <a th:if="${p.estado == 'ABIERTA'}" th:href="@{/pedidos/cobrar/{id}(id=${p.id})}" class="btn-cobrar">💵 Cobrar</a>
                             <a th:href="@{/pedidos/ticket/{id}(id=${p.id})}" class="btn-ver-mas">Ver más</a>
                         </div>
                     </td>
-                    <td class="text-right">
+                    <td data-label="Acciones" class="text-right">
+                        <button class="btn-card-toggle" type="button" onclick="toggleCardExtra(this)">▼ Más</button>
                         <div class="action-buttons">
                             <a th:href="@{/pedidos/editar/{id}(id=${p.id})}" class="btn-icon btn-edit"><svg viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg></a>
                             <a th:href="@{/pedidos/borrar/{id}(id=${p.id})}" class="btn-icon btn-delete" onclick="return confirm('¿Eliminar cuenta permanentemente?')"><svg viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg></a>

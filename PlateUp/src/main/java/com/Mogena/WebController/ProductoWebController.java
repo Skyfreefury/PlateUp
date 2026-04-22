@@ -54,13 +54,17 @@ public class ProductoWebController {
      * basándose en la presencia del ID.
      */
     @PostMapping("/guardar")
-    public String guardarProducto(@ModelAttribute("producto") Producto producto) {
+    public String guardarProducto(@ModelAttribute("producto") Producto producto, Model model) {
         try {
             productoService.guardarProducto(producto);
             return "redirect:/productos?exito=true";
+        } catch (IllegalArgumentException e) {
+            model.addAttribute("error", e.getMessage());
+            return "producto-form";
         } catch (Exception e) {
             System.err.println("ERROR AL GUARDAR PRODUCTO: " + e.getMessage());
-            return "redirect:/productos?error=true";
+            model.addAttribute("error", "Error inesperado al guardar el producto.");
+            return "producto-form";
         }
     }
 

@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ProductoDAO extends JpaRepository<Producto, Long> {
 
-    /** Devuelve el producto con el nombre exacto indicado, o {@code null} si no existe. */
     Producto findByNombre(String nombre);
+    boolean existsByNombre(String nombre);
+    boolean existsByNombreAndIdNot(String nombre, Long id);
 }

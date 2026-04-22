@@ -8,7 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import java.util.Map;
+import java.time.LocalDate;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -27,10 +28,24 @@ public class MesaWebController {
 
     @GetMapping
     public String listarMesas(Model model) {
-        model.addAttribute("mesas", mesaService.obtenerTodas());
+        List<Mesa> mesas = mesaService.obtenerTodas();
+        model.addAttribute("mesas", mesas);
+
         Map<Long, Cliente> clientesMap = clienteService.obtenerTodos()
             .stream().collect(Collectors.toMap(Cliente::getId, c -> c));
         model.addAttribute("clientesMap", clientesMap);
+
+        LocalDate hoy = LocalDate.now();
+        Map<LocalDate, List<Mesa>> reservasPorDia = mesas.stream()
+            .filter(m -> "RESERVADA".equals(m.getEstado())
+                      && m.getFechaReserva() != null
+                      && !m.getFechaReserva().isBefore(hoy))
+            .sorted(Comparator.comparing(Mesa::getFechaReserva)
+                              .thenComparing(m -> m.getHoraReserva() != null ? m.getHoraReserva() : ""))
+            .collect(Collectors.groupingBy(Mesa::getFechaReserva, LinkedHashMap::new, Collectors.toList()));
+        model.addAttribute("reservasPorDia", reservasPorDia);
+        model.addAttribute("hoy", hoy);
+
         return "mesas";
     }
 
@@ -53,9 +68,15 @@ public class MesaWebController {
     }
 
     @PostMapping("/guardar")
-    public String guardarMesa(@ModelAttribute("mesa") Mesa mesa) {
-        mesaService.guardarMesa(mesa);
-        return "redirect:/mesas?exito=true";
+    public String guardarMesa(@ModelAttribute("mesa") Mesa mesa, Model model) {
+        try {
+            mesaService.guardarMesa(mesa);
+            return "redirect:/mesas?exito=true";
+        } catch (IllegalArgumentException e) {
+            model.addAttribute("error", e.getMessage());
+            model.addAttribute("clientes", clienteService.obtenerTodos());
+            return "mesa-form";
+        }
     }
 
     @GetMapping("/borrar/{id}")

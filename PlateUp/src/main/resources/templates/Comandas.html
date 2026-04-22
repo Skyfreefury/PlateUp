@@ -2,6 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="es">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <meta name="description" content="Panel de cocina en tiempo real — Eclipse PlateUp." />
     <meta name="robots" content="noindex, nofollow" />
     <title>Panel de Cocina | Eclipse PlateUp</title>
@@ -19,6 +20,13 @@
 <header>
 <nav id="navbar" class="scrolled dashboard-nav">
     <a th:href="@{/}" class="nav-logo">Eclipse PlateUp</a>
+    <button class="mobile-menu-btn" id="burger-btn" aria-label="Menú">
+        <svg viewBox="0 0 100 80" width="24" height="24" fill="var(--gold)">
+            <rect width="100" height="10" rx="5"></rect>
+            <rect y="35" width="100" height="10" rx="5"></rect>
+            <rect y="70" width="100" height="10" rx="5"></rect>
+        </svg>
+    </button>
     <ul class="nav-links" id="nav-links">
         <li><a th:href="@{/mesas}">Mesas</a></li>
         <li><a th:href="@{/pedidos}">Cuentas</a></li>
@@ -56,7 +64,7 @@
             <thead><tr><th>Mesa</th><th>Plato</th><th>Cant.</th><th>Tiempo Espera</th><th class="text-right">Acción</th></tr></thead>
             <tbody>
                 <tr th:each="c : ${comandas}" th:if="${c.tipoComandaId == 1 and c.estado != 'LISTO'}">
-                    <td th:with="p=${pedidosMap != null ? pedidosMap[c.pedidoId] : null}, m=${p != null and mesaMap != null ? mesaMap[p.mesaId] : null}">
+                    <td data-label="Mesa" th:with="p=${pedidosMap != null ? pedidosMap[c.pedidoId] : null}, m=${p != null and mesaMap != null ? mesaMap[p.mesaId] : null}">
                         <span th:if="${p != null and p.mesaAnteriorId != null}" class="mesa-cambiada">
                             <strong>Mesa <span th:text="${p.mesaId}">?</span></strong>
                             <span th:if="${m != null}" class="badge-ubicacion" th:classappend="${m.ubicacion == 'TERRAZA'} ? ' badge-terraza' : ' badge-salon'" th:text="${m.ubicacion == 'TERRAZA'} ? 'Terraza' : 'Salón'"></span>
@@ -68,10 +76,10 @@
                         </span>
                         <br><small class="text-muted">#<span th:text="${c.pedidoId}">?</span></small>
                     </td>
-                    <td class="text-gold font-medium" th:text="${c.nombrePlato != null} ? ${c.nombrePlato} : '-'"></td>
-                    <td th:text="${c.cantidad != null} ? 'x' + ${c.cantidad} : 'x?'"></td>
-                    <td><span class="wait-time" th:data-start="${c.creadoEn}">Calculando...</span></td>
-                    <td class="text-right">
+                    <td data-label="Plato" class="text-gold font-medium" th:text="${c.nombrePlato != null} ? ${c.nombrePlato} : '-'"></td>
+                    <td data-label="Cant." th:text="${c.cantidad != null} ? 'x' + ${c.cantidad} : 'x?'"></td>
+                    <td data-label="Espera"><span class="wait-time" th:data-start="${c.creadoEn}">Calculando...</span></td>
+                    <td data-label="Acción" class="text-right">
                         <a th:href="@{/comandas/listo/{id}(id=${c.id})}" class="btn-icon btn-icon-success" title="¡Plato Listo!">
                             <svg viewBox="0 0 24 24" fill="currentColor"><path d="M9 16.17L4.83 12l-1.41 1.41L9 19 21 7l-1.41-1.41z"/></svg>
                         </a>
@@ -87,7 +95,7 @@
             <thead><tr><th>Mesa</th><th>Plato</th><th>Cant.</th><th>Tiempo Espera</th><th class="text-right">Acción</th></tr></thead>
             <tbody>
                 <tr th:each="c : ${comandas}" th:if="${c.tipoComandaId == 2 and c.estado != 'LISTO'}">
-                    <td th:with="p=${pedidosMap != null ? pedidosMap[c.pedidoId] : null}, m=${p != null and mesaMap != null ? mesaMap[p.mesaId] : null}">
+                    <td data-label="Mesa" th:with="p=${pedidosMap != null ? pedidosMap[c.pedidoId] : null}, m=${p != null and mesaMap != null ? mesaMap[p.mesaId] : null}">
                         <span th:if="${p != null and p.mesaAnteriorId != null}" class="mesa-cambiada">
                             <strong>Mesa <span th:text="${p.mesaId}">?</span></strong>
                             <span th:if="${m != null}" class="badge-ubicacion" th:classappend="${m.ubicacion == 'TERRAZA'} ? ' badge-terraza' : ' badge-salon'" th:text="${m.ubicacion == 'TERRAZA'} ? 'Terraza' : 'Salón'"></span>
@@ -99,10 +107,10 @@
                         </span>
                         <br><small class="text-muted">#<span th:text="${c.pedidoId}">?</span></small>
                     </td>
-                    <td class="text-gold font-medium" th:text="${c.nombrePlato != null} ? ${c.nombrePlato} : '-'"></td>
-                    <td th:text="${c.cantidad != null} ? 'x' + ${c.cantidad} : 'x?'"></td>
-                    <td><span class="wait-time" th:data-start="${c.creadoEn}">Calculando...</span></td>
-                    <td class="text-right">
+                    <td data-label="Plato" class="text-gold font-medium" th:text="${c.nombrePlato != null} ? ${c.nombrePlato} : '-'"></td>
+                    <td data-label="Cant." th:text="${c.cantidad != null} ? 'x' + ${c.cantidad} : 'x?'"></td>
+                    <td data-label="Espera"><span class="wait-time" th:data-start="${c.creadoEn}">Calculando...</span></td>
+                    <td data-label="Acción" class="text-right">
                         <a th:href="@{/comandas/listo/{id}(id=${c.id})}" class="btn-icon btn-icon-success" title="¡Plato Listo!">
                             <svg viewBox="0 0 24 24" fill="currentColor"><path d="M9 16.17L4.83 12l-1.41 1.41L9 19 21 7l-1.41-1.41z"/></svg>
                         </a>
@@ -118,7 +126,7 @@
             <thead><tr><th>Mesa</th><th>Plato</th><th>Cant.</th><th>Tiempo Espera</th><th class="text-right">Acción</th></tr></thead>
             <tbody>
                 <tr th:each="c : ${comandas}" th:if="${c.tipoComandaId == 3 and c.estado != 'LISTO'}">
-                    <td th:with="p=${pedidosMap != null ? pedidosMap[c.pedidoId] : null}, m=${p != null and mesaMap != null ? mesaMap[p.mesaId] : null}">
+                    <td data-label="Mesa" th:with="p=${pedidosMap != null ? pedidosMap[c.pedidoId] : null}, m=${p != null and mesaMap != null ? mesaMap[p.mesaId] : null}">
                         <span th:if="${p != null and p.mesaAnteriorId != null}" class="mesa-cambiada">
                             <strong>Mesa <span th:text="${p.mesaId}">?</span></strong>
                             <span th:if="${m != null}" class="badge-ubicacion" th:classappend="${m.ubicacion == 'TERRAZA'} ? ' badge-terraza' : ' badge-salon'" th:text="${m.ubicacion == 'TERRAZA'} ? 'Terraza' : 'Salón'"></span>
@@ -130,10 +138,10 @@
                         </span>
                         <br><small class="text-muted">#<span th:text="${c.pedidoId}">?</span></small>
                     </td>
-                    <td class="text-gold font-medium" th:text="${c.nombrePlato != null} ? ${c.nombrePlato} : '-'"></td>
-                    <td th:text="${c.cantidad != null} ? 'x' + ${c.cantidad} : 'x?'"></td>
-                    <td><span class="wait-time" th:data-start="${c.creadoEn}">Calculando...</span></td>
-                    <td class="text-right">
+                    <td data-label="Plato" class="text-gold font-medium" th:text="${c.nombrePlato != null} ? ${c.nombrePlato} : '-'"></td>
+                    <td data-label="Cant." th:text="${c.cantidad != null} ? 'x' + ${c.cantidad} : 'x?'"></td>
+                    <td data-label="Espera"><span class="wait-time" th:data-start="${c.creadoEn}">Calculando...</span></td>
+                    <td data-label="Acción" class="text-right">
                         <a th:href="@{/comandas/listo/{id}(id=${c.id})}" class="btn-icon btn-icon-success" title="¡Plato Listo!">
                             <svg viewBox="0 0 24 24" fill="currentColor"><path d="M9 16.17L4.83 12l-1.41 1.41L9 19 21 7l-1.41-1.41z"/></svg>
                         </a>
