@@ -40,6 +40,9 @@ public class MesaService {
      * @return {@code true} si se guardó correctamente, {@code false} si no hay IDs disponibles.
      */
     public boolean guardarMesa(Mesa mesa) {
+        if (mesa.getCapacidad() == null || mesa.getCapacidad() < 1 || mesa.getCapacidad() > 20)
+            throw new IllegalArgumentException("La capacidad debe estar entre 1 y 20 comensales.");
+
         if (mesa.getId() != null) {
             mesaDAO.saveAndFlush(mesa);
             return true;

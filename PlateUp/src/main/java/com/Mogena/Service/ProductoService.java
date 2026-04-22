@@ -43,6 +43,16 @@ public class ProductoService {
      */
     @Transactional
     public boolean guardarProducto(Producto producto) {
+        if (producto.getNombre() == null || producto.getNombre().isBlank())
+            throw new IllegalArgumentException("El nombre del plato no puede estar vacío.");
+        if (producto.getPrecio() == null || producto.getPrecio() <= 0)
+            throw new IllegalArgumentException("El precio debe ser mayor que 0 €.");
+        boolean duplicado = (producto.getId() == null)
+            ? productoDAO.existsByNombre(producto.getNombre())
+            : productoDAO.existsByNombreAndIdNot(producto.getNombre(), producto.getId());
+        if (duplicado)
+            throw new IllegalArgumentException("Ya existe un plato con el nombre «" + producto.getNombre() + "».");
+
         if (producto.getId() != null) {
             productoDAO.saveAndFlush(producto);
             return true;

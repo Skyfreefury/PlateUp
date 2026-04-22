@@ -41,9 +41,14 @@ public class ClienteWebController {
     }
 
     @PostMapping("/guardar")
-    public String guardarCliente(@ModelAttribute("cliente") Cliente cliente) {
-        clienteService.guardarCliente(cliente);
-        return "redirect:/clientes?exito=true";
+    public String guardarCliente(@ModelAttribute("cliente") Cliente cliente, Model model) {
+        try {
+            clienteService.guardarCliente(cliente);
+            return "redirect:/clientes?exito=true";
+        } catch (IllegalArgumentException e) {
+            model.addAttribute("error", e.getMessage());
+            return "cliente-form";
+        }
     }
 
     @GetMapping("/borrar/{id}")

@@ -2,12 +2,154 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="es">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <meta name="description" content="Panel de gestión de mesas del restaurante Eclipse PlateUp." />
     <meta name="robots" content="noindex, nofollow" />
     <title>Gestión de Mesas | Eclipse PlateUp</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet"/>
     <link rel="stylesheet" th:href="@{/css/style.css?v=11.0}">
+    <style>
+        .reservas-drawer {
+            position: fixed;
+            top: 0; right: 0;
+            height: 100vh;
+            width: 380px;
+            max-width: 95vw;
+            background: var(--bg-card, #181818);
+            border-left: 1px solid rgba(212,175,55,0.25);
+            z-index: 1100;
+            transform: translateX(100%);
+            transition: transform 0.3s cubic-bezier(.4,0,.2,1);
+            display: flex;
+            flex-direction: column;
+            box-shadow: -4px 0 24px rgba(0,0,0,0.45);
+        }
+        .reservas-drawer.open { transform: translateX(0); }
+        .reservas-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.45);
+            z-index: 1099;
+        }
+        .reservas-overlay.open { display: block; }
+        .reservas-drawer-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 20px 24px 16px;
+            border-bottom: 1px solid rgba(212,175,55,0.2);
+            flex-shrink: 0;
+        }
+        .reservas-drawer-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.25rem;
+            color: var(--text-primary, #f5f0e8);
+            letter-spacing: 0.04em;
+        }
+        .reservas-drawer-close {
+            background: none;
+            border: none;
+            color: var(--text-muted, #888);
+            font-size: 1.5rem;
+            cursor: pointer;
+            line-height: 1;
+            padding: 4px 8px;
+            border-radius: 4px;
+            transition: color 0.2s;
+        }
+        .reservas-drawer-close:hover { color: var(--color-gold, #d4af37); }
+        .reservas-drawer-body {
+            overflow-y: auto;
+            flex: 1;
+            padding: 16px 24px 24px;
+        }
+        .reservas-dia-grupo { margin-bottom: 24px; }
+        .reservas-dia-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 6px 0 10px;
+            border-bottom: 1px solid rgba(212,175,55,0.15);
+            margin-bottom: 10px;
+            font-size: 0.78rem;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--color-gold, #d4af37);
+        }
+        .badge-hoy, .badge-manana {
+            font-size: 0.65rem;
+            padding: 2px 7px;
+            border-radius: 99px;
+            font-weight: 600;
+            letter-spacing: 0.06em;
+        }
+        .badge-hoy    { background: rgba(212,175,55,0.18); color: #d4af37; }
+        .badge-manana { background: rgba(100,149,237,0.18); color: #6495ed; }
+        .reserva-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 12px;
+            border-radius: 8px;
+            margin-bottom: 6px;
+            background: rgba(255,255,255,0.04);
+            transition: background 0.15s;
+        }
+        .reserva-item:hover { background: rgba(212,175,55,0.08); }
+        .reserva-item-mesa {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 0.95rem;
+            color: var(--color-gold, #d4af37);
+            min-width: 60px;
+            font-weight: 600;
+        }
+        .reserva-item-info {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            flex: 1;
+        }
+        .reserva-item-cliente {
+            font-size: 0.85rem;
+            color: var(--text-primary, #f5f0e8);
+            font-weight: 500;
+        }
+        .reserva-item-meta {
+            font-size: 0.75rem;
+            color: var(--text-muted, #888);
+        }
+        .no-reservas {
+            text-align: center;
+            padding: 48px 0;
+            color: var(--text-muted, #888);
+            font-size: 0.9rem;
+        }
+        .btn-reservas {
+            background: transparent;
+            border: 1px solid rgba(212,175,55,0.5);
+            color: var(--color-gold, #d4af37);
+            padding: 8px 18px;
+            border-radius: 4px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.78rem;
+            font-weight: 500;
+            letter-spacing: 0.06em;
+            cursor: pointer;
+            text-transform: uppercase;
+            transition: background 0.2s, border-color 0.2s;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .btn-reservas:hover {
+            background: rgba(212,175,55,0.1);
+            border-color: var(--color-gold, #d4af37);
+        }
+    </style>
     <script>
         if (localStorage.getItem('theme') === 'light') {
             document.documentElement.setAttribute('data-theme', 'light');
@@ -19,7 +161,14 @@
 <header>
 <nav id="navbar" class="scrolled dashboard-nav">
     <a th:href="@{/}" class="nav-logo">Eclipse PlateUp</a>
-    <ul class="nav-links">
+    <button class="mobile-menu-btn" id="burger-btn" aria-label="Menú">
+        <svg viewBox="0 0 100 80" width="24" height="24" fill="var(--gold)">
+            <rect width="100" height="10" rx="5"></rect>
+            <rect y="35" width="100" height="10" rx="5"></rect>
+            <rect y="70" width="100" height="10" rx="5"></rect>
+        </svg>
+    </button>
+    <ul class="nav-links" id="nav-links">
         <li><a th:href="@{/mesas}" class="text-gold">Mesas</a></li>
         <li><a th:href="@{/pedidos}">Cuentas</a></li>
         <li><a th:href="@{/comandas}">Cocina</a></li>
@@ -49,6 +198,7 @@
             <h2 class="section-title m-0">Gestión de <em>Mesas</em></h2>
         </div>
         <div class="header-actions">
+            <button class="btn-reservas" onclick="toggleReservasPanel()">&#128197; Ver Reservas</button>
             <a th:href="@{/mesas/nuevo}" class="btn-primary btn-link-action">+ Añadir Nueva Mesa</a>
         </div>
     </div>
@@ -67,21 +217,20 @@
             </thead>
             <tbody>
                 <tr th:each="m : ${mesas}">
-                    <td class="text-gold font-medium" th:text="'Mesa ' + ${m.id}"></td>
+                    <td data-label="Mesa" class="text-gold font-medium" th:text="'Mesa ' + ${m.id}"></td>
 
-                    <td>
+                    <td data-label="Ubicación" class="card-extra">
                         <span th:if="${m.ubicacion == 'TERRAZA'}" class="badge-ubicacion badge-terraza">Terraza</span>
                         <span th:if="${m.ubicacion == 'SALON'}"   class="badge-ubicacion badge-salon">Salón</span>
                         <span th:unless="${m.ubicacion == 'TERRAZA' or m.ubicacion == 'SALON'}" class="badge-ubicacion">—</span>
                     </td>
 
-                    <td th:with="c=${m.clienteId != null ? clientesMap[m.clienteId] : null}">
+                    <td data-label="Cliente" class="card-extra" th:with="c=${m.clienteId != null ? clientesMap[m.clienteId] : null}">
                         <span th:if="${c != null}" class="text-gold font-medium" th:text="${c.nombre}">—</span>
                         <span th:unless="${c != null}" class="text-muted">—</span>
                     </td>
 
-                    <td th:with="c=${m.clienteId != null ? clientesMap[m.clienteId] : null}">
-                        <!-- RESERVADA: badge clickable con datos de la reserva -->
+                    <td data-label="Estado" th:with="c=${m.clienteId != null ? clientesMap[m.clienteId] : null}">
                         <span th:if="${m.estado == 'RESERVADA'}"
                               class="badge-estado badge-reservada badge-clickable"
                               th:data-mesa="${m.numero}"
@@ -93,16 +242,16 @@
                               title="Ver detalles de la reserva">
                             RESERVADA &#9432;
                         </span>
-                        <!-- LIBRE / OCUPADA: badge normal -->
                         <span th:unless="${m.estado == 'RESERVADA'}"
                               th:text="${m.estado}"
                               th:classappend="${m.estado == 'LIBRE'} ? ' badge-libre' : ' badge-ocupada'"
                               class="badge-estado">—</span>
                     </td>
 
-                    <td th:text="${m.capacidad} + ' pax'"></td>
+                    <td data-label="Capacidad" class="card-extra" th:text="${m.capacidad} + ' pax'"></td>
 
-                    <td class="text-right">
+                    <td data-label="Acciones" class="text-right">
+                        <button class="btn-card-toggle" type="button" onclick="toggleCardExtra(this)">▼ Más</button>
                         <div class="action-buttons">
                             <a th:href="@{/mesas/editar/{id}(id=${m.id})}" class="btn-icon btn-edit" title="Editar Mesa">
                                 <svg viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
@@ -122,6 +271,43 @@
 <footer>
     <div style="text-align:center; padding:16px; font-size:0.8rem; opacity:0.5;">© 2026 Eclipse PlateUp</div>
 </footer>
+
+<!-- Overlay fondo drawer -->
+<div class="reservas-overlay" id="reservasOverlay" onclick="toggleReservasPanel()"></div>
+
+<!-- Drawer panel de reservas próximas -->
+<div class="reservas-drawer" id="reservasDrawer">
+    <div class="reservas-drawer-header">
+        <span class="reservas-drawer-title">Reservas Próximas</span>
+        <button class="reservas-drawer-close" onclick="toggleReservasPanel()">&times;</button>
+    </div>
+    <div class="reservas-drawer-body">
+
+        <div th:if="${reservasPorDia.isEmpty()}" class="no-reservas">
+            No hay reservas próximas
+        </div>
+
+        <div th:each="entry : ${reservasPorDia}" class="reservas-dia-grupo">
+            <div class="reservas-dia-header">
+                <span th:text="${#temporals.format(entry.key, 'dd/MM/yyyy')}"></span>
+                <span th:if="${entry.key.equals(hoy)}"           class="badge-hoy">Hoy</span>
+                <span th:if="${entry.key.equals(hoy.plusDays(1))}" class="badge-manana">Mañana</span>
+            </div>
+
+            <div th:each="m : ${entry.value}"
+                 th:with="c=${m.clienteId != null ? clientesMap[m.clienteId] : null}"
+                 class="reserva-item">
+                <div class="reserva-item-mesa" th:text="'Mesa ' + ${m.id}"></div>
+                <div class="reserva-item-info">
+                    <span class="reserva-item-cliente" th:text="${c != null ? c.nombre : 'Sin nombre'}"></span>
+                    <span class="reserva-item-meta"
+                          th:text="${(m.horaReserva != null ? m.horaReserva : '—') + ' · ' + m.capacidad + ' pax'}"></span>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
 
 <!-- Modal detalle de reserva -->
 <div class="reserva-modal-overlay" id="reservaModal" onclick="cerrarReservaModal(event)">
@@ -164,7 +350,23 @@ function cerrarReservaModal(e) {
         document.getElementById('reservaModal').classList.remove('open');
     }
 }
-document.addEventListener('keydown', e => { if (e.key === 'Escape') cerrarReservaModal(); });
+document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') {
+        cerrarReservaModal();
+        cerrarReservasPanel();
+    }
+});
+
+function toggleReservasPanel() {
+    const drawer  = document.getElementById('reservasDrawer');
+    const overlay = document.getElementById('reservasOverlay');
+    const open    = drawer.classList.toggle('open');
+    overlay.classList.toggle('open', open);
+}
+function cerrarReservasPanel() {
+    document.getElementById('reservasDrawer').classList.remove('open');
+    document.getElementById('reservasOverlay').classList.remove('open');
+}
 </script>
 
 </body>

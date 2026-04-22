@@ -64,6 +64,14 @@
     </div>
 </section>
 
+<div class="toast" id="toast"></div>
+<div id="error-msg" th:if="${error}" th:text="${error}" style="display:none"></div>
 <script th:src="@{/js/main.js}"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var el = document.getElementById('error-msg');
+        if (el) showToast('✖ ' + el.textContent);
+    });
+</script>
 </body>
 </html>

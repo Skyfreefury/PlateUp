@@ -10,5 +10,8 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ClienteDAO extends JpaRepository<Cliente, Long> {
-    // ¡Vacío! Spring Data JPA genera todas las consultas SQL automáticamente.
+
+    boolean existsByEmail(String email);
+    boolean existsByEmailAndIdNot(String email, Long id);
+    Cliente findByEmail(String email);
 }
