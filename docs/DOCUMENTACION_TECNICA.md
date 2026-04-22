@@ -105,6 +105,13 @@ sesiones ──────────── pedidos (cuenta de mesa) ◄──
 - **Comanda → LineasProducto**: 1:N. Cada comanda contiene líneas individuales de producto.
 - **Producto → TipoProducto**: N:1. Los productos se agrupan por categoría (Entrante, Principal, Postre, Bebida).
 
+### Consultas derivadas de `MesaDAO`
+
+| Método | Propósito |
+|--------|-----------|
+| `existsByClienteIdAndFechaReservaAndEstado` | Detecta reserva duplicada al crear una nueva |
+| `existsByClienteIdAndFechaReservaAndEstadoAndIdNot` | Detecta reserva duplicada al editar, excluyendo la propia mesa |
+
 ---
 
 ## 5. Módulos Funcionales
@@ -119,6 +126,19 @@ sesiones ──────────── pedidos (cuenta de mesa) ◄──
 - CRUD completo de mesas con capacidad y estado.
 - Sistema de reciclaje de IDs: el número de mesa coincide con su ID, reutilizando huecos al eliminar.
 - Límite configurable de 20 mesas físicas.
+- **Lógica de estado en vista**: el estado visible en la tabla se calcula en Thymeleaf según las reglas siguientes:
+
+| Condición en BD | Estado mostrado |
+|-----------------|----------------|
+| `estado = RESERVADA` y `fechaReserva <= hoy` | 🟡 RESERVADA (badge interactivo) |
+| `estado = RESERVADA` y `fechaReserva > hoy` | 🟢 LIBRE |
+| `clienteId != null` y `estado != RESERVADA` | 🔴 OCUPADA |
+| Resto de casos | valor real del campo `estado` |
+
+- **Validaciones al guardar** (`MesaService.guardarMesa`):
+  - Capacidad entre 1 y 20 comensales.
+  - Si estado es `RESERVADA`: fecha obligatoria y no anterior a hoy; si la fecha es hoy, la hora no puede ser anterior a la hora actual.
+  - Si estado es `RESERVADA` y tiene cliente asignado: el mismo cliente no puede tener otra mesa reservada para esa misma fecha (previene duplicados por día, no globales).
 
 ### 5.3 Gestión de Pedidos (Cuentas)
 - Apertura y cierre de cuentas por mesa.
@@ -138,6 +158,7 @@ sesiones ──────────── pedidos (cuenta de mesa) ◄──
 ### 5.6 Gestión de Clientes
 - Directorio de clientes con nombre, email y teléfono.
 - CRUD completo con validación de campos.
+- El **email es único** a nivel de directorio (una persona = un registro); esta restricción no impide que el mismo cliente tenga reservas en fechas distintas, ya que la unicidad por fecha se valida en la capa de mesas.
 
 ### 5.7 Gestión de Caja (Sesiones)
 - Apertura de turno con fondo inicial de caja.
@@ -153,6 +174,7 @@ sesiones ──────────── pedidos (cuenta de mesa) ◄──
   3. Asigna `cliente_id`, `fecha_reserva` y `hora_reserva` a la mesa y cambia su estado a `RESERVADA`.
 - Devuelve JSON `{ exito, mesa, mensaje }` al frontend, que muestra un toast al cliente.
 - Si no hay mesas disponibles, responde con `exito: false` y un mensaje de contacto telefónico.
+- **Prevención de reservas duplicadas por cliente y día**: al asignar un cliente a una reserva, `MesaService` comprueba que ese cliente no tenga ya otra mesa en estado `RESERVADA` para la misma `fechaReserva`. La consulta excluye la propia mesa al editar para evitar falsos positivos.
 
 ---
 
