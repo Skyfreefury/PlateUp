@@ -5,6 +5,9 @@ import com.Mogena.Repository.MesaDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.format.DateTimeParseException;
 import java.util.List;
 
 /**
@@ -42,6 +45,20 @@ public class MesaService {
     public boolean guardarMesa(Mesa mesa) {
         if (mesa.getCapacidad() == null || mesa.getCapacidad() < 1 || mesa.getCapacidad() > 20)
             throw new IllegalArgumentException("La capacidad debe estar entre 1 y 20 comensales.");
+
+        if ("RESERVADA".equals(mesa.getEstado())) {
+            if (mesa.getFechaReserva() == null)
+                throw new IllegalArgumentException("Debes indicar la fecha de la reserva.");
+            LocalDate hoy = LocalDate.now();
+            if (mesa.getFechaReserva().isBefore(hoy))
+                throw new IllegalArgumentException("La fecha de reserva no puede ser anterior a hoy.");
+            if (mesa.getFechaReserva().isEqual(hoy) && mesa.getHoraReserva() != null && !mesa.getHoraReserva().isBlank()) {
+                try {
+                    if (LocalTime.parse(mesa.getHoraReserva()).isBefore(LocalTime.now()))
+                        throw new IllegalArgumentException("La hora de reserva no puede ser anterior a la hora actual.");
+                } catch (DateTimeParseException ignored) {}
+            }
+        }
 
         if (mesa.getId() != null) {
             mesaDAO.saveAndFlush(mesa);
