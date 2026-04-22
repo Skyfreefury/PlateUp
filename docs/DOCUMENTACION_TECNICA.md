@@ -226,15 +226,33 @@ El usuario administrador por defecto se crea automáticamente al primer arranque
 
 ---
 
-## 8. Diagrama de Clases
+## 8. Diagramas
 
-El diagrama de clases completo se encuentra en el archivo:
+### Diagrama Entidad-Relación (BD)
 
 ```
-DiagramaClasePlateup.drawio
+docs/DiagramaEntidadRelacion_PlateUP.drawio
 ```
 
-Incluye todas las entidades del modelo con sus atributos, relaciones y cardinalidades.
+Muestra las tablas de la base de datos `restaurante_db` con sus columnas, tipos y relaciones entre tablas (claves primarias y foráneas).
+
+### Diagrama de Clases Java
+
+```
+docs/DiagramaClasesJava_PlateUP.drawio
+```
+
+Muestra la arquitectura en capas de la aplicación con todas las clases Java organizadas por capa y código de colores:
+
+| Color | Capa |
+|-------|------|
+| Verde | Modelo — Entidades JPA (`@Entity`) |
+| Azul | Repositorios — Interfaces Spring Data JPA (`@Repository`) |
+| Amarillo | Servicios — Lógica de negocio (`@Service`) |
+| Naranja | Controladores — Spring MVC (`@Controller` / `@RestController`) |
+| Morado | Seguridad — Spring Security (`@Component`) |
+
+Incluye atributos, métodos y asociaciones entre modelos (mediante claves foráneas).
 
 ---
 
