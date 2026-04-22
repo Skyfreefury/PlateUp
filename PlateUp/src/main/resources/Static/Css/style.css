@@ -1702,15 +1702,22 @@ footer {
     }
 
     /* ── Responsive tables → cards ───────────────── */
-    .table-responsive { overflow-x: hidden; }
+    .table-responsive { overflow-x: hidden; width: 100%; }
 
     .solstice-table {
+        display: block;
         white-space: normal;
-        overflow-x: visible;
+        overflow-x: hidden;
         width: 100%;
+        min-width: 0;
     }
 
     .solstice-table thead { display: none; }
+
+    .solstice-table tbody {
+        display: block;
+        width: 100%;
+    }
 
     .solstice-table tbody tr {
         display: block;
