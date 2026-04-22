@@ -231,7 +231,7 @@
                     </td>
                     <td data-label="Estado" th:with="c=${m.clienteId != null ? clientesMap[m.clienteId] : null},esHoy=${m.estado == 'RESERVADA' and (m.fechaReserva == null or !m.fechaReserva.isAfter(hoy))}">
                         <span th:if="${esHoy}" class="badge-estado badge-reservada badge-clickable" th:data-mesa="${m.numero}" th:data-cliente="${c != null ? c.nombre : 'Sin nombre'}" th:data-fecha="${m.fechaReserva != null ? m.fechaReserva : '—'}" th:data-hora="${m.horaReserva != null ? m.horaReserva : '—'}" th:data-pax="${m.capacidad}" onclick="abrirReservaModal(this)" title="Ver detalles de la reserva">RESERVADA &#9432;</span>
-                        <span th:unless="${esHoy}" th:text="${m.clienteId != null} ? 'OCUPADA' : (${m.estado != null} ? ${m.estado} : 'LIBRE')" th:classappend="${m.clienteId != null or m.estado == 'OCUPADA'} ? ' badge-ocupada' : ' badge-libre'" class="badge-estado">—</span>
+                        <span th:unless="${esHoy}" th:text="${m.estado == 'RESERVADA'} ? 'LIBRE' : (${m.clienteId != null} ? 'OCUPADA' : (${m.estado != null} ? ${m.estado} : 'LIBRE'))" th:classappend="${(m.clienteId != null and m.estado != 'RESERVADA') or m.estado == 'OCUPADA'} ? ' badge-ocupada' : ' badge-libre'" class="badge-estado">—</span>
                     </td>
                     <td data-label="Capacidad" th:text="${m.capacidad != null} ? ${m.capacidad} + ' pax' : '—'"></td>
                     <td data-label="Acciones" class="text-right">
