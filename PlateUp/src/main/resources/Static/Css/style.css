@@ -877,7 +877,7 @@ section {
     padding: 50px;
     border: 1px solid var(--border);
     width: 100%;
-    max-width: 500px;
+    max-width: 680px;
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
 }
 
@@ -1067,8 +1067,8 @@ footer {
 }
 
 .dashboard-container {
-    padding: 40px 5%;
-    max-width: 1400px;
+    padding: 40px 2%;
+    max-width: 1600px;
     margin: 0 auto;
 }
 
