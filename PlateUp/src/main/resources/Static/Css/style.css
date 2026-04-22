@@ -1502,13 +1502,25 @@ footer {
         border-color: var(--gold);
     }
 
-    /* Nombre del restaurante más compacto en móvil */
+    /* Logo compacto y ocupa el espacio sobrante para empujar todo a la derecha */
     .nav-logo {
         font-size: 13px;
         letter-spacing: 0.12em;
+        flex: 1;
     }
 
-    /* Ocultar solo el formulario de logout — Inicio sigue visible */
+    /* Agrupar nav-actions antes del hamburguesa para que queden juntos a la derecha */
+    .nav-actions {
+        order: 1;
+        gap: 10px;
+    }
+
+    .mobile-menu-btn {
+        order: 2;
+        margin-left: 6px;
+    }
+
+    /* Ocultar solo el formulario de logout — Inicio/Volver sigue visible */
     .nav-actions form {
         display: none;
     }
@@ -1523,14 +1535,6 @@ footer {
     /* Nombre de usuario — innecesario en móvil */
     nav span[sec\:authorize] {
         display: none;
-    }
-
-    .nav-actions {
-        gap: 10px;
-    }
-
-    .mobile-menu-btn {
-        margin-left: 8px;
     }
 
     .btn-circle {
