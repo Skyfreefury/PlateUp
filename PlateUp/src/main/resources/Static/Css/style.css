@@ -139,20 +139,20 @@ nav {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 24px 60px;
+    padding: 28px 70px;
     background: linear-gradient(to bottom, rgba(10, 10, 8, 0.95), transparent);
     transition: padding 0.4s, background 0.4s;
 }
 
 nav.scrolled {
-    padding: 16px 60px;
+    padding: 20px 70px;
     background: rgba(10, 10, 8, 0.97);
     border-bottom: 1px solid var(--border);
 }
 
 .nav-logo {
     font-family: 'Cormorant Garamond', serif;
-    font-size: 22px;
+    font-size: 26px;
     font-weight: 300;
     letter-spacing: 0.3em;
     color: var(--gold);
@@ -163,14 +163,14 @@ nav.scrolled {
 
 .nav-links {
     display: flex;
-    gap: 40px;
+    gap: 48px;
     list-style: none;
     align-items: center;
     margin: 0;
 }
 
 .nav-links a {
-    font-size: 11px;
+    font-size: 12px;
     letter-spacing: 0.2em;
     text-transform: uppercase;
     color: var(--white);
@@ -201,12 +201,12 @@ nav.scrolled {
 }
 
 .nav-cta {
-    font-size: 11px;
+    font-size: 12px;
     letter-spacing: 0.2em;
     text-transform: uppercase;
     border: 1px solid var(--gold);
     color: var(--gold);
-    padding: 10px 24px;
+    padding: 12px 28px;
     background: transparent;
     cursor: pointer;
     transition: all 0.3s;
