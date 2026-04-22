@@ -40,6 +40,13 @@ public class MesaService {
      * Si es nueva, se busca el primer ID libre (hueco) entre 1 y {@code LIMITE_MESAS}.
      * El número de mesa se establece igual al ID asignado.
      *
+     * <p>Validaciones aplicadas:
+     * <ul>
+     *   <li>Capacidad entre 1 y 20 comensales.</li>
+     *   <li>Estado RESERVADA: fecha obligatoria, no anterior a hoy; si es hoy, hora no anterior a la actual.</li>
+     *   <li>Estado RESERVADA con cliente asignado: el mismo cliente no puede tener otra mesa reservada para la misma fecha.</li>
+     * </ul>
+     *
      * @return {@code true} si se guardó correctamente, {@code false} si no hay IDs disponibles.
      */
     public boolean guardarMesa(Mesa mesa) {
@@ -57,6 +64,14 @@ public class MesaService {
                     if (LocalTime.parse(mesa.getHoraReserva()).isBefore(LocalTime.now()))
                         throw new IllegalArgumentException("La hora de reserva no puede ser anterior a la hora actual.");
                 } catch (DateTimeParseException ignored) {}
+            }
+            // Un cliente solo puede tener una mesa reservada por día; excluir la propia mesa en edición.
+            if (mesa.getClienteId() != null) {
+                boolean conflicto = (mesa.getId() != null)
+                    ? mesaDAO.existsByClienteIdAndFechaReservaAndEstadoAndIdNot(mesa.getClienteId(), mesa.getFechaReserva(), "RESERVADA", mesa.getId())
+                    : mesaDAO.existsByClienteIdAndFechaReservaAndEstado(mesa.getClienteId(), mesa.getFechaReserva(), "RESERVADA");
+                if (conflicto)
+                    throw new IllegalArgumentException("Este cliente ya tiene una reserva para ese día en otra mesa.");
             }
         }
 
