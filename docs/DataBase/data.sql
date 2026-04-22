@@ -88,43 +88,43 @@ INSERT INTO mesas (id, numero, capacidad, estado, ubicacion, cliente_id, fecha_r
 -- ============================================================
 -- 5. PRODUCTOS — La Carta completa
 -- ============================================================
-INSERT INTO productos (id, nombre, precio, tipo_producto_id, tipo_comanda_id) VALUES
-  -- Entrantes (tipo_producto=1, tipo_comanda=1)
-  (1,  'Croquetas de Jamón Ibérico',                  8.50,  1, 1),
-  (2,  'Ensalada César con Pollo',                   10.50,  1, 1),
-  (3,  'Foie a la Plancha con Mermelada de Higos',   15.00,  1, 1),
-  (4,  'Gazpacho Andaluz',                            6.50,  1, 1),
-  (5,  'Tabla de Ibéricos Selectos',                 14.00,  1, 1),
-  (6,  'Pulpo a la Gallega',                         16.50,  1, 1),
-  (7,  'Patatas Bravas',                              6.00,  1, 1),
-  (8,  'Burrata con Tomate y Albahaca',              11.00,  1, 1),
-  -- Principales (tipo_producto=2, tipo_comanda=2)
-  (9,  'Solomillo de Ternera con Patatas al Romero', 26.00,  2, 2),
-  (10, 'Merluza al Horno con Verduras',              20.00,  2, 2),
-  (11, 'Risotto de Setas y Trufa',                   18.00,  2, 2),
-  (12, 'Secreto Ibérico a la Brasa',                 22.00,  2, 2),
-  (13, 'Paella Valenciana (por persona)',             19.00,  2, 2),
-  (14, 'Entrecot de Angus con Salsa de Pimienta',    28.00,  2, 2),
-  (15, 'Bacalao al Pil Pil',                         23.00,  2, 2),
-  (16, 'Pollo de Corral al Horno',                   17.00,  2, 2),
-  -- Postres (tipo_producto=3, tipo_comanda=3)
-  (17, 'Tiramisú Casero',                             7.00,  3, 3),
-  (18, 'Tarta de Queso con Frutos Rojos',             7.50,  3, 3),
-  (19, 'Crema Catalana',                              5.50,  3, 3),
-  (20, 'Coulant de Chocolate con Helado de Vainilla', 7.00,  3, 3),
-  (21, 'Helado Artesano (3 bolas)',                   5.00,  3, 3),
-  -- Bebidas (tipo_producto=4, tipo_comanda=4)
-  (22, 'Agua Mineral 50cl',                           2.00,  4, 4),
-  (23, 'Agua Mineral 1L',                             3.50,  4, 4),
-  (24, 'Vino Tinto Rioja (copa)',                     5.50,  4, 4),
-  (25, 'Vino Blanco Albariño (copa)',                 5.50,  4, 4),
-  (26, 'Cerveza Artesana 33cl',                       3.50,  4, 4),
-  (27, 'Refresco',                                    2.50,  4, 4),
-  (28, 'Café Solo',                                   1.80,  4, 4),
-  (29, 'Cortado',                                     1.80,  4, 4),
-  (30, 'Botella Vino Tinto Rioja Reserva',           28.00,  4, 4),
-  (31, 'Botella Vino Blanco Albariño',               22.00,  4, 4),
-  (32, 'Zumo Natural de Naranja',                     3.50,  4, 4);
+INSERT INTO productos (id, nombre, precio, tipo_producto_id) VALUES
+  -- Entrantes (tipo_producto=1)
+  (1,  'Croquetas de Jamón Ibérico',                  8.50,  1),
+  (2,  'Ensalada César con Pollo',                   10.50,  1),
+  (3,  'Foie a la Plancha con Mermelada de Higos',   15.00,  1),
+  (4,  'Gazpacho Andaluz',                            6.50,  1),
+  (5,  'Tabla de Ibéricos Selectos',                 14.00,  1),
+  (6,  'Pulpo a la Gallega',                         16.50,  1),
+  (7,  'Patatas Bravas',                              6.00,  1),
+  (8,  'Burrata con Tomate y Albahaca',              11.00,  1),
+  -- Principales (tipo_producto=2)
+  (9,  'Solomillo de Ternera con Patatas al Romero', 26.00,  2),
+  (10, 'Merluza al Horno con Verduras',              20.00,  2),
+  (11, 'Risotto de Setas y Trufa',                   18.00,  2),
+  (12, 'Secreto Ibérico a la Brasa',                 22.00,  2),
+  (13, 'Paella Valenciana (por persona)',             19.00,  2),
+  (14, 'Entrecot de Angus con Salsa de Pimienta',    28.00,  2),
+  (15, 'Bacalao al Pil Pil',                         23.00,  2),
+  (16, 'Pollo de Corral al Horno',                   17.00,  2),
+  -- Postres (tipo_producto=3)
+  (17, 'Tiramisú Casero',                             7.00,  3),
+  (18, 'Tarta de Queso con Frutos Rojos',             7.50,  3),
+  (19, 'Crema Catalana',                              5.50,  3),
+  (20, 'Coulant de Chocolate con Helado de Vainilla', 7.00,  3),
+  (21, 'Helado Artesano (3 bolas)',                   5.00,  3),
+  -- Bebidas (tipo_producto=4)
+  (22, 'Agua Mineral 50cl',                           2.00,  4),
+  (23, 'Agua Mineral 1L',                             3.50,  4),
+  (24, 'Vino Tinto Rioja (copa)',                     5.50,  4),
+  (25, 'Vino Blanco Albariño (copa)',                 5.50,  4),
+  (26, 'Cerveza Artesana 33cl',                       3.50,  4),
+  (27, 'Refresco',                                    2.50,  4),
+  (28, 'Café Solo',                                   1.80,  4),
+  (29, 'Cortado',                                     1.80,  4),
+  (30, 'Botella Vino Tinto Rioja Reserva',           28.00,  4),
+  (31, 'Botella Vino Blanco Albariño',               22.00,  4),
+  (32, 'Zumo Natural de Naranja',                     3.50,  4);
 
 
 -- ============================================================

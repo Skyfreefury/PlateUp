@@ -48,7 +48,7 @@
   </script>
 
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet"/>
-  <link rel="stylesheet" th:href="@{/css/style.css?v=11.0}">
+  <link rel="stylesheet" th:href="@{/css/style.css?v=12.0}">
 </head>
 <body>
 
@@ -60,7 +60,7 @@
 
   <a th:href="@{/}" class="nav-logo">Eclipse PlateUp</a>
   
-  <button class="mobile-menu-btn" id="burger-btn" aria-label="Menú">
+  <button class="mobile-menu-btn" id="burger-btn" aria-label="Menú" sec:authorize="isAuthenticated()">
       <svg viewBox="0 0 100 80" width="24" height="24" fill="var(--gold)">
           <rect width="100" height="10" rx="5"></rect>
           <rect y="35" width="100" height="10" rx="5"></rect>
