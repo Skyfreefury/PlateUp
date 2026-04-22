@@ -1507,6 +1507,7 @@ footer {
         font-size: 13px;
         letter-spacing: 0.12em;
         flex: 1;
+        margin-right: 18px;
     }
 
     /* Agrupar nav-actions antes del hamburguesa para que queden juntos a la derecha */
