@@ -1502,6 +1502,12 @@ footer {
         border-color: var(--gold);
     }
 
+    /* Nombre del restaurante más compacto en móvil */
+    .nav-logo {
+        font-size: 13px;
+        letter-spacing: 0.12em;
+    }
+
     /* Ocultar solo el formulario de logout — Inicio sigue visible */
     .nav-actions form {
         display: none;
@@ -1694,6 +1700,12 @@ footer {
     /* ── Responsive tables → cards ───────────────── */
     .table-responsive { overflow-x: hidden; }
 
+    .solstice-table {
+        white-space: normal;
+        overflow-x: visible;
+        width: 100%;
+    }
+
     .solstice-table thead { display: none; }
 
     .solstice-table tbody tr {
@@ -1709,11 +1721,14 @@ footer {
         display: flex;
         justify-content: space-between;
         align-items: center;
+        width: 100%;
+        box-sizing: border-box;
         padding: 10px 16px;
         border-bottom: 1px solid rgba(255,255,255,0.05);
         font-size: 0.85rem;
         text-align: left !important;
         gap: 12px;
+        white-space: normal;
     }
 
     .solstice-table td:last-child { border-bottom: none; }
