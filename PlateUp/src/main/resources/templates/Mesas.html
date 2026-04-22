@@ -220,46 +220,24 @@
             <tbody>
                 <tr th:each="m : ${mesas}">
                     <td data-label="Mesa" class="text-gold font-medium" th:text="'Mesa ' + ${m.id}"></td>
-
                     <td data-label="Ubicación">
                         <span th:if="${m.ubicacion == 'TERRAZA'}" class="badge-ubicacion badge-terraza">Terraza</span>
-                        <span th:if="${m.ubicacion == 'SALON'}"   class="badge-ubicacion badge-salon">Salón</span>
+                        <span th:if="${m.ubicacion == 'SALON'}" class="badge-ubicacion badge-salon">Salón</span>
                         <span th:unless="${m.ubicacion == 'TERRAZA' or m.ubicacion == 'SALON'}" class="badge-ubicacion">—</span>
                     </td>
-
                     <td data-label="Cliente" th:with="c=${m.clienteId != null ? clientesMap[m.clienteId] : null}">
                         <span th:if="${c != null}" class="text-gold font-medium" th:text="${c.nombre}">—</span>
                         <span th:unless="${c != null}" class="text-muted">—</span>
                     </td>
-
                     <td data-label="Estado" th:with="c=${m.clienteId != null ? clientesMap[m.clienteId] : null}">
-                        <span th:if="${m.estado == 'RESERVADA'}"
-                              class="badge-estado badge-reservada badge-clickable"
-                              th:data-mesa="${m.numero}"
-                              th:data-cliente="${c != null ? c.nombre : 'Sin nombre'}"
-                              th:data-fecha="${m.fechaReserva != null ? m.fechaReserva : '—'}"
-                              th:data-hora="${m.horaReserva != null ? m.horaReserva : '—'}"
-                              th:data-pax="${m.capacidad}"
-                              onclick="abrirReservaModal(this)"
-                              title="Ver detalles de la reserva">
-                            RESERVADA &#9432;
-                        </span>
-                        <span th:unless="${m.estado == 'RESERVADA'}"
-                              th:text="${m.estado}"
-                              th:classappend="${m.estado == 'LIBRE'} ? ' badge-libre' : ' badge-ocupada'"
-                              class="badge-estado">—</span>
+                        <span th:if="${m.estado == 'RESERVADA'}" class="badge-estado badge-reservada badge-clickable" th:data-mesa="${m.numero}" th:data-cliente="${c != null ? c.nombre : 'Sin nombre'}" th:data-fecha="${m.fechaReserva != null ? m.fechaReserva : '—'}" th:data-hora="${m.horaReserva != null ? m.horaReserva : '—'}" th:data-pax="${m.capacidad}" onclick="abrirReservaModal(this)" title="Ver detalles de la reserva">RESERVADA &#9432;</span>
+                        <span th:unless="${m.estado == 'RESERVADA'}" th:text="${m.estado != null} ? ${m.estado} : '—'" th:classappend="${m.estado == 'LIBRE'} ? ' badge-libre' : ' badge-ocupada'" class="badge-estado">—</span>
                     </td>
-
-                    <td data-label="Capacidad" th:text="${m.capacidad} + ' pax'"></td>
-
+                    <td data-label="Capacidad" th:text="${m.capacidad != null} ? ${m.capacidad} + ' pax' : '—'"></td>
                     <td data-label="Acciones" class="text-right">
                         <div class="action-buttons">
-                            <a th:href="@{/mesas/editar/{id}(id=${m.id})}" class="btn-icon btn-edit" title="Editar Mesa">
-                                <svg viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
-                            </a>
-                            <a th:href="@{/mesas/borrar/{id}(id=${m.id})}" class="btn-icon btn-delete" onclick="return confirm('¿Estás seguro de que deseas eliminar esta mesa?')" title="Eliminar Mesa">
-                                <svg viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
-                            </a>
+                            <a th:href="@{/mesas/editar/{id}(id=${m.id})}" class="btn-icon btn-edit" title="Editar Mesa"><svg viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg></a>
+                            <a th:href="@{/mesas/borrar/{id}(id=${m.id})}" class="btn-icon btn-delete" onclick="return confirm('¿Estás seguro de que deseas eliminar esta mesa?')" title="Eliminar Mesa"><svg viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg></a>
                         </div>
                     </td>
                 </tr>
