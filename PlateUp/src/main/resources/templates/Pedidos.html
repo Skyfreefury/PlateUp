@@ -80,12 +80,12 @@
                 <tr th:each="p : ${pedidos}">
                     <td data-label="Ticket" class="text-gold font-semibold" th:text="${p.numeroTicket != null} ? 'Ticket #' + ${p.numeroTicket} : 'Ref. #' + ${p.id}"></td>
                     <td data-label="Mesa" th:text="'Mesa ' + ${p.mesaId}"></td>
+                    <td data-label="Fecha" th:text="${p.fechaHora != null} ? ${#temporals.format(p.fechaHora, 'dd/MM/yyyy HH:mm')} : '-'"></td>
+                    <td data-label="Total" class="text-gold font-medium" th:text="${p.total != null} ? ${p.total} + ' €' : '0.00 €'"></td>
                     <td data-label="Estado">
                         <span th:if="${p.estado == 'ABIERTA'}" class="timer-badge timer-green">Abierta</span>
                         <span th:if="${p.estado == 'CERRADA'}" class="timer-badge timer-red">Cerrada</span>
                     </td>
-                    <td data-label="Fecha" th:text="${p.fechaHora != null} ? ${#temporals.format(p.fechaHora, 'dd/MM/yyyy HH:mm')} : '-'"></td>
-                    <td data-label="Total" class="text-gold font-medium" th:text="${p.total != null} ? ${p.total} + ' €' : '0.00 €'"></td>
                     <td data-label="Detalles">
                         <div class="action-row">
                             <a th:if="${p.estado == 'ABIERTA'}" th:href="@{/pedidos/cobrar/{id}(id=${p.id})}" class="btn-cobrar">💵 Cobrar</a>
