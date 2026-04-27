@@ -1294,11 +1294,11 @@ footer {
 /* =========================================
    22. FONDOS DE IMAGEN
    ========================================= */
-.bg-filosofia { background-image: url('../Img/FondoFilosofia.jpg'); background-size: cover; background-position: center; }
-.bg-andres    { background: url('../Img/AndresFuentes.png')  center/cover no-repeat; }
-.bg-clara     { background: url('../Img/ClaraMontoya.png')   center/cover no-repeat; }
-.bg-miguel    { background: url('../Img/MiguelRios.png')     center/cover no-repeat; }
-.bg-sofia     { background: url('../Img/SofiaAguilar.png')   center/cover no-repeat; }
+.bg-filosofia { background-image: url('../img/FondoFilosofia.jpg'); background-size: cover; background-position: center; }
+.bg-andres    { background: url('../img/AndresFuentes.png')  center/cover no-repeat; }
+.bg-clara     { background: url('../img/ClaraMontoya.png')   center/cover no-repeat; }
+.bg-miguel    { background: url('../img/MiguelRios.png')     center/cover no-repeat; }
+.bg-sofia     { background: url('../img/SofiaAguilar.png')   center/cover no-repeat; }
 
 /* =========================================
    23. BADGES DE ESTADO Y CAMBIO DE MESA
