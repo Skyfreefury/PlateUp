@@ -1,542 +1,288 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <mxfile host="app.diagrams.net" version="29.6.6">
   <diagram name="Diagrama de Clases Java — PlateUP" id="PlateUP-java-classes">
-    <mxGraphModel dx="1900" dy="2200" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1654" pageHeight="2339" math="0" shadow="0">
+    <mxGraphModel dx="1600" dy="1200" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1654" pageHeight="1169" math="0" shadow="0">
       <root>
         <mxCell id="0"/>
         <mxCell id="1" parent="0"/>
 
-        <!-- ============================================================ -->
-        <!-- CAPA: MODELO (Entidades JPA)                                  -->
-        <!-- ============================================================ -->
+        <!-- ══════════════════════════════════════════════════
+             FILA 1 — Mesa · Cliente · Sesion · Usuario
+        ══════════════════════════════════════════════════ -->
 
         <!-- Mesa -->
-        <mxCell id="m_mesa" value="«Entity»&#xa;Mesa" style="swimlane;fontStyle=1;align=center;startSize=30;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;" vertex="1" parent="1">
-          <mxGeometry x="20" y="20" width="260" height="222" as="geometry"/>
+        <mxCell id="m_mesa" value="Mesa" style="swimlane;fontStyle=1;align=center;startSize=26;fillColor=#FFE6CC;strokeColor=#d6b656;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="20" y="20" width="230" height="215" as="geometry"/>
         </mxCell>
-        <mxCell id="m_mesa_a" value="- id: Long&#xa;- numero: Integer&#xa;- capacidad: Integer&#xa;- estado: String&#xa;- ubicacion: String&#xa;- clienteId: Long&#xa;- fechaReserva: LocalDate&#xa;- horaReserva: String" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;fontSize=11;" vertex="1" parent="m_mesa">
-          <mxGeometry y="30" width="260" height="144" as="geometry"/>
+        <mxCell id="m_mesa_a" value="-id: Long&#xa;-numero: Integer&#xa;-capacidad: Integer&#xa;-estado: String&#xa;-ubicacion: String&#xa;-clienteId: Long&#xa;-fechaReserva: LocalDate&#xa;-horaReserva: String" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=6;fontSize=11;" vertex="1" parent="m_mesa">
+          <mxGeometry y="26" width="230" height="132" as="geometry"/>
         </mxCell>
-        <mxCell id="m_mesa_line" value="" style="line;strokeColor=#82b366;fillColor=none;" vertex="1" parent="m_mesa">
-          <mxGeometry y="174" width="260" height="8" as="geometry"/>
+        <mxCell id="m_mesa_sep" value="" style="line;strokeColor=#d6b656;fillColor=none;" vertex="1" parent="m_mesa">
+          <mxGeometry y="158" width="230" height="8" as="geometry"/>
         </mxCell>
-        <mxCell id="m_mesa_m" value="+ Mesa()&#xa;+ Mesa(id, numero, capacidad, estado, ubicacion)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;fontSize=11;" vertex="1" parent="m_mesa">
-          <mxGeometry y="182" width="260" height="40" as="geometry"/>
+        <mxCell id="m_mesa_m" value="+Mesa()&#xa;+Mesa(id,numero,capacidad,estado,ubicacion)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=6;fontSize=11;" vertex="1" parent="m_mesa">
+          <mxGeometry y="166" width="230" height="49" as="geometry"/>
         </mxCell>
 
         <!-- Cliente -->
-        <mxCell id="m_cliente" value="«Entity»&#xa;Cliente" style="swimlane;fontStyle=1;align=center;startSize=30;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;" vertex="1" parent="1">
-          <mxGeometry x="300" y="20" width="260" height="150" as="geometry"/>
+        <mxCell id="m_cliente" value="Cliente" style="swimlane;fontStyle=1;align=center;startSize=26;fillColor=#FFE6CC;strokeColor=#d6b656;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="280" y="20" width="210" height="134" as="geometry"/>
         </mxCell>
-        <mxCell id="m_cliente_a" value="- id: Long&#xa;- nombre: String&#xa;- email: String&#xa;- telefono: String" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;fontSize=11;" vertex="1" parent="m_cliente">
-          <mxGeometry y="30" width="260" height="72" as="geometry"/>
+        <mxCell id="m_cliente_a" value="-id: Long&#xa;-nombre: String&#xa;-email: String&#xa;-telefono: String" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=6;fontSize=11;" vertex="1" parent="m_cliente">
+          <mxGeometry y="26" width="210" height="68" as="geometry"/>
         </mxCell>
-        <mxCell id="m_cliente_line" value="" style="line;strokeColor=#82b366;fillColor=none;" vertex="1" parent="m_cliente">
-          <mxGeometry y="102" width="260" height="8" as="geometry"/>
+        <mxCell id="m_cliente_sep" value="" style="line;strokeColor=#d6b656;fillColor=none;" vertex="1" parent="m_cliente">
+          <mxGeometry y="94" width="210" height="8" as="geometry"/>
         </mxCell>
-        <mxCell id="m_cliente_m" value="+ Cliente()&#xa;+ Cliente(id, nombre, telefono, email)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;fontSize=11;" vertex="1" parent="m_cliente">
-          <mxGeometry y="110" width="260" height="40" as="geometry"/>
-        </mxCell>
-
-        <!-- Pedido -->
-        <mxCell id="m_pedido" value="«Entity»&#xa;Pedido" style="swimlane;fontStyle=1;align=center;startSize=30;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;" vertex="1" parent="1">
-          <mxGeometry x="580" y="20" width="260" height="260" as="geometry"/>
-        </mxCell>
-        <mxCell id="m_pedido_a" value="- id: Long&#xa;- mesaId: Long&#xa;- clienteId: Long&#xa;- sesionId: Long&#xa;- fechaHora: LocalDateTime&#xa;- total: Double&#xa;- pagoEfectivo: Double&#xa;- pagoTarjeta: Double&#xa;- estado: String&#xa;- numeroTicket: Integer&#xa;- mesaAnteriorId: Long" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;fontSize=11;" vertex="1" parent="m_pedido">
-          <mxGeometry y="30" width="260" height="198" as="geometry"/>
-        </mxCell>
-        <mxCell id="m_pedido_line" value="" style="line;strokeColor=#82b366;fillColor=none;" vertex="1" parent="m_pedido">
-          <mxGeometry y="228" width="260" height="8" as="geometry"/>
-        </mxCell>
-        <mxCell id="m_pedido_m" value="+ Pedido()" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;fontSize=11;" vertex="1" parent="m_pedido">
-          <mxGeometry y="236" width="260" height="24" as="geometry"/>
-        </mxCell>
-
-        <!-- Comanda -->
-        <mxCell id="m_comanda" value="«Entity»&#xa;Comanda" style="swimlane;fontStyle=1;align=center;startSize=30;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;" vertex="1" parent="1">
-          <mxGeometry x="860" y="20" width="260" height="222" as="geometry"/>
-        </mxCell>
-        <mxCell id="m_comanda_a" value="- id: Long&#xa;- pedidoId: Long&#xa;- tipoComandaId: Long&#xa;- estado: String&#xa;- comentarios: String&#xa;- nombrePlato: String&#xa;- cantidad: Integer&#xa;- creadoEn: LocalDateTime" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;fontSize=11;" vertex="1" parent="m_comanda">
-          <mxGeometry y="30" width="260" height="144" as="geometry"/>
-        </mxCell>
-        <mxCell id="m_comanda_line" value="" style="line;strokeColor=#82b366;fillColor=none;" vertex="1" parent="m_comanda">
-          <mxGeometry y="174" width="260" height="8" as="geometry"/>
-        </mxCell>
-        <mxCell id="m_comanda_m" value="+ Comanda()&#xa;~ preGuardar()" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;fontSize=11;" vertex="1" parent="m_comanda">
-          <mxGeometry y="182" width="260" height="40" as="geometry"/>
-        </mxCell>
-
-        <!-- LineaProducto -->
-        <mxCell id="m_lp" value="«Entity»&#xa;LineaProducto" style="swimlane;fontStyle=1;align=center;startSize=30;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;" vertex="1" parent="1">
-          <mxGeometry x="1140" y="20" width="260" height="170" as="geometry"/>
-        </mxCell>
-        <mxCell id="m_lp_a" value="- id: Long&#xa;- comandaId: Long&#xa;- productoId: Long&#xa;- cantidad: Integer&#xa;- subtotal: Double" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;fontSize=11;" vertex="1" parent="m_lp">
-          <mxGeometry y="30" width="260" height="90" as="geometry"/>
-        </mxCell>
-        <mxCell id="m_lp_line" value="" style="line;strokeColor=#82b366;fillColor=none;" vertex="1" parent="m_lp">
-          <mxGeometry y="120" width="260" height="8" as="geometry"/>
-        </mxCell>
-        <mxCell id="m_lp_m" value="+ LineaProducto()&#xa;+ LineaProducto(id, comandaId, productoId, cantidad, subtotal)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;fontSize=11;" vertex="1" parent="m_lp">
-          <mxGeometry y="128" width="260" height="42" as="geometry"/>
-        </mxCell>
-
-        <!-- Producto -->
-        <mxCell id="m_producto" value="«Entity»&#xa;Producto" style="swimlane;fontStyle=1;align=center;startSize=30;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;" vertex="1" parent="1">
-          <mxGeometry x="20" y="310" width="260" height="170" as="geometry"/>
-        </mxCell>
-        <mxCell id="m_producto_a" value="- id: Long&#xa;- nombre: String&#xa;- descripcion: String&#xa;- precio: Double&#xa;- tipoProductoId: Long" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;fontSize=11;" vertex="1" parent="m_producto">
-          <mxGeometry y="30" width="260" height="90" as="geometry"/>
-        </mxCell>
-        <mxCell id="m_producto_line" value="" style="line;strokeColor=#82b366;fillColor=none;" vertex="1" parent="m_producto">
-          <mxGeometry y="120" width="260" height="8" as="geometry"/>
-        </mxCell>
-        <mxCell id="m_producto_m" value="+ Producto()&#xa;+ Producto(id, nombre, precio, descripcion, tipoProductoId)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;fontSize=11;" vertex="1" parent="m_producto">
-          <mxGeometry y="128" width="260" height="42" as="geometry"/>
-        </mxCell>
-
-        <!-- TipoProducto -->
-        <mxCell id="m_tp" value="«Entity»&#xa;TipoProducto" style="swimlane;fontStyle=1;align=center;startSize=30;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;" vertex="1" parent="1">
-          <mxGeometry x="300" y="310" width="260" height="110" as="geometry"/>
-        </mxCell>
-        <mxCell id="m_tp_a" value="- id: Long&#xa;- nombre: String" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;fontSize=11;" vertex="1" parent="m_tp">
-          <mxGeometry y="30" width="260" height="36" as="geometry"/>
-        </mxCell>
-        <mxCell id="m_tp_line" value="" style="line;strokeColor=#82b366;fillColor=none;" vertex="1" parent="m_tp">
-          <mxGeometry y="66" width="260" height="8" as="geometry"/>
-        </mxCell>
-        <mxCell id="m_tp_m" value="+ TipoProducto()&#xa;+ TipoProducto(id, nombre)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;fontSize=11;" vertex="1" parent="m_tp">
-          <mxGeometry y="74" width="260" height="36" as="geometry"/>
-        </mxCell>
-
-        <!-- TipoComanda -->
-        <mxCell id="m_tc" value="«Entity»&#xa;TipoComanda" style="swimlane;fontStyle=1;align=center;startSize=30;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;" vertex="1" parent="1">
-          <mxGeometry x="580" y="310" width="260" height="110" as="geometry"/>
-        </mxCell>
-        <mxCell id="m_tc_a" value="- id: Long&#xa;- nombre: String" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;fontSize=11;" vertex="1" parent="m_tc">
-          <mxGeometry y="30" width="260" height="36" as="geometry"/>
-        </mxCell>
-        <mxCell id="m_tc_line" value="" style="line;strokeColor=#82b366;fillColor=none;" vertex="1" parent="m_tc">
-          <mxGeometry y="66" width="260" height="8" as="geometry"/>
-        </mxCell>
-        <mxCell id="m_tc_m" value="+ TipoComanda()&#xa;+ TipoComanda(id, nombre)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;fontSize=11;" vertex="1" parent="m_tc">
-          <mxGeometry y="74" width="260" height="36" as="geometry"/>
+        <mxCell id="m_cliente_m" value="+Cliente()&#xa;+Cliente(id,nombre,telefono,email)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=6;fontSize=11;" vertex="1" parent="m_cliente">
+          <mxGeometry y="102" width="210" height="32" as="geometry"/>
         </mxCell>
 
         <!-- Sesion -->
-        <mxCell id="m_sesion" value="«Entity»&#xa;Sesion" style="swimlane;fontStyle=1;align=center;startSize=30;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;" vertex="1" parent="1">
-          <mxGeometry x="860" y="310" width="260" height="148" as="geometry"/>
+        <mxCell id="m_sesion" value="Sesion" style="swimlane;fontStyle=1;align=center;startSize=26;fillColor=#FFE6CC;strokeColor=#d6b656;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="520" y="20" width="210" height="134" as="geometry"/>
         </mxCell>
-        <mxCell id="m_sesion_a" value="- id: Long&#xa;- apertura: LocalDateTime&#xa;- cierre: LocalDateTime&#xa;- montoInicial: Double&#xa;- estado: String" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;fontSize=11;" vertex="1" parent="m_sesion">
-          <mxGeometry y="30" width="260" height="90" as="geometry"/>
+        <mxCell id="m_sesion_a" value="-id: Long&#xa;-apertura: LocalDateTime&#xa;-cierre: LocalDateTime&#xa;-montoInicial: Double&#xa;-estado: String" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=6;fontSize=11;" vertex="1" parent="m_sesion">
+          <mxGeometry y="26" width="210" height="84" as="geometry"/>
         </mxCell>
-        <mxCell id="m_sesion_line" value="" style="line;strokeColor=#82b366;fillColor=none;" vertex="1" parent="m_sesion">
-          <mxGeometry y="120" width="260" height="8" as="geometry"/>
+        <mxCell id="m_sesion_sep" value="" style="line;strokeColor=#d6b656;fillColor=none;" vertex="1" parent="m_sesion">
+          <mxGeometry y="110" width="210" height="8" as="geometry"/>
         </mxCell>
-        <mxCell id="m_sesion_m" value="+ Sesion()" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;fontSize=11;" vertex="1" parent="m_sesion">
-          <mxGeometry y="128" width="260" height="20" as="geometry"/>
+        <mxCell id="m_sesion_m" value="+Sesion()" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=6;fontSize=11;" vertex="1" parent="m_sesion">
+          <mxGeometry y="118" width="210" height="16" as="geometry"/>
         </mxCell>
 
         <!-- Usuario -->
-        <mxCell id="m_usuario" value="«Entity»&#xa;Usuario" style="swimlane;fontStyle=1;align=center;startSize=30;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;" vertex="1" parent="1">
-          <mxGeometry x="1140" y="310" width="260" height="148" as="geometry"/>
+        <mxCell id="m_usuario" value="Usuario" style="swimlane;fontStyle=1;align=center;startSize=26;fillColor=#FFE6CC;strokeColor=#d6b656;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="760" y="20" width="210" height="134" as="geometry"/>
         </mxCell>
-        <mxCell id="m_usuario_a" value="- id: Long&#xa;- username: String&#xa;- password: String&#xa;- nombre: String&#xa;- rol: String" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;fontSize=11;" vertex="1" parent="m_usuario">
-          <mxGeometry y="30" width="260" height="90" as="geometry"/>
+        <mxCell id="m_usuario_a" value="-id: Long&#xa;-username: String&#xa;-password: String&#xa;-nombre: String&#xa;-rol: String" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=6;fontSize=11;" vertex="1" parent="m_usuario">
+          <mxGeometry y="26" width="210" height="84" as="geometry"/>
         </mxCell>
-        <mxCell id="m_usuario_line" value="" style="line;strokeColor=#82b366;fillColor=none;" vertex="1" parent="m_usuario">
-          <mxGeometry y="120" width="260" height="8" as="geometry"/>
+        <mxCell id="m_usuario_sep" value="" style="line;strokeColor=#d6b656;fillColor=none;" vertex="1" parent="m_usuario">
+          <mxGeometry y="110" width="210" height="8" as="geometry"/>
         </mxCell>
-        <mxCell id="m_usuario_m" value="+ Usuario()" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;fontSize=11;" vertex="1" parent="m_usuario">
-          <mxGeometry y="128" width="260" height="20" as="geometry"/>
-        </mxCell>
-
-        <!-- ============================================================ -->
-        <!-- CAPA: REPOSITORIOS                                            -->
-        <!-- ============================================================ -->
-
-        <!-- MesaDAO -->
-        <mxCell id="r_mesa" value="«Repository»&#xa;MesaDAO" style="swimlane;fontStyle=1;align=center;startSize=30;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" vertex="1" parent="1">
-          <mxGeometry x="20" y="530" width="300" height="90" as="geometry"/>
-        </mxCell>
-        <mxCell id="r_mesa_m" value="+ existsByClienteId..AndIdNot(clienteId, fecha, estado, id): boolean&#xa;+ existsByClienteId..(clienteId, fecha, estado): boolean" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;fontSize=11;" vertex="1" parent="r_mesa">
-          <mxGeometry y="30" width="300" height="60" as="geometry"/>
+        <mxCell id="m_usuario_m" value="+Usuario()" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=6;fontSize=11;" vertex="1" parent="m_usuario">
+          <mxGeometry y="118" width="210" height="16" as="geometry"/>
         </mxCell>
 
-        <!-- ClienteDAO -->
-        <mxCell id="r_cliente" value="«Repository»&#xa;ClienteDAO" style="swimlane;fontStyle=1;align=center;startSize=30;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" vertex="1" parent="1">
-          <mxGeometry x="340" y="530" width="280" height="90" as="geometry"/>
+        <!-- ══════════════════════════════════════════════════
+             FILA 2 — Pedido (centro)
+        ══════════════════════════════════════════════════ -->
+
+        <!-- Pedido -->
+        <mxCell id="m_pedido" value="Pedido" style="swimlane;fontStyle=1;align=center;startSize=26;fillColor=#FFE6CC;strokeColor=#d6b656;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="280" y="310" width="240" height="252" as="geometry"/>
         </mxCell>
-        <mxCell id="r_cliente_m" value="+ existsByEmail(email): boolean&#xa;+ existsByEmailAndIdNot(email, id): boolean&#xa;+ findByEmail(email): Cliente" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;fontSize=11;" vertex="1" parent="r_cliente">
-          <mxGeometry y="30" width="280" height="60" as="geometry"/>
+        <mxCell id="m_pedido_a" value="-id: Long&#xa;-mesaId: Long&#xa;-clienteId: Long&#xa;-sesionId: Long&#xa;-fechaHora: LocalDateTime&#xa;-total: Double&#xa;-pagoEfectivo: Double&#xa;-pagoTarjeta: Double&#xa;-estado: String&#xa;-numeroTicket: Integer&#xa;-mesaAnteriorId: Long" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=6;fontSize=11;" vertex="1" parent="m_pedido">
+          <mxGeometry y="26" width="240" height="194" as="geometry"/>
+        </mxCell>
+        <mxCell id="m_pedido_sep" value="" style="line;strokeColor=#d6b656;fillColor=none;" vertex="1" parent="m_pedido">
+          <mxGeometry y="220" width="240" height="8" as="geometry"/>
+        </mxCell>
+        <mxCell id="m_pedido_m" value="+Pedido()" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=6;fontSize=11;" vertex="1" parent="m_pedido">
+          <mxGeometry y="228" width="240" height="24" as="geometry"/>
         </mxCell>
 
-        <!-- PedidoDAO -->
-        <mxCell id="r_pedido" value="«Repository»&#xa;PedidoDAO" style="swimlane;fontStyle=1;align=center;startSize=30;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" vertex="1" parent="1">
-          <mxGeometry x="640" y="530" width="280" height="80" as="geometry"/>
+        <!-- ══════════════════════════════════════════════════
+             FILA 3 — Comanda · TipoComanda
+        ══════════════════════════════════════════════════ -->
+
+        <!-- Comanda -->
+        <mxCell id="m_comanda" value="Comanda" style="swimlane;fontStyle=1;align=center;startSize=26;fillColor=#FFE6CC;strokeColor=#d6b656;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="150" y="640" width="230" height="210" as="geometry"/>
         </mxCell>
-        <mxCell id="r_pedido_m" value="+ findBySesionId(sesionId): List&lt;Pedido&gt;&#xa;+ findTopBySesionIdOrderByNumeroTicketDesc(sesionId)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;fontSize=11;" vertex="1" parent="r_pedido">
-          <mxGeometry y="30" width="280" height="50" as="geometry"/>
+        <mxCell id="m_comanda_a" value="-id: Long&#xa;-pedidoId: Long&#xa;-tipoComandaId: Long&#xa;-estado: String&#xa;-comentarios: String&#xa;-nombrePlato: String&#xa;-cantidad: Integer&#xa;-creadoEn: LocalDateTime" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=6;fontSize=11;" vertex="1" parent="m_comanda">
+          <mxGeometry y="26" width="230" height="132" as="geometry"/>
+        </mxCell>
+        <mxCell id="m_comanda_sep" value="" style="line;strokeColor=#d6b656;fillColor=none;" vertex="1" parent="m_comanda">
+          <mxGeometry y="158" width="230" height="8" as="geometry"/>
+        </mxCell>
+        <mxCell id="m_comanda_m" value="+Comanda()&#xa;~preGuardar()" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=6;fontSize=11;" vertex="1" parent="m_comanda">
+          <mxGeometry y="166" width="230" height="44" as="geometry"/>
         </mxCell>
 
-        <!-- ComandaDAO -->
-        <mxCell id="r_comanda" value="«Repository»&#xa;ComandaDAO" style="swimlane;fontStyle=1;align=center;startSize=30;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" vertex="1" parent="1">
-          <mxGeometry x="940" y="530" width="240" height="65" as="geometry"/>
+        <!-- TipoComanda -->
+        <mxCell id="m_tc" value="TipoComanda" style="swimlane;fontStyle=1;align=center;startSize=26;fillColor=#FFE6CC;strokeColor=#d6b656;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="420" y="640" width="200" height="98" as="geometry"/>
         </mxCell>
-        <mxCell id="r_comanda_m" value="+ findByPedidoId(pedidoId): List&lt;Comanda&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;fontSize=11;" vertex="1" parent="r_comanda">
-          <mxGeometry y="30" width="240" height="35" as="geometry"/>
+        <mxCell id="m_tc_a" value="-id: Long&#xa;-nombre: String" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=6;fontSize=11;" vertex="1" parent="m_tc">
+          <mxGeometry y="26" width="200" height="34" as="geometry"/>
         </mxCell>
-
-        <!-- LineaProductoDAO -->
-        <mxCell id="r_lp" value="«Repository»&#xa;LineaProductoDAO" style="swimlane;fontStyle=1;align=center;startSize=30;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" vertex="1" parent="1">
-          <mxGeometry x="1200" y="530" width="210" height="55" as="geometry"/>
+        <mxCell id="m_tc_sep" value="" style="line;strokeColor=#d6b656;fillColor=none;" vertex="1" parent="m_tc">
+          <mxGeometry y="60" width="200" height="8" as="geometry"/>
         </mxCell>
-        <mxCell id="r_lp_m" value="(hereda JpaRepository)" style="text;strokeColor=none;fillColor=none;align=center;verticalAlign=top;fontSize=11;fontStyle=2;" vertex="1" parent="r_lp">
-          <mxGeometry y="30" width="210" height="25" as="geometry"/>
+        <mxCell id="m_tc_m" value="+TipoComanda()&#xa;+TipoComanda(id,nombre)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=6;fontSize=11;" vertex="1" parent="m_tc">
+          <mxGeometry y="68" width="200" height="30" as="geometry"/>
         </mxCell>
 
-        <!-- ProductoDAO -->
-        <mxCell id="r_producto" value="«Repository»&#xa;ProductoDAO" style="swimlane;fontStyle=1;align=center;startSize=30;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" vertex="1" parent="1">
-          <mxGeometry x="20" y="640" width="280" height="80" as="geometry"/>
+        <!-- ══════════════════════════════════════════════════
+             FILA 4 — LineaProducto · Producto · TipoProducto
+        ══════════════════════════════════════════════════ -->
+
+        <!-- LineaProducto -->
+        <mxCell id="m_lp" value="LineaProducto" style="swimlane;fontStyle=1;align=center;startSize=26;fillColor=#FFE6CC;strokeColor=#d6b656;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="20" y="940" width="230" height="156" as="geometry"/>
         </mxCell>
-        <mxCell id="r_producto_m" value="+ findByNombre(nombre): Producto&#xa;+ existsByNombre(nombre): boolean&#xa;+ existsByNombreAndIdNot(nombre, id): boolean" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;fontSize=11;" vertex="1" parent="r_producto">
-          <mxGeometry y="30" width="280" height="50" as="geometry"/>
+        <mxCell id="m_lp_a" value="-id: Long&#xa;-comandaId: Long&#xa;-productoId: Long&#xa;-cantidad: Integer&#xa;-subtotal: Double" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=6;fontSize=11;" vertex="1" parent="m_lp">
+          <mxGeometry y="26" width="230" height="84" as="geometry"/>
+        </mxCell>
+        <mxCell id="m_lp_sep" value="" style="line;strokeColor=#d6b656;fillColor=none;" vertex="1" parent="m_lp">
+          <mxGeometry y="110" width="230" height="8" as="geometry"/>
+        </mxCell>
+        <mxCell id="m_lp_m" value="+LineaProducto()&#xa;+LineaProducto(id,comandaId,productoId,cantidad,subtotal)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=6;fontSize=11;" vertex="1" parent="m_lp">
+          <mxGeometry y="118" width="230" height="38" as="geometry"/>
         </mxCell>
 
-        <!-- SesionDAO -->
-        <mxCell id="r_sesion" value="«Repository»&#xa;SesionDAO" style="swimlane;fontStyle=1;align=center;startSize=30;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" vertex="1" parent="1">
-          <mxGeometry x="320" y="640" width="240" height="65" as="geometry"/>
+        <!-- Producto -->
+        <mxCell id="m_producto" value="Producto" style="swimlane;fontStyle=1;align=center;startSize=26;fillColor=#FFE6CC;strokeColor=#d6b656;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="290" y="940" width="220" height="156" as="geometry"/>
         </mxCell>
-        <mxCell id="r_sesion_m" value="+ findByEstado(estado): Optional&lt;Sesion&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;fontSize=11;" vertex="1" parent="r_sesion">
-          <mxGeometry y="30" width="240" height="35" as="geometry"/>
+        <mxCell id="m_producto_a" value="-id: Long&#xa;-nombre: String&#xa;-descripcion: String&#xa;-precio: Double&#xa;-tipoProductoId: Long" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=6;fontSize=11;" vertex="1" parent="m_producto">
+          <mxGeometry y="26" width="220" height="84" as="geometry"/>
         </mxCell>
-
-        <!-- TipoComandaDAO -->
-        <mxCell id="r_tcDAO" value="«Repository»&#xa;TipoComandaDAO" style="swimlane;fontStyle=1;align=center;startSize=30;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" vertex="1" parent="1">
-          <mxGeometry x="580" y="640" width="210" height="55" as="geometry"/>
+        <mxCell id="m_producto_sep" value="" style="line;strokeColor=#d6b656;fillColor=none;" vertex="1" parent="m_producto">
+          <mxGeometry y="110" width="220" height="8" as="geometry"/>
         </mxCell>
-        <mxCell id="r_tcDAO_m" value="(hereda JpaRepository)" style="text;strokeColor=none;fillColor=none;align=center;verticalAlign=top;fontSize=11;fontStyle=2;" vertex="1" parent="r_tcDAO">
-          <mxGeometry y="30" width="210" height="25" as="geometry"/>
+        <mxCell id="m_producto_m" value="+Producto()&#xa;+Producto(id,nombre,precio,descripcion,tipoProductoId)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=6;fontSize=11;" vertex="1" parent="m_producto">
+          <mxGeometry y="118" width="220" height="38" as="geometry"/>
         </mxCell>
 
-        <!-- TipoProductoDAO -->
-        <mxCell id="r_tpDAO" value="«Repository»&#xa;TipoProductoDAO" style="swimlane;fontStyle=1;align=center;startSize=30;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" vertex="1" parent="1">
-          <mxGeometry x="810" y="640" width="210" height="55" as="geometry"/>
+        <!-- TipoProducto -->
+        <mxCell id="m_tp" value="TipoProducto" style="swimlane;fontStyle=1;align=center;startSize=26;fillColor=#FFE6CC;strokeColor=#d6b656;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="550" y="940" width="200" height="98" as="geometry"/>
         </mxCell>
-        <mxCell id="r_tpDAO_m" value="(hereda JpaRepository)" style="text;strokeColor=none;fillColor=none;align=center;verticalAlign=top;fontSize=11;fontStyle=2;" vertex="1" parent="r_tpDAO">
-          <mxGeometry y="30" width="210" height="25" as="geometry"/>
+        <mxCell id="m_tp_a" value="-id: Long&#xa;-nombre: String" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=6;fontSize=11;" vertex="1" parent="m_tp">
+          <mxGeometry y="26" width="200" height="34" as="geometry"/>
         </mxCell>
-
-        <!-- UsuarioDAO -->
-        <mxCell id="r_usuario" value="«Repository»&#xa;UsuarioDAO" style="swimlane;fontStyle=1;align=center;startSize=30;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" vertex="1" parent="1">
-          <mxGeometry x="1040" y="640" width="240" height="65" as="geometry"/>
+        <mxCell id="m_tp_sep" value="" style="line;strokeColor=#d6b656;fillColor=none;" vertex="1" parent="m_tp">
+          <mxGeometry y="60" width="200" height="8" as="geometry"/>
         </mxCell>
-        <mxCell id="r_usuario_m" value="+ findByUsername(username): Optional&lt;Usuario&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;fontSize=11;" vertex="1" parent="r_usuario">
-          <mxGeometry y="30" width="240" height="35" as="geometry"/>
+        <mxCell id="m_tp_m" value="+TipoProducto()&#xa;+TipoProducto(id,nombre)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=6;fontSize=11;" vertex="1" parent="m_tp">
+          <mxGeometry y="68" width="200" height="30" as="geometry"/>
         </mxCell>
 
-        <!-- ============================================================ -->
-        <!-- CAPA: SERVICIOS                                               -->
-        <!-- ============================================================ -->
+        <!-- ══════════════════════════════════════════════════
+             RELACIONES UML
+        ══════════════════════════════════════════════════ -->
 
-        <!-- MesaService -->
-        <mxCell id="s_mesa" value="«Service»&#xa;MesaService" style="swimlane;fontStyle=1;align=center;startSize=30;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=12;" vertex="1" parent="1">
-          <mxGeometry x="20" y="770" width="270" height="186" as="geometry"/>
-        </mxCell>
-        <mxCell id="s_mesa_a" value="- mesaDAO: MesaDAO&#xa;- LIMITE_MESAS: int = 20" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;fontSize=11;" vertex="1" parent="s_mesa">
-          <mxGeometry y="30" width="270" height="36" as="geometry"/>
-        </mxCell>
-        <mxCell id="s_mesa_line" value="" style="line;strokeColor=#d6b656;fillColor=none;" vertex="1" parent="s_mesa">
-          <mxGeometry y="66" width="270" height="8" as="geometry"/>
-        </mxCell>
-        <mxCell id="s_mesa_m" value="+ obtenerTodas(): List&lt;Mesa&gt;&#xa;+ obtenerPorId(id: Long): Mesa&#xa;+ guardarMesa(mesa: Mesa): boolean&#xa;+ borrarMesa(id: Long)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;fontSize=11;" vertex="1" parent="s_mesa">
-          <mxGeometry y="74" width="270" height="112" as="geometry"/>
-        </mxCell>
-
-        <!-- ClienteService -->
-        <mxCell id="s_cliente" value="«Service»&#xa;ClienteService" style="swimlane;fontStyle=1;align=center;startSize=30;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=12;" vertex="1" parent="1">
-          <mxGeometry x="310" y="770" width="270" height="212" as="geometry"/>
-        </mxCell>
-        <mxCell id="s_cliente_a" value="- clienteDAO: ClienteDAO" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;fontSize=11;" vertex="1" parent="s_cliente">
-          <mxGeometry y="30" width="270" height="18" as="geometry"/>
-        </mxCell>
-        <mxCell id="s_cliente_line" value="" style="line;strokeColor=#d6b656;fillColor=none;" vertex="1" parent="s_cliente">
-          <mxGeometry y="48" width="270" height="8" as="geometry"/>
-        </mxCell>
-        <mxCell id="s_cliente_m" value="+ obtenerTodos(): List&lt;Cliente&gt;&#xa;+ obtenerPorId(id: Long): Cliente&#xa;+ obtenerPorEmail(email: String): Cliente&#xa;+ guardarCliente(c: Cliente): boolean&#xa;+ actualizarCliente(c: Cliente): boolean&#xa;+ borrarCliente(id: Long): boolean&#xa;- validar(c: Cliente)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;fontSize=11;" vertex="1" parent="s_cliente">
-          <mxGeometry y="56" width="270" height="156" as="geometry"/>
-        </mxCell>
-
-        <!-- PedidoService -->
-        <mxCell id="s_pedido" value="«Service»&#xa;PedidoService" style="swimlane;fontStyle=1;align=center;startSize=30;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=12;" vertex="1" parent="1">
-          <mxGeometry x="600" y="770" width="270" height="212" as="geometry"/>
-        </mxCell>
-        <mxCell id="s_pedido_a" value="- pedidoDAO: PedidoDAO" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;fontSize=11;" vertex="1" parent="s_pedido">
-          <mxGeometry y="30" width="270" height="18" as="geometry"/>
-        </mxCell>
-        <mxCell id="s_pedido_line" value="" style="line;strokeColor=#d6b656;fillColor=none;" vertex="1" parent="s_pedido">
-          <mxGeometry y="48" width="270" height="8" as="geometry"/>
-        </mxCell>
-        <mxCell id="s_pedido_m" value="+ obtenerTodos(): List&lt;Pedido&gt;&#xa;+ obtenerPorId(id: Long): Pedido&#xa;+ guardarPedido(p: Pedido): Pedido&#xa;+ borrarPedido(id: Long)&#xa;+ obtenerPedidosPorSesion(sesionId): List&lt;Pedido&gt;&#xa;+ obtenerUltimoDeSesion(sesionId): Optional&lt;Pedido&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;fontSize=11;" vertex="1" parent="s_pedido">
-          <mxGeometry y="56" width="270" height="156" as="geometry"/>
-        </mxCell>
-
-        <!-- ComandaService -->
-        <mxCell id="s_comanda" value="«Service»&#xa;ComandaService" style="swimlane;fontStyle=1;align=center;startSize=30;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=12;" vertex="1" parent="1">
-          <mxGeometry x="890" y="770" width="270" height="210" as="geometry"/>
-        </mxCell>
-        <mxCell id="s_comanda_a" value="- comandaDAO: ComandaDAO&#xa;- LIMITE_COMANDAS: int = 1000" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;fontSize=11;" vertex="1" parent="s_comanda">
-          <mxGeometry y="30" width="270" height="36" as="geometry"/>
-        </mxCell>
-        <mxCell id="s_comanda_line" value="" style="line;strokeColor=#d6b656;fillColor=none;" vertex="1" parent="s_comanda">
-          <mxGeometry y="66" width="270" height="8" as="geometry"/>
-        </mxCell>
-        <mxCell id="s_comanda_m" value="+ obtenerTodas(): List&lt;Comanda&gt;&#xa;+ obtenerPorId(id: Long): Comanda&#xa;+ guardarComanda(c: Comanda): boolean&#xa;+ borrarComanda(id: Long)&#xa;+ obtenerPorPedidoId(pedidoId: Long): List&lt;Comanda&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;fontSize=11;" vertex="1" parent="s_comanda">
-          <mxGeometry y="74" width="270" height="136" as="geometry"/>
-        </mxCell>
-
-        <!-- ProductoService -->
-        <mxCell id="s_producto" value="«Service»&#xa;ProductoService" style="swimlane;fontStyle=1;align=center;startSize=30;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=12;" vertex="1" parent="1">
-          <mxGeometry x="1180" y="770" width="270" height="200" as="geometry"/>
-        </mxCell>
-        <mxCell id="s_producto_a" value="- productoDAO: ProductoDAO&#xa;- LIMITE_PRODUCTOS: int = 500" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;fontSize=11;" vertex="1" parent="s_producto">
-          <mxGeometry y="30" width="270" height="36" as="geometry"/>
-        </mxCell>
-        <mxCell id="s_producto_line" value="" style="line;strokeColor=#d6b656;fillColor=none;" vertex="1" parent="s_producto">
-          <mxGeometry y="66" width="270" height="8" as="geometry"/>
-        </mxCell>
-        <mxCell id="s_producto_m" value="+ obtenerTodos(): List&lt;Producto&gt;&#xa;+ obtenerPorId(id: Long): Producto&#xa;+ guardarProducto(p: Producto): boolean&#xa;+ borrarProducto(id: Long)&#xa;+ obtenerPorNombre(nombre: String): Producto" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;fontSize=11;" vertex="1" parent="s_producto">
-          <mxGeometry y="74" width="270" height="126" as="geometry"/>
-        </mxCell>
-
-        <!-- LineaProductoService -->
-        <mxCell id="s_lp" value="«Service»&#xa;LineaProductoService" style="swimlane;fontStyle=1;align=center;startSize=30;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=12;" vertex="1" parent="1">
-          <mxGeometry x="20" y="1010" width="270" height="176" as="geometry"/>
-        </mxCell>
-        <mxCell id="s_lp_a" value="- lineaProductoDAO: LineaProductoDAO" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;fontSize=11;" vertex="1" parent="s_lp">
-          <mxGeometry y="30" width="270" height="18" as="geometry"/>
-        </mxCell>
-        <mxCell id="s_lp_line" value="" style="line;strokeColor=#d6b656;fillColor=none;" vertex="1" parent="s_lp">
-          <mxGeometry y="48" width="270" height="8" as="geometry"/>
-        </mxCell>
-        <mxCell id="s_lp_m" value="+ obtenerTodas(): List&lt;LineaProducto&gt;&#xa;+ obtenerPorId(id: Long): LineaProducto&#xa;+ guardarLinea(l: LineaProducto): boolean&#xa;+ actualizarLinea(l: LineaProducto): boolean&#xa;+ borrarLinea(id: Long): boolean" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;fontSize=11;" vertex="1" parent="s_lp">
-          <mxGeometry y="56" width="270" height="120" as="geometry"/>
-        </mxCell>
-
-        <!-- SesionService -->
-        <mxCell id="s_sesion" value="«Service»&#xa;SesionService" style="swimlane;fontStyle=1;align=center;startSize=30;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=12;" vertex="1" parent="1">
-          <mxGeometry x="310" y="1010" width="270" height="120" as="geometry"/>
-        </mxCell>
-        <mxCell id="s_sesion_a" value="- sesionDAO: SesionDAO" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;fontSize=11;" vertex="1" parent="s_sesion">
-          <mxGeometry y="30" width="270" height="18" as="geometry"/>
-        </mxCell>
-        <mxCell id="s_sesion_line" value="" style="line;strokeColor=#d6b656;fillColor=none;" vertex="1" parent="s_sesion">
-          <mxGeometry y="48" width="270" height="8" as="geometry"/>
-        </mxCell>
-        <mxCell id="s_sesion_m" value="+ obtenerSesionActiva(): Sesion&#xa;+ abrirSesion(montoInicial: Double): Sesion&#xa;+ cerrarSesion(s: Sesion)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;fontSize=11;" vertex="1" parent="s_sesion">
-          <mxGeometry y="56" width="270" height="64" as="geometry"/>
-        </mxCell>
-
-        <!-- TipoComandaService -->
-        <mxCell id="s_tc" value="«Service»&#xa;TipoComandaService" style="swimlane;fontStyle=1;align=center;startSize=30;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=12;" vertex="1" parent="1">
-          <mxGeometry x="600" y="1010" width="270" height="176" as="geometry"/>
-        </mxCell>
-        <mxCell id="s_tc_a" value="- tipoComandaDAO: TipoComandaDAO" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;fontSize=11;" vertex="1" parent="s_tc">
-          <mxGeometry y="30" width="270" height="18" as="geometry"/>
-        </mxCell>
-        <mxCell id="s_tc_line" value="" style="line;strokeColor=#d6b656;fillColor=none;" vertex="1" parent="s_tc">
-          <mxGeometry y="48" width="270" height="8" as="geometry"/>
-        </mxCell>
-        <mxCell id="s_tc_m" value="+ obtenerTodos(): List&lt;TipoComanda&gt;&#xa;+ obtenerPorId(id: Long): TipoComanda&#xa;+ guardarTipoComanda(tc: TipoComanda): boolean&#xa;+ actualizarTipoComanda(tc: TipoComanda): boolean&#xa;+ borrarTipoComanda(id: Long): boolean" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;fontSize=11;" vertex="1" parent="s_tc">
-          <mxGeometry y="56" width="270" height="120" as="geometry"/>
-        </mxCell>
-
-        <!-- ============================================================ -->
-        <!-- CAPA: CONTROLADORES                                           -->
-        <!-- ============================================================ -->
-
-        <!-- MesaWebController -->
-        <mxCell id="c_mesa" value="«Controller»&#xa;MesaWebController" style="swimlane;fontStyle=1;align=center;startSize=30;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=12;" vertex="1" parent="1">
-          <mxGeometry x="20" y="1240" width="280" height="198" as="geometry"/>
-        </mxCell>
-        <mxCell id="c_mesa_a" value="- mesaService: MesaService&#xa;- clienteService: ClienteService" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;fontSize=11;" vertex="1" parent="c_mesa">
-          <mxGeometry y="30" width="280" height="36" as="geometry"/>
-        </mxCell>
-        <mxCell id="c_mesa_line" value="" style="line;strokeColor=#d79b00;fillColor=none;" vertex="1" parent="c_mesa">
-          <mxGeometry y="66" width="280" height="8" as="geometry"/>
-        </mxCell>
-        <mxCell id="c_mesa_m" value="+ listarMesas(model): String&#xa;+ mostrarFormularioNuevo(model): String&#xa;+ mostrarFormularioEditar(id, model): String&#xa;+ guardarMesa(mesa, model): String&#xa;+ borrarMesa(id): String" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;fontSize=11;" vertex="1" parent="c_mesa">
-          <mxGeometry y="74" width="280" height="124" as="geometry"/>
-        </mxCell>
-
-        <!-- ClienteWebController -->
-        <mxCell id="c_cliente" value="«Controller»&#xa;ClienteWebController" style="swimlane;fontStyle=1;align=center;startSize=30;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=12;" vertex="1" parent="1">
-          <mxGeometry x="320" y="1240" width="280" height="180" as="geometry"/>
-        </mxCell>
-        <mxCell id="c_cliente_a" value="- clienteService: ClienteService" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;fontSize=11;" vertex="1" parent="c_cliente">
-          <mxGeometry y="30" width="280" height="18" as="geometry"/>
-        </mxCell>
-        <mxCell id="c_cliente_line" value="" style="line;strokeColor=#d79b00;fillColor=none;" vertex="1" parent="c_cliente">
-          <mxGeometry y="48" width="280" height="8" as="geometry"/>
-        </mxCell>
-        <mxCell id="c_cliente_m" value="+ listarClientes(model): String&#xa;+ mostrarFormularioNuevo(model): String&#xa;+ mostrarFormularioEditar(id, model): String&#xa;+ guardarCliente(cliente, model): String&#xa;+ borrarCliente(id): String" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;fontSize=11;" vertex="1" parent="c_cliente">
-          <mxGeometry y="56" width="280" height="124" as="geometry"/>
-        </mxCell>
-
-        <!-- PedidoWebController -->
-        <mxCell id="c_pedido" value="«Controller»&#xa;PedidoWebController" style="swimlane;fontStyle=1;align=center;startSize=30;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=12;" vertex="1" parent="1">
-          <mxGeometry x="620" y="1240" width="280" height="310" as="geometry"/>
-        </mxCell>
-        <mxCell id="c_pedido_a" value="- pedidoService: PedidoService&#xa;- mesaService: MesaService&#xa;- clienteService: ClienteService&#xa;- comandaService: ComandaService&#xa;- sesionService: SesionService&#xa;- productoService: ProductoService" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;fontSize=11;" vertex="1" parent="c_pedido">
-          <mxGeometry y="30" width="280" height="108" as="geometry"/>
-        </mxCell>
-        <mxCell id="c_pedido_line" value="" style="line;strokeColor=#d79b00;fillColor=none;" vertex="1" parent="c_pedido">
-          <mxGeometry y="138" width="280" height="8" as="geometry"/>
-        </mxCell>
-        <mxCell id="c_pedido_m" value="+ listarPedidos(model): String&#xa;+ mostrarFormNuevo(model): String&#xa;+ guardarPedido(pedido): String&#xa;+ mostrarFormEditar(id, model): String&#xa;+ guardarEdicion(id, params): String&#xa;+ cobrar(id, model): String&#xa;+ procesarCobro(params): String&#xa;+ verTicket(id, model): String&#xa;+ borrarPedido(id): String" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;fontSize=11;" vertex="1" parent="c_pedido">
-          <mxGeometry y="146" width="280" height="164" as="geometry"/>
-        </mxCell>
-
-        <!-- ProductoWebController -->
-        <mxCell id="c_producto" value="«Controller»&#xa;ProductoWebController" style="swimlane;fontStyle=1;align=center;startSize=30;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=12;" vertex="1" parent="1">
-          <mxGeometry x="920" y="1240" width="280" height="180" as="geometry"/>
-        </mxCell>
-        <mxCell id="c_producto_a" value="- productoService: ProductoService" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;fontSize=11;" vertex="1" parent="c_producto">
-          <mxGeometry y="30" width="280" height="18" as="geometry"/>
-        </mxCell>
-        <mxCell id="c_producto_line" value="" style="line;strokeColor=#d79b00;fillColor=none;" vertex="1" parent="c_producto">
-          <mxGeometry y="48" width="280" height="8" as="geometry"/>
-        </mxCell>
-        <mxCell id="c_producto_m" value="+ listarProductos(model): String&#xa;+ mostrarFormNuevo(model): String&#xa;+ mostrarFormEditar(id, model): String&#xa;+ guardarProducto(producto, model): String&#xa;+ borrarProducto(id): String" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;fontSize=11;" vertex="1" parent="c_producto">
-          <mxGeometry y="56" width="280" height="124" as="geometry"/>
-        </mxCell>
-
-        <!-- ReservaWebController -->
-        <mxCell id="c_reserva" value="«RestController»&#xa;ReservaWebController" style="swimlane;fontStyle=1;align=center;startSize=30;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=12;" vertex="1" parent="1">
-          <mxGeometry x="1220" y="1240" width="250" height="120" as="geometry"/>
-        </mxCell>
-        <mxCell id="c_reserva_a" value="- clienteService: ClienteService&#xa;- mesaService: MesaService" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;fontSize=11;" vertex="1" parent="c_reserva">
-          <mxGeometry y="30" width="250" height="36" as="geometry"/>
-        </mxCell>
-        <mxCell id="c_reserva_line" value="" style="line;strokeColor=#d79b00;fillColor=none;" vertex="1" parent="c_reserva">
-          <mxGeometry y="66" width="250" height="8" as="geometry"/>
-        </mxCell>
-        <mxCell id="c_reserva_m" value="+ crearReserva(params): ResponseEntity" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;fontSize=11;" vertex="1" parent="c_reserva">
-          <mxGeometry y="74" width="250" height="46" as="geometry"/>
-        </mxCell>
-
-        <!-- CierreWebController -->
-        <mxCell id="c_cierre" value="«Controller»&#xa;CierreWebController" style="swimlane;fontStyle=1;align=center;startSize=30;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=12;" vertex="1" parent="1">
-          <mxGeometry x="20" y="1580" width="280" height="172" as="geometry"/>
-        </mxCell>
-        <mxCell id="c_cierre_a" value="- pedidoService: PedidoService&#xa;- comandaService: ComandaService&#xa;- sesionService: SesionService" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;fontSize=11;" vertex="1" parent="c_cierre">
-          <mxGeometry y="30" width="280" height="54" as="geometry"/>
-        </mxCell>
-        <mxCell id="c_cierre_line" value="" style="line;strokeColor=#d79b00;fillColor=none;" vertex="1" parent="c_cierre">
-          <mxGeometry y="84" width="280" height="8" as="geometry"/>
-        </mxCell>
-        <mxCell id="c_cierre_m" value="+ verCierreDeCaja(model): String&#xa;+ finalizarSesion(sesionId): String&#xa;+ iniciarSesion(montoInicial): String" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;fontSize=11;" vertex="1" parent="c_cierre">
-          <mxGeometry y="92" width="280" height="80" as="geometry"/>
-        </mxCell>
-
-        <!-- ============================================================ -->
-        <!-- CAPA: SEGURIDAD                                               -->
-        <!-- ============================================================ -->
-
-        <!-- DataInitializer -->
-        <mxCell id="sec_di" value="«Component»&#xa;DataInitializer" style="swimlane;fontStyle=1;align=center;startSize=30;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=12;" vertex="1" parent="1">
-          <mxGeometry x="340" y="1580" width="270" height="120" as="geometry"/>
-        </mxCell>
-        <mxCell id="sec_di_a" value="- usuarioDAO: UsuarioDAO&#xa;- passwordEncoder: PasswordEncoder" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;fontSize=11;" vertex="1" parent="sec_di">
-          <mxGeometry y="30" width="270" height="36" as="geometry"/>
-        </mxCell>
-        <mxCell id="sec_di_line" value="" style="line;strokeColor=#9673a6;fillColor=none;" vertex="1" parent="sec_di">
-          <mxGeometry y="66" width="270" height="8" as="geometry"/>
-        </mxCell>
-        <mxCell id="sec_di_m" value="+ run(args: String...)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;fontSize=11;" vertex="1" parent="sec_di">
-          <mxGeometry y="74" width="270" height="46" as="geometry"/>
-        </mxCell>
-
-        <!-- UsuarioDetailsService -->
-        <mxCell id="sec_uds" value="«Service»&#xa;UsuarioDetailsService" style="swimlane;fontStyle=1;align=center;startSize=30;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=12;" vertex="1" parent="1">
-          <mxGeometry x="630" y="1580" width="270" height="100" as="geometry"/>
-        </mxCell>
-        <mxCell id="sec_uds_a" value="- usuarioDAO: UsuarioDAO" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;fontSize=11;" vertex="1" parent="sec_uds">
-          <mxGeometry y="30" width="270" height="18" as="geometry"/>
-        </mxCell>
-        <mxCell id="sec_uds_line" value="" style="line;strokeColor=#9673a6;fillColor=none;" vertex="1" parent="sec_uds">
-          <mxGeometry y="48" width="270" height="8" as="geometry"/>
-        </mxCell>
-        <mxCell id="sec_uds_m" value="+ loadUserByUsername(username): UserDetails" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;fontSize=11;" vertex="1" parent="sec_uds">
-          <mxGeometry y="56" width="270" height="44" as="geometry"/>
-        </mxCell>
-
-        <!-- ============================================================ -->
-        <!-- LEYENDA DE CAPAS                                              -->
-        <!-- ============================================================ -->
-
-        <mxCell id="lbl_model" value="MODELO (Entidades JPA)" style="text;fontStyle=1;fontSize=12;fillColor=#d5e8d4;strokeColor=#82b366;align=center;rounded=1;" vertex="1" parent="1">
-          <mxGeometry x="1470" y="130" width="210" height="36" as="geometry"/>
-        </mxCell>
-        <mxCell id="lbl_repo" value="REPOSITORIOS (Spring Data JPA)" style="text;fontStyle=1;fontSize=12;fillColor=#dae8fc;strokeColor=#6c8ebf;align=center;rounded=1;" vertex="1" parent="1">
-          <mxGeometry x="1470" y="610" width="210" height="36" as="geometry"/>
-        </mxCell>
-        <mxCell id="lbl_svc" value="SERVICIOS (Lógica de negocio)" style="text;fontStyle=1;fontSize=12;fillColor=#fff2cc;strokeColor=#d6b656;align=center;rounded=1;" vertex="1" parent="1">
-          <mxGeometry x="1470" y="870" width="210" height="36" as="geometry"/>
-        </mxCell>
-        <mxCell id="lbl_ctrl" value="CONTROLADORES (Spring MVC)" style="text;fontStyle=1;fontSize=12;fillColor=#ffe6cc;strokeColor=#d79b00;align=center;rounded=1;" vertex="1" parent="1">
-          <mxGeometry x="1470" y="1310" width="210" height="36" as="geometry"/>
-        </mxCell>
-        <mxCell id="lbl_sec" value="SEGURIDAD (Spring Security)" style="text;fontStyle=1;fontSize=12;fillColor=#e1d5e7;strokeColor=#9673a6;align=center;rounded=1;" vertex="1" parent="1">
-          <mxGeometry x="1470" y="1600" width="210" height="36" as="geometry"/>
-        </mxCell>
-
-        <!-- ============================================================ -->
-        <!-- ASOCIACIONES ENTRE MODELOS (foreign keys)                     -->
-        <!-- ============================================================ -->
-
-        <!-- Mesa → Cliente (clienteId) -->
-        <mxCell id="rel_mesa_cliente" value="clienteId" style="endArrow=open;endSize=8;startArrow=none;rounded=0;dashed=1;exitX=0;exitY=0.5;entryX=1;entryY=0.5;" edge="1" source="m_mesa" target="m_cliente" parent="1">
+        <!-- Composición: Pedido ◆───N─── Comanda -->
+        <mxCell id="comp_ped_com" value="" style="startArrow=diamond;startFill=1;startSize=14;endArrow=open;endSize=8;strokeColor=#555555;" edge="1" source="m_pedido" target="m_comanda" parent="1">
           <mxGeometry relative="1" as="geometry"/>
         </mxCell>
-
-        <!-- Pedido → Mesa (mesaId) -->
-        <mxCell id="rel_pedido_mesa" value="mesaId" style="endArrow=open;endSize=8;startArrow=none;rounded=0;dashed=1;exitX=0;exitY=0.4;entryX=1;entryY=0.3;" edge="1" source="m_pedido" target="m_mesa" parent="1">
-          <mxGeometry relative="1" as="geometry"/>
+        <mxCell id="comp_ped_com_s" value="1" style="edgeLabel;fontSize=11;fontStyle=1;" vertex="1" connectable="0" parent="comp_ped_com">
+          <mxGeometry x="-0.8" relative="1" as="geometry"><mxPoint as="offset"/></mxGeometry>
+        </mxCell>
+        <mxCell id="comp_ped_com_t" value="N" style="edgeLabel;fontSize=11;fontStyle=1;" vertex="1" connectable="0" parent="comp_ped_com">
+          <mxGeometry x="0.8" relative="1" as="geometry"><mxPoint as="offset"/></mxGeometry>
         </mxCell>
 
-        <!-- Pedido → Cliente (clienteId) -->
-        <mxCell id="rel_pedido_cliente" value="clienteId" style="endArrow=open;endSize=8;startArrow=none;rounded=0;dashed=1;exitX=0;exitY=0.3;entryX=1;entryY=0.7;" edge="1" source="m_pedido" target="m_cliente" parent="1">
+        <!-- Composición: Comanda ◆───N─── LineaProducto -->
+        <mxCell id="comp_com_lp" value="" style="startArrow=diamond;startFill=1;startSize=14;endArrow=open;endSize=8;strokeColor=#555555;" edge="1" source="m_comanda" target="m_lp" parent="1">
           <mxGeometry relative="1" as="geometry"/>
         </mxCell>
-
-        <!-- Pedido → Sesion (sesionId) -->
-        <mxCell id="rel_pedido_sesion" value="sesionId" style="endArrow=open;endSize=8;startArrow=none;rounded=0;dashed=1;" edge="1" source="m_pedido" target="m_sesion" parent="1">
-          <mxGeometry relative="1" as="geometry"/>
+        <mxCell id="comp_com_lp_s" value="1" style="edgeLabel;fontSize=11;fontStyle=1;" vertex="1" connectable="0" parent="comp_com_lp">
+          <mxGeometry x="-0.8" relative="1" as="geometry"><mxPoint as="offset"/></mxGeometry>
+        </mxCell>
+        <mxCell id="comp_com_lp_t" value="N" style="edgeLabel;fontSize=11;fontStyle=1;" vertex="1" connectable="0" parent="comp_com_lp">
+          <mxGeometry x="0.8" relative="1" as="geometry"><mxPoint as="offset"/></mxGeometry>
         </mxCell>
 
-        <!-- Comanda → Pedido (pedidoId) -->
-        <mxCell id="rel_comanda_pedido" value="pedidoId" style="endArrow=open;endSize=8;startArrow=none;rounded=0;dashed=1;exitX=0;exitY=0.5;entryX=1;entryY=0.5;" edge="1" source="m_comanda" target="m_pedido" parent="1">
+        <!-- Asociación: Mesa ───0..1─── Cliente -->
+        <mxCell id="assoc_mesa_cli" value="" style="endArrow=open;endSize=8;strokeColor=#555555;" edge="1" source="m_mesa" target="m_cliente" parent="1">
           <mxGeometry relative="1" as="geometry"/>
         </mxCell>
-
-        <!-- Comanda → TipoComanda (tipoComandaId) -->
-        <mxCell id="rel_comanda_tc" value="tipoComandaId" style="endArrow=open;endSize=8;startArrow=none;rounded=0;dashed=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" source="m_comanda" target="m_tc" parent="1">
-          <mxGeometry relative="1" as="geometry"/>
+        <mxCell id="assoc_mesa_cli_s" value="0..1" style="edgeLabel;fontSize=11;fontStyle=1;" vertex="1" connectable="0" parent="assoc_mesa_cli">
+          <mxGeometry x="-0.7" relative="1" as="geometry"><mxPoint as="offset"/></mxGeometry>
+        </mxCell>
+        <mxCell id="assoc_mesa_cli_t" value="1" style="edgeLabel;fontSize=11;fontStyle=1;" vertex="1" connectable="0" parent="assoc_mesa_cli">
+          <mxGeometry x="0.7" relative="1" as="geometry"><mxPoint as="offset"/></mxGeometry>
         </mxCell>
 
-        <!-- LineaProducto → Comanda (comandaId) -->
-        <mxCell id="rel_lp_comanda" value="comandaId" style="endArrow=open;endSize=8;startArrow=none;rounded=0;dashed=1;exitX=0;exitY=0.5;entryX=1;entryY=0.5;" edge="1" source="m_lp" target="m_comanda" parent="1">
+        <!-- Asociación: Pedido ───N─── Mesa -->
+        <mxCell id="assoc_ped_mesa" value="" style="endArrow=open;endSize=8;strokeColor=#555555;" edge="1" source="m_pedido" target="m_mesa" parent="1">
           <mxGeometry relative="1" as="geometry"/>
         </mxCell>
-
-        <!-- LineaProducto → Producto (productoId) -->
-        <mxCell id="rel_lp_producto" value="productoId" style="endArrow=open;endSize=8;startArrow=none;rounded=0;dashed=1;exitX=0;exitY=1;entryX=1;entryY=0;" edge="1" source="m_lp" target="m_producto" parent="1">
-          <mxGeometry relative="1" as="geometry"/>
+        <mxCell id="assoc_ped_mesa_s" value="N" style="edgeLabel;fontSize=11;fontStyle=1;" vertex="1" connectable="0" parent="assoc_ped_mesa">
+          <mxGeometry x="-0.7" relative="1" as="geometry"><mxPoint as="offset"/></mxGeometry>
+        </mxCell>
+        <mxCell id="assoc_ped_mesa_t" value="1" style="edgeLabel;fontSize=11;fontStyle=1;" vertex="1" connectable="0" parent="assoc_ped_mesa">
+          <mxGeometry x="0.7" relative="1" as="geometry"><mxPoint as="offset"/></mxGeometry>
         </mxCell>
 
-        <!-- Producto → TipoProducto (tipoProductoId) -->
-        <mxCell id="rel_producto_tp" value="tipoProductoId" style="endArrow=open;endSize=8;startArrow=none;rounded=0;dashed=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" source="m_producto" target="m_tp" parent="1">
+        <!-- Asociación: Pedido ───N─── Cliente -->
+        <mxCell id="assoc_ped_cli" value="" style="endArrow=open;endSize=8;strokeColor=#555555;" edge="1" source="m_pedido" target="m_cliente" parent="1">
           <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="assoc_ped_cli_s" value="N" style="edgeLabel;fontSize=11;fontStyle=1;" vertex="1" connectable="0" parent="assoc_ped_cli">
+          <mxGeometry x="-0.7" relative="1" as="geometry"><mxPoint as="offset"/></mxGeometry>
+        </mxCell>
+        <mxCell id="assoc_ped_cli_t" value="0..1" style="edgeLabel;fontSize=11;fontStyle=1;" vertex="1" connectable="0" parent="assoc_ped_cli">
+          <mxGeometry x="0.7" relative="1" as="geometry"><mxPoint as="offset"/></mxGeometry>
+        </mxCell>
+
+        <!-- Asociación: Pedido ───N─── Sesion -->
+        <mxCell id="assoc_ped_ses" value="" style="endArrow=open;endSize=8;strokeColor=#555555;" edge="1" source="m_pedido" target="m_sesion" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="assoc_ped_ses_s" value="N" style="edgeLabel;fontSize=11;fontStyle=1;" vertex="1" connectable="0" parent="assoc_ped_ses">
+          <mxGeometry x="-0.7" relative="1" as="geometry"><mxPoint as="offset"/></mxGeometry>
+        </mxCell>
+        <mxCell id="assoc_ped_ses_t" value="1" style="edgeLabel;fontSize=11;fontStyle=1;" vertex="1" connectable="0" parent="assoc_ped_ses">
+          <mxGeometry x="0.7" relative="1" as="geometry"><mxPoint as="offset"/></mxGeometry>
+        </mxCell>
+
+        <!-- Asociación: LineaProducto ───N─── Producto -->
+        <mxCell id="assoc_lp_prod" value="" style="endArrow=open;endSize=8;strokeColor=#555555;" edge="1" source="m_lp" target="m_producto" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="assoc_lp_prod_s" value="N" style="edgeLabel;fontSize=11;fontStyle=1;" vertex="1" connectable="0" parent="assoc_lp_prod">
+          <mxGeometry x="-0.7" relative="1" as="geometry"><mxPoint as="offset"/></mxGeometry>
+        </mxCell>
+        <mxCell id="assoc_lp_prod_t" value="1" style="edgeLabel;fontSize=11;fontStyle=1;" vertex="1" connectable="0" parent="assoc_lp_prod">
+          <mxGeometry x="0.7" relative="1" as="geometry"><mxPoint as="offset"/></mxGeometry>
+        </mxCell>
+
+        <!-- Asociación: Producto ───N─── TipoProducto -->
+        <mxCell id="assoc_prod_tp" value="" style="endArrow=open;endSize=8;strokeColor=#555555;" edge="1" source="m_producto" target="m_tp" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="assoc_prod_tp_s" value="N" style="edgeLabel;fontSize=11;fontStyle=1;" vertex="1" connectable="0" parent="assoc_prod_tp">
+          <mxGeometry x="-0.7" relative="1" as="geometry"><mxPoint as="offset"/></mxGeometry>
+        </mxCell>
+        <mxCell id="assoc_prod_tp_t" value="1" style="edgeLabel;fontSize=11;fontStyle=1;" vertex="1" connectable="0" parent="assoc_prod_tp">
+          <mxGeometry x="0.7" relative="1" as="geometry"><mxPoint as="offset"/></mxGeometry>
+        </mxCell>
+
+        <!-- Asociación: Comanda ───N─── TipoComanda -->
+        <mxCell id="assoc_com_tc" value="" style="endArrow=open;endSize=8;strokeColor=#555555;" edge="1" source="m_comanda" target="m_tc" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="assoc_com_tc_s" value="N" style="edgeLabel;fontSize=11;fontStyle=1;" vertex="1" connectable="0" parent="assoc_com_tc">
+          <mxGeometry x="-0.7" relative="1" as="geometry"><mxPoint as="offset"/></mxGeometry>
+        </mxCell>
+        <mxCell id="assoc_com_tc_t" value="1" style="edgeLabel;fontSize=11;fontStyle=1;" vertex="1" connectable="0" parent="assoc_com_tc">
+          <mxGeometry x="0.7" relative="1" as="geometry"><mxPoint as="offset"/></mxGeometry>
+        </mxCell>
+
+        <!-- ══════════════════════════════════════════════════
+             LEYENDA
+        ══════════════════════════════════════════════════ -->
+
+        <mxCell id="ley_title" value="Leyenda" style="text;fontStyle=1;fontSize=12;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="830" y="50" width="80" height="20" as="geometry"/>
+        </mxCell>
+        <mxCell id="ley_comp" value="" style="startArrow=diamond;startFill=1;startSize=12;endArrow=open;endSize=8;strokeColor=#555555;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="830" y="90" as="sourcePoint"/><mxPoint x="920" y="90" as="targetPoint"/></mxGeometry>
+        </mxCell>
+        <mxCell id="ley_comp_lbl" value="Composición" style="text;fontSize=11;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="930" y="82" width="100" height="18" as="geometry"/>
+        </mxCell>
+        <mxCell id="ley_assoc" value="" style="endArrow=open;endSize=8;strokeColor=#555555;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="830" y="118" as="sourcePoint"/><mxPoint x="920" y="118" as="targetPoint"/></mxGeometry>
+        </mxCell>
+        <mxCell id="ley_assoc_lbl" value="Asociación" style="text;fontSize=11;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="930" y="110" width="100" height="18" as="geometry"/>
         </mxCell>
 
       </root>
