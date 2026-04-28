@@ -148,3 +148,11 @@ CREATE TABLE lineas_producto (
     CONSTRAINT fk_linea_producto FOREIGN KEY (producto_id)
         REFERENCES productos(id) ON DELETE CASCADE
 );
+
+-- ============================================================
+-- 9. Cambio de usuario
+--    Cambio de usuario root al propio
+-- ============================================================
+CREATE USER 'plateup'@'localhost' IDENTIFIED BY 'admin123';
+GRANT ALL PRIVILEGES ON restaurante_db.* TO 'plateup'@'localhost';
+FLUSH PRIVILEGES;
