@@ -45,13 +45,13 @@ public class ClienteService {
     private void validar(Cliente cliente) {
         if (cliente.getNombre() == null || cliente.getNombre().isBlank())
             throw new IllegalArgumentException("El nombre del cliente no puede estar vacío.");
-        if (cliente.getEmail() == null || cliente.getEmail().isBlank())
-            throw new IllegalArgumentException("El correo electrónico es obligatorio.");
-        boolean duplicado = (cliente.getId() == null)
-            ? clienteDAO.existsByEmail(cliente.getEmail())
-            : clienteDAO.existsByEmailAndIdNot(cliente.getEmail(), cliente.getId());
-        if (duplicado)
-            throw new IllegalArgumentException("Ya existe un cliente con el email «" + cliente.getEmail() + "».");
+        if (cliente.getEmail() != null && !cliente.getEmail().isBlank()) {
+            boolean duplicado = (cliente.getId() == null)
+                ? clienteDAO.existsByEmail(cliente.getEmail())
+                : clienteDAO.existsByEmailAndIdNot(cliente.getEmail(), cliente.getId());
+            if (duplicado)
+                throw new IllegalArgumentException("Ya existe un cliente con el email «" + cliente.getEmail() + "».");
+        }
     }
 
     /** Elimina el cliente con el ID indicado. Devuelve {@code false} si no existe. */

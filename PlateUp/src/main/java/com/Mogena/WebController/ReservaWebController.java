@@ -37,39 +37,50 @@ public class ReservaWebController {
             @RequestParam String fecha,
             @RequestParam String hora) {
 
-        // Buscar mesa libre con capacidad suficiente (la más pequeña que encaje)
-        Optional<Mesa> mesaOpt = mesaService.obtenerTodas().stream()
-            .filter(m -> "LIBRE".equals(m.getEstado())
-                      && m.getCapacidad() != null
-                      && m.getCapacidad() >= comensales)
-            .min(Comparator.comparingInt(Mesa::getCapacidad));
+        try {
+            // Buscar mesa libre con capacidad suficiente (la más pequeña que encaje)
+            Optional<Mesa> mesaOpt = mesaService.obtenerTodas().stream()
+                .filter(m -> "LIBRE".equals(m.getEstado())
+                          && m.getCapacidad() != null
+                          && m.getCapacidad() >= comensales)
+                .min(Comparator.comparingInt(Mesa::getCapacidad));
 
-        if (mesaOpt.isEmpty()) {
+            if (mesaOpt.isEmpty()) {
+                return ResponseEntity.ok(Map.of(
+                    "exito", false,
+                    "mensaje", "No hay mesas disponibles para " + comensales + " personas. Llámenos al +34 91 000 00 00."
+                ));
+            }
+
+            // Reutilizar cliente existente por email o crear uno nuevo
+            Cliente cliente = (!email.isBlank()) ? clienteService.obtenerPorEmail(email) : null;
+            if (cliente == null) {
+                cliente = new Cliente();
+                cliente.setNombre(nombre);
+                if (!telefono.isBlank()) cliente.setTelefono(telefono);
+                if (!email.isBlank())    cliente.setEmail(email);
+                clienteService.guardarCliente(cliente);
+            }
+
+            // Asignar mesa y guardar reserva
+            Mesa mesa = mesaOpt.get();
+            mesa.setClienteId(cliente.getId());
+            mesa.setEstado("RESERVADA");
+            mesa.setFechaReserva(LocalDate.parse(fecha));
+            mesa.setHoraReserva(hora);
+            mesaService.guardarMesa(mesa);
+
             return ResponseEntity.ok(Map.of(
-                "exito", false,
-                "mensaje", "No hay mesas disponibles para " + comensales + " personas. Llámenos al +34 91 000 00 00."
+                "exito",  true,
+                "mesa",   mesa.getNumero(),
+                "mensaje", "Reserva confirmada — " + fecha + " a las " + hora
+            ));
+
+        } catch (Exception e) {
+            return ResponseEntity.ok(Map.of(
+                "exito",   false,
+                "mensaje", "Error al procesar la reserva: " + e.getMessage()
             ));
         }
-
-        // Crear o registrar el cliente
-        Cliente cliente = new Cliente();
-        cliente.setNombre(nombre);
-        if (!telefono.isBlank()) cliente.setTelefono(telefono);
-        if (!email.isBlank())    cliente.setEmail(email);
-        clienteService.guardarCliente(cliente);
-
-        // Asignar mesa y guardar reserva
-        Mesa mesa = mesaOpt.get();
-        mesa.setClienteId(cliente.getId());
-        mesa.setEstado("RESERVADA");
-        mesa.setFechaReserva(LocalDate.parse(fecha));
-        mesa.setHoraReserva(hora);
-        mesaService.guardarMesa(mesa);
-
-        return ResponseEntity.ok(Map.of(
-            "exito",  true,
-            "mesa",   mesa.getNumero(),
-            "mensaje", "Reserva confirmada — " + fecha + " a las " + hora
-        ));
     }
 }
